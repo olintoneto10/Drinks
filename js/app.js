@@ -554,8 +554,9 @@ function abrirReceita(id) {
     <div class="botoes-duplos">
       <button class="btn" id="btn-favoritar" data-receita="${r.id}">
         ${state.favoritos.has(r.id) ? '♥ Favorito' : '♡ Favoritar'}</button>
-      <button class="btn" id="btn-compartilhar" data-receita="${r.id}">Compartilhar</button>
+      <button class="btn" id="btn-cartao" data-receita="${r.id}">🃏 Cartão</button>
     </div>
+    <button class="btn" id="btn-compartilhar" data-receita="${r.id}">Compartilhar como texto</button>
     ${r.custom ? `<div class="botoes-duplos">
       <button class="btn" id="btn-editar-receita" data-receita="${r.id}">Editar receita</button>
       <button class="btn btn-excluir" id="btn-excluir-receita" data-receita="${r.id}">Excluir</button>
@@ -1450,6 +1451,9 @@ function initEventos() {
     const shareBtn = ev.target.closest('#btn-compartilhar');
     if (shareBtn) compartilharReceita(shareBtn.dataset.receita);
 
+    const cartaoBtn = ev.target.closest('#btn-cartao');
+    if (cartaoBtn) gerarCartaoReceita(cartaoBtn.dataset.receita);
+
     const notaBtn = ev.target.closest('#btn-editar-nota');
     if (notaBtn) {
       const id = notaBtn.dataset.receita;
@@ -1508,6 +1512,7 @@ async function init() {
   state.entries = await dbGetEntries();
   initEventos();
   checarConvite();
+  checarReceitaRecebida();
   checarBoasVindas();
   $('#contador-bar').textContent = state.bar.size;
   renderLembrete();

@@ -38,6 +38,11 @@ bar e o seu gosto.
   festa 🎉 prioriza drinks que agradam todo mundo respeitando as restrições.
 - **♥ Favoritos e compartilhar** — marque receitas para depois e compartilhe
   receitas ou registros do diário via WhatsApp e afins (Web Share API).
+- **🃏 Cartão de receita com QR** — gera uma imagem na cor do próprio drink,
+  com a ilustração, os ingredientes e um QR. Quem recebe **aponta a câmera do
+  celular** (não precisa de app nenhum para ler) e a receita abre no MeuBar
+  pronta para guardar e editar. Clássico do catálogo viaja pelo id; receita
+  própria viaja inteira dentro do QR. Sem servidor, como o cartão de convidado.
 - **📊 Diário rico** — filtros por nota mínima e período, resumo neutro do mês
   (nº de registros, nota média, destaque) e fotos comprimidas automaticamente
   (~1200px) para não estourar o armazenamento.
@@ -141,6 +146,8 @@ js/retro.js           cartaz da retrospectiva do ano (canvas)
 js/preparo.js         modo preparo passo a passo e o brinde
 js/momentos.js        hora do bar, drink do dia, efemérides e coleção
 js/retorno.js         boas-voltas e lembrete semanal no calendário (.ics)
+js/qr.js              gerador de QR Code em JS puro (modo byte, correção M)
+js/cartao.js          cartão de receita em imagem + importação pelo QR
 js/kit.js             lista de compras calculada a partir do estilo preferido
 js/jogo.js            nível, conquistas e rotas (repertório, nunca volume)
 js/boasvindas.js      primeiro acesso guiado até a primeira receita

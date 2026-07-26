@@ -90,8 +90,7 @@ const CONQUISTAS = [
   { id: 'fotografo', icone: '📷', nome: 'Bebe pelos olhos', sobre: 'Cinco registros com foto.',
     testa: c => c.comFoto >= 5 },
   { id: 'autor', icone: '✍️', nome: 'Receita da casa', sobre: 'Criou uma receita própria.',
-    testa: () => Object.keys(Store.getReceitasCustom() || {}).length > 0
-      || RECEITAS.some(r => r.custom) },
+    testa: () => RECEITAS.some(r => r.custom) },
   { id: 'colecionador', icone: '🏛️', nome: 'Colecionador', sobre: 'Um quarto do cardápio preparado.',
     testa: c => c.feitos.size >= Math.ceil(RECEITAS.filter(r => !r.custom).length / 4) },
 ];
