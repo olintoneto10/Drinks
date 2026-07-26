@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#12100e">
+  <title>MeuBar — seu bartender de bolso</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header>
+    <h1>🍹 MeuBar</h1>
+    <p class="slogan">seu bartender de bolso</p>
+  </header>
+
+  <main>
+    <!-- Sugestões -->
+    <section id="aba-sugestoes" class="aba">
+      <input id="busca-sugestoes" type="search" placeholder="Buscar drink pelo nome...">
+      <div id="filtros" class="chips">
+        <button class="chip on" data-tag="todos">Todos</button>
+        <button class="chip" data-tag="citrico">Cítrico</button>
+        <button class="chip" data-tag="doce">Doce</button>
+        <button class="chip" data-tag="amargo">Amargo</button>
+        <button class="chip" data-tag="refrescante">Refrescante</button>
+        <button class="chip" data-tag="forte">Forte</button>
+        <button class="chip" data-tag="cremoso">Cremoso</button>
+        <button class="chip" data-tag="tropical">Tropical</button>
+        <button class="chip" data-tag="sem-alcool">Sem álcool</button>
+      </div>
+      <div id="lista-sugestoes"></div>
+    </section>
+
+    <!-- Meu Bar -->
+    <section id="aba-bar" class="aba">
+      <input id="busca-bar" type="search" placeholder="Buscar ingrediente...">
+      <div id="conteudo-bar"></div>
+    </section>
+
+    <!-- Diário -->
+    <section id="aba-diario" class="aba">
+      <button id="btn-nova-entrada" class="btn primario">+ Registrar um drink</button>
+      <input id="busca-diario" type="search" placeholder="Buscar no diário...">
+      <div id="lista-diario"></div>
+    </section>
+
+    <!-- Especialista -->
+    <section id="aba-expert" class="aba">
+      <div id="expert-config">
+        <div class="vazio">
+          🤖 <strong>Modo Especialista</strong><br>
+          Converse com um bartender de IA que conhece o seu bar e o seu gosto.<br><br>
+          Para ativar, cole sua chave da API da Anthropic
+          (crie em <em>console.anthropic.com</em>). Ela fica salva <strong>apenas neste aparelho</strong>.
+        </div>
+        <form id="form-chave">
+          <input id="input-chave" type="password" placeholder="sk-ant-..." required>
+          <button class="btn primario" type="submit">Ativar especialista</button>
+        </form>
+      </div>
+      <div id="expert-chat" class="escondido">
+        <div id="chat-mensagens"></div>
+        <form id="form-chat">
+          <input id="chat-input" type="text" placeholder='Ex.: "me surpreende com algo cítrico"' autocomplete="off">
+          <button class="btn primario" type="submit">➤</button>
+        </form>
+        <button id="btn-trocar-chave" class="mini">trocar chave de API</button>
+      </div>
+    </section>
+  </main>
+
+  <nav id="tabs">
+    <button class="tab ativa" data-aba="sugestoes">🍸<span>Sugestões</span></button>
+    <button class="tab" data-aba="bar">🍾<span>Meu Bar</span> <span id="contador-bar" class="badge">0</span></button>
+    <button class="tab" data-aba="diario">📔<span>Diário</span></button>
+    <button class="tab" data-aba="expert">🤖<span>Especialista</span></button>
+  </nav>
+
+  <div id="modal">
+    <div id="modal-caixa">
+      <button id="modal-fechar" aria-label="Fechar">✕</button>
+      <div id="modal-corpo"></div>
+    </div>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/db.js"></script>
+  <script src="js/ai.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
