@@ -498,7 +498,6 @@ body.noite header, body.noite main, body.noite #tabs { position: relative; z-ind
 body.noite .card:not(.drink-dia),
 body.noite .entrada { background: transparent; }
 body.noite .arte-modal svg path[stroke],
-body.noite .thumb svg path[stroke] { stroke: var(--tinta); }
 body.noite .pontos, body.noite .bv-pontos { border-color: #52402F; }
 body.noite .toast { box-shadow: 0 10px 34px -12px rgba(0, 0, 0, .6); }
 body.noite #modal { background: rgba(12, 9, 7, .62); }

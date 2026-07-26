@@ -130,6 +130,13 @@ const PAIS_DO_DRINK = {
   'sea-breeze': 'Estados Unidos', 'bay-breeze': 'Estados Unidos',
   'woo-woo': 'Estados Unidos', 'fuzzy-navel': 'Estados Unidos',
   'malibu-abacaxi': 'Barbados', 'coco-limao': 'Brasil',
+  // Sem álcool e variações também contam no passaporte — a origem está escrita
+  // no verbete de cada um, não havia motivo para ficarem de fora.
+  'virgin-mojito': 'Cuba', 'shirley-temple': 'Estados Unidos',
+  'limonada-suica': 'Brasil', 'abacaxi-hortela': 'Brasil',
+  'maracuja-tonica': 'Brasil', 'limonada-de-gengibre': 'Brasil',
+  'maca-verde-refresco': 'Estados Unidos', 'vodka-melancia': 'Brasil',
+  'tangerina-tonica': 'Espanha', 'vodka-ice': 'Austrália',
 };
 
 function statsColecao() {

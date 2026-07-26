@@ -71,7 +71,7 @@ function desenharQR(ctx, texto, x, y, lado) {
 }
 
 // Quebra o texto em linhas que cabem na largura
-function linhas(ctx, texto, largura) {
+function quebrarLinhas(ctx, texto, largura) {
   const palavras = texto.split(/\s+/);
   const saida = [];
   let atual = '';
@@ -98,7 +98,7 @@ function gerarCartaoReceita(receitaId) {
   // dimensionar, senão sobra um vão morto acima do QR nos drinks curtos.
   const regua = document.createElement('canvas').getContext('2d');
   regua.font = 'italic 25px Georgia, serif';
-  const corpo = linhas(regua, r.preparo, L - 240).slice(0, 4);
+  const corpo = quebrarLinhas(regua, r.preparo, L - 240).slice(0, 4);
   const A = 700 + ings.length * 42 + corpo.length * 36 + 396;
 
   const canvas = document.createElement('canvas');

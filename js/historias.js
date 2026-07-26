@@ -1034,6 +1034,7 @@ const TRILHA_POR_PAIS = {
   'Suécia': { busca: 'scandinavian indie folk', nome: 'indie escandinavo' },
   'Peru': { busca: 'musica criolla peruana', nome: 'música criolla' },
   'Alemanha': { busca: 'krautrock electronic berlin', nome: 'eletrônico de Berlim' },
+  'Austrália': { busca: 'australian indie surf rock', nome: 'indie australiano' },
 };
 
 // Onde o país não decide (Estados Unidos faz de tudo), o destilado decide:
