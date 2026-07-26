@@ -143,10 +143,9 @@ function svgDrink(receita, tamanho = 76) {
     <defs><linearGradient id="${gid}" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0" stop-color="${c1}"/><stop offset="1" stop-color="${c2}"/>
     </linearGradient></defs>
-    <circle cx="50" cy="50" r="47" fill="#1d1a17"/>
     <path d="${copo.liquid}" fill="url(#${gid})"/>
     ${deco}
-    <path d="${copo.glass}" fill="none" stroke="#e8a13c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="${copo.glass}" fill="none" stroke="#201D1A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
     ${garnish}
   </svg>`;
 }

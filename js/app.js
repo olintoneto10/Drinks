@@ -210,7 +210,7 @@ function renderSugestoes() {
     html += `<div class="vazio">🍾 Seu bar está vazio.<br>
       Cadastre o que você tem em casa na aba <strong>Meu Bar</strong> e eu digo o que dá para fazer.</div>`;
   }
-  html += `<h2>🍸 Pode fazer agora <span class="badge">${readyF.length}</span></h2>`;
+  html += `<h2>Pode fazer agora <span class="badge">${readyF.length}</span></h2>`;
   html += readyF.length
     ? `<div class="cards">${readyF.map(x => cardReceita(x, true, fotos)).join('')}</div>`
     : '<p class="dica">Nada por enquanto — adicione mais itens ao seu bar.</p>';
@@ -220,7 +220,7 @@ function renderSugestoes() {
     const dicas = ingredientesQueValemAPena(almost);
     if (dicas.length) {
       const quem = state.pessoaAtiva === 'eu' ? 'seu perfil' : getPessoa(state.pessoaAtiva)?.nome;
-      html += `<h2>💡 Vale a pena comprar</h2>
+      html += `<h2>Vale a pena comprar</h2>
         <p class="dica">Pensando em ${esc(quem)}, estes ingredientes desbloqueiam mais drinks:</p>
         <ul class="compras-inteligentes">` +
         dicas.map(([id, g]) => {
@@ -232,7 +232,7 @@ function renderSugestoes() {
     }
   }
 
-  html += `<h2>🛒 Falta só 1 ingrediente <span class="badge">${almostF.length}</span></h2>`;
+  html += `<h2>Falta só 1 ingrediente <span class="badge">${almostF.length}</span></h2>`;
   html += almostF.length
     ? `<div class="cards">${almostF.map(x => cardReceita(x, false, fotos)).join('')}</div>`
     : '<p class="dica">Nenhuma sugestão aqui com os filtros atuais.</p>';
@@ -255,10 +255,10 @@ function renderBar() {
           <button class="mini danger" data-tira-lista="${id}">✕</button>
         </span></li>`;
     }).join('');
-    html += `<div class="bloco"><h2>🛒 Lista de compras</h2><ul class="lista-compras">${itens}</ul></div>`;
+    html += `<div class="bloco"><h2>Lista de compras</h2><ul class="lista-compras">${itens}</ul></div>`;
   }
 
-  html += '<h2>🍾 O que você tem em casa</h2>';
+  html += '<h2>O que você tem em casa</h2>';
   html += '<p class="dica">Toque para adicionar ou remover. Açúcar, sal e gelo já contam como disponíveis.</p>';
 
   for (const cat of CATEGORIAS) {

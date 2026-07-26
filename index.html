@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#12100e">
+  <meta name="theme-color" content="#FBFAF7">
   <title>MeuBar — seu bartender de bolso</title>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icons/icon-192.png">
@@ -12,9 +12,16 @@
 </head>
 <body>
   <header>
-    <h1>🍹 MeuBar</h1>
+    <h1>Meu<em>Bar</em></h1>
     <p class="slogan">seu bartender de bolso</p>
   </header>
+
+  <nav id="tabs">
+    <button class="tab ativa" data-aba="sugestoes">Sugestões</button>
+    <button class="tab" data-aba="bar">Meu Bar <span id="contador-bar" class="badge">0</span></button>
+    <button class="tab" data-aba="diario">Diário</button>
+    <button class="tab" data-aba="expert">IA</button>
+  </nav>
 
   <main>
     <!-- Sugestões -->
@@ -72,13 +79,6 @@
       </div>
     </section>
   </main>
-
-  <nav id="tabs">
-    <button class="tab ativa" data-aba="sugestoes">🍸<span>Sugestões</span></button>
-    <button class="tab" data-aba="bar">🍾<span>Meu Bar</span> <span id="contador-bar" class="badge">0</span></button>
-    <button class="tab" data-aba="diario">📔<span>Diário</span></button>
-    <button class="tab" data-aba="expert">🤖<span>Especialista</span></button>
-  </nav>
 
   <div id="modal">
     <div id="modal-caixa">
