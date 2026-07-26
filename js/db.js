@@ -99,6 +99,10 @@ const Store = {
   setChat(h) { LS.set('meubar.chat', h.slice(-30)); },
   getReceitasCustom() { return LS.get('meubar.receitas', []); },
   setReceitasCustom(lista) { LS.set('meubar.receitas', lista); },
+  getBoasVindas() { return LS.get('meubar.boasvindas', false); },
+  setBoasVindas(v) { LS.set('meubar.boasvindas', v); },
+  getHistorias() { return LS.get('meubar.historias', {}); },
+  setHistorias(obj) { LS.set('meubar.historias', obj); },
   getNotas() { return LS.get('meubar.notas', {}); },
   setNotas(obj) { LS.set('meubar.notas', obj); },
 };

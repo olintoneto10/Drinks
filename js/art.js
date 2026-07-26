@@ -113,9 +113,9 @@ function svgDrink(receita, tamanho = 76) {
 
   // Bolhas para drinks gaseificados
   if (['espumante', 'agua-com-gas', 'agua-tonica', 'ginger-beer', 'refrigerante-cola'].some(x => ids.includes(x))) {
-    deco += '<circle cx="46" cy="48" r="1.6" fill="#fff" opacity="0.4"/>' +
-            '<circle cx="54" cy="58" r="1.3" fill="#fff" opacity="0.35"/>' +
-            '<circle cx="49" cy="68" r="1.6" fill="#fff" opacity="0.3"/>';
+    deco += '<circle class="bolha-viva" cx="46" cy="52" r="1.7" fill="#fff" opacity="0.45"/>' +
+            '<circle class="bolha-viva" cx="54" cy="60" r="1.4" fill="#fff" opacity="0.4"/>' +
+            '<circle class="bolha-viva" cx="49" cy="68" r="1.7" fill="#fff" opacity="0.35"/>';
   }
   // Espuma/creme por cima
   if (['espresso-martini', 'irish-coffee', 'white-russian'].includes(receita.id)) {

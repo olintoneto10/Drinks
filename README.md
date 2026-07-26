@@ -44,6 +44,22 @@ bar e o seu gosto.
   evita, e devolve um link que a cadastra no seu app. Sem servidor: as
   preferências viajam dentro da própria URL.
 
+### Camada de experiência
+
+- **Modo Preparo** — tela cheia, um passo por vez, tipografia grande para quem
+  está de pé com as mãos ocupadas.
+- **O Brinde** — ao concluir, o copo se enche, sobem bolhas e o celular vibra
+  *antes* de qualquer formulário; marcos (1º, 10º, 50º…) ganham selo carimbado.
+- **Histórias** — origem, criador, curiosidade, harmonização, variações e
+  aparições culturais. 25 clássicos escritos à mão (lendas marcadas como
+  lendas); os demais o Especialista escreve sob demanda e guarda no aparelho.
+- **Boas-vindas** — em vez da tela vazia, o app leva à primeira vitória:
+  marque o que tem em casa e veja na hora o que já dá para fazer.
+- **Movimento** — entrada em cascata, transições entre abas, ingredientes que
+  se preenchem, bolhas nas ilustrações, skeleton nas esperas, avisos próprios
+  no lugar dos diálogos do sistema e resposta tátil (vibração). Tudo respeita
+  `prefers-reduced-motion`.
+
 ## Como rodar
 
 É um site estático — não precisa de build nem servidor de aplicação.

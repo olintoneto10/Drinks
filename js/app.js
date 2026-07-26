@@ -11,6 +11,7 @@ const state = {
   pessoaAtiva: 'eu',
   festa: Store.getFesta(), // ids das pessoas no modo festa
   favoritos: Store.getFavoritos(),
+  animar: true, // cascata só ao entrar na aba, não a cada toque
   filtroTag: 'todos',
   buscaSugestao: '',
   fotoURLs: new Map(), // entryId -> objectURL
@@ -55,6 +56,13 @@ function getPessoa(id) {
     return state.pessoas.find(p => p.id === 'eu') || { id: 'eu', nome: 'Você', tags: [] };
   }
   return state.pessoas.find(p => p.id === id) || null;
+}
+
+// Consome o pedido de animação: a cascata roda uma vez por entrada de aba.
+function consumirAnimacao() {
+  const v = state.animar;
+  state.animar = false;
+  return v;
 }
 
 function esc(s) {
@@ -235,7 +243,8 @@ function cardReceita({ receita, faltam, score }, destaque, fotos) {
       <button class="mini ${naLista ? 'ok' : ''}" data-shop="${ing.id}">
         ${naLista ? '✓ na lista' : '+ lista'}</button></div>`;
   }
-  return `<div class="card sugestao" data-receita="${receita.id}">
+  const combina = destaque && score > 0 ? ' combina' : '';
+  return `<div class="card sugestao${combina}" data-receita="${receita.id}">
     <div class="item">
       <h3>${esc(receita.nome)}${fav}${foto}</h3>
       <span class="pontos"></span>
@@ -351,6 +360,7 @@ function renderSugestoes() {
     : '<p class="dica">Nenhuma sugestão aqui com os filtros atuais.</p>';
 
   $('#lista-sugestoes').innerHTML = html;
+  if (consumirAnimacao()) escalonar($('#lista-sugestoes'));
 }
 
 // ---------- Render: Meu Bar ----------
@@ -387,6 +397,7 @@ function renderBar() {
 
   $('#conteudo-bar').innerHTML = html;
   $('#contador-bar').textContent = state.bar.size;
+  if (consumirAnimacao()) escalonar($('#conteudo-bar'), '.bloco', 60);
 }
 
 // ---------- Render: Diário ----------
@@ -426,9 +437,11 @@ function renderStatsDiario() {
     ? (comNota.reduce((s, e) => s + e.nota, 0) / comNota.length).toFixed(1)
     : null;
   const melhor = [...comNota].sort((a, b) => b.nota - a.nota)[0];
-  $('#stats-diario').innerHTML = `<p class="stats">Este mês: <strong>${doMes.length}</strong>
+  $('#stats-diario').innerHTML = `<p class="stats">Este mês: <strong data-conta="${doMes.length}">0</strong>
     ${doMes.length === 1 ? 'registro' : 'registros'}${media ? ` · nota média <strong>${media}</strong>` : ''}${
     melhor ? ` · destaque: <strong>${esc(melhor.nome)}</strong>` : ''}</p>`;
+  const alvo = $('#stats-diario [data-conta]');
+  if (alvo) contarAte(alvo, Number(alvo.dataset.conta), 800);
 }
 
 function renderDiario() {
@@ -450,7 +463,7 @@ function renderDiario() {
     return;
   }
 
-  $('#lista-diario').innerHTML = entries.map(e => {
+  const pintarDiario = entries.map(e => {
     const url = fotoURL(e);
     const foto = url ? `<img class="foto" src="${url}" alt="Foto de ${esc(e.nome)}">` : '';
     const receita = e.receitaId && RECEITA_MAP[e.receitaId];
@@ -471,6 +484,8 @@ function renderDiario() {
       </div>
     </div>`;
   }).join('');
+  $('#lista-diario').innerHTML = pintarDiario;
+  if (consumirAnimacao()) escalonar($('#lista-diario'), '.entrada');
 }
 
 function compartilharEntrada(id) {
@@ -496,11 +511,15 @@ function abrirReceita(id) {
   const arte = entrada
     ? `<img class="arte-foto" src="${fotoURL(entrada)}" alt="Sua foto de ${esc(r.nome)}"><span class="sua-foto">📷 sua foto</span>`
     : svgDrink(r, 140);
+  const h = historiaDe(r.id);
+  const nivel = nivelDaReceita(r);
   $('#modal-corpo').innerHTML = `
     <div class="arte-modal">${arte}</div>
     <h2>${esc(r.nome)}</h2>
+    <p class="linha-ficha">${h ? esc(h.origem) + ' · ' : ''}${'★'.repeat(nivel)}${'☆'.repeat(3 - nivel)} ${esc(NIVEL_NOMES[nivel])} · ${tempoDaReceita(r)} min</p>
     <div class="tags">${r.tags.map(t => `<span class="tag">${esc(TAG_NOMES[t] || t)}</span>`).join('')}</div>
     <p class="meta">🥃 ${esc(r.copo)}</p>
+    <div id="area-historia">${blocoHistoria(r, h)}</div>
     <h3>Ingredientes</h3>
     <ul class="ingredientes">${ing}</ul>
     <h3>Preparo</h3>
@@ -513,10 +532,11 @@ function abrirReceita(id) {
         : '<p class="dica">Seus ajustes na receita — ex.: "faço com 2 limões e menos açúcar".</p>'}
       <button class="mini" id="btn-editar-nota" data-receita="${r.id}">✎ ${Store.getNotas()[r.id] ? 'editar' : 'anotar'}</button>
     </div>
+    <button class="btn primario" id="btn-preparar" data-receita="${r.id}">Preparar passo a passo</button>
     <a class="btn btn-video" target="_blank" rel="noopener"
       href="https://www.youtube.com/results?search_query=${encodeURIComponent('como fazer ' + r.nome + ' drink receita')}">
       ▶ Ver vídeos do preparo</a>
-    <button class="btn primario" id="btn-registrar" data-receita="${r.id}">Fiz esse! Registrar no diário</button>
+    <button class="btn" id="btn-registrar" data-receita="${r.id}">Já fiz — só registrar</button>
     <div class="botoes-duplos">
       <button class="btn" id="btn-favoritar" data-receita="${r.id}">
         ${state.favoritos.has(r.id) ? '♥ Favorito' : '♡ Favoritar'}</button>
@@ -535,8 +555,8 @@ async function compartilharTexto(titulo, texto) {
   } else {
     try {
       await navigator.clipboard.writeText(texto);
-      alert('Copiado! É só colar onde quiser.');
-    } catch { alert('Não consegui compartilhar neste navegador.'); }
+      toast('Copiado!', 'É só colar onde quiser.');
+    } catch { toast('Não consegui compartilhar', 'Seu navegador não permite esta ação.', 'erro'); }
   }
 }
 
@@ -643,6 +663,7 @@ function abrirFormEntrada(entry = null, receitaId = null) {
     trocarAba('diario');
     renderDiario();
     renderSugestoes();
+    if (!entry) celebrarMarco(state.entries.length);
   });
 }
 
@@ -717,8 +738,9 @@ function abrirFormPessoa(id = null) {
 
   const apagar = $('#btn-apagar-pessoa');
   if (apagar) {
-    apagar.addEventListener('click', () => {
-      if (!confirm(`Remover ${pessoa.nome}? Os registros dela no diário são mantidos.`)) return;
+    apagar.addEventListener('click', async () => {
+      if (!await confirmar(`Remover ${pessoa.nome}?`,
+        'Os registros dela no diário são mantidos.', 'Remover', true)) return;
       state.pessoas = state.pessoas.filter(p => p.id !== pessoa.id);
       state.festa = state.festa.filter(id => id !== pessoa.id);
       Store.setFesta(state.festa);
@@ -805,7 +827,7 @@ function abrirFormReceita(receita = null) {
     const ing = $$('#linhas-ing .linha-ing')
       .map(l => ({ id: l.querySelector('.ing-sel').value, q: l.querySelector('.ing-q').value.trim() || 'a gosto' }))
       .filter(i => i.id);
-    if (!ing.length) { alert('Escolha pelo menos 1 ingrediente do catálogo.'); return; }
+    if (!ing.length) { toast('Falta um ingrediente', 'Escolha pelo menos 1 item do catálogo.', 'erro'); return; }
     const nova = {
       id: receita?.id || 'custom-' + Date.now(),
       custom: true,
@@ -826,7 +848,7 @@ function abrirFormReceita(receita = null) {
 function gerarCardapioFesta() {
   const { ready } = matchRecipes();
   const drinks = ready.slice(0, 8);
-  if (!drinks.length) { alert('Nenhum drink disponível — adicione itens ao seu bar.'); return; }
+  if (!drinks.length) { toast('Cardápio vazio', 'Adicione itens ao seu bar para ter o que servir.', 'erro'); return; }
   const nomes = state.pessoaAtiva === 'festa'
     ? state.festa.map(id => id === 'eu' ? 'Você' : getPessoa(id)?.nome).filter(Boolean)
     : [];
@@ -933,11 +955,13 @@ function gerarCardapioFesta() {
 async function analisarEstante(arquivo) {
   const chave = Store.getApiKey();
   if (!chave) {
-    alert('Para usar a leitura da estante, configure sua chave de API na aba IA.');
+    toast('Configure a IA primeiro', 'A leitura da estante precisa da sua chave de API.', 'info');
     trocarAba('expert');
     return;
   }
-  $('#modal-corpo').innerHTML = '<h2>📸 Analisando sua estante...</h2><p class="dica">Identificando garrafas e ingredientes. Isso leva alguns segundos.</p>';
+  $('#modal-corpo').innerHTML = `<h2>Analisando sua estante</h2>
+    <p class="dica">Identificando garrafas e ingredientes...</p>
+    <div class="skeleton"><i></i><i></i><i></i></div>`;
   $('#modal').classList.add('aberto');
   try {
     const base64 = await fotoParaBase64Jpeg(arquivo);
@@ -969,7 +993,9 @@ async function analisarEstante(arquivo) {
       Store.setBar(state.bar);
       fecharModal();
       renderBar();
-      alert(`${sel.size} ${sel.size === 1 ? 'item adicionado' : 'itens adicionados'} ao seu bar! 🍾`);
+      const { ready } = matchRecipes();
+      toast(`${sel.size} ${sel.size === 1 ? 'item entrou' : 'itens entraram'} no seu bar`,
+        `Agora você pode fazer ${ready.length} drinks.`);
     });
   } catch (err) {
     $('#modal-corpo').innerHTML = `<h2>⚠️ Não deu certo</h2><p>${esc(err.message)}</p>
@@ -1001,7 +1027,7 @@ function abrirFormFesta() {
   });
 
   $('#btn-salvar-festa').addEventListener('click', () => {
-    if (sel.size < 2) { alert('Escolha pelo menos duas pessoas.'); return; }
+    if (sel.size < 2) { toast('Festa de uma pessoa só?', 'Escolha pelo menos duas.', 'erro'); return; }
     state.festa = [...sel];
     Store.setFesta(state.festa);
     state.pessoaAtiva = 'festa';
@@ -1050,13 +1076,13 @@ async function exportarDados() {
 async function importarDados(arquivo) {
   let dados;
   try { dados = JSON.parse(await arquivo.text()); }
-  catch { alert('Arquivo inválido.'); return; }
+  catch { toast('Arquivo inválido', 'Não consegui ler esse arquivo.', 'erro'); return; }
   if (dados?.app !== 'meubar' || !Array.isArray(dados.entries)) {
-    alert('Esse arquivo não parece um backup do MeuBar.');
+    toast('Backup não reconhecido', 'Esse arquivo não parece um backup do MeuBar.', 'erro');
     return;
   }
-  if (!confirm(`Importar backup de ${fmtData(dados.exportadoEm?.slice(0, 10))} ` +
-    `(${dados.entries.length} registros)? Isso substitui os dados atuais.`)) return;
+  if (!await confirmar(`Importar backup de ${fmtData(dados.exportadoEm?.slice(0, 10))}?`,
+    `${dados.entries.length} registros. Isso substitui os dados atuais.`, 'Importar')) return;
 
   await dbClearEntries();
   for (const url of state.fotoURLs.values()) URL.revokeObjectURL(url);
@@ -1088,7 +1114,7 @@ async function importarDados(arquivo) {
   state.entries = await dbGetEntries();
   renderDiario();
   renderSugestoes();
-  alert('Backup importado! 🍸');
+  toast('Backup importado', `${dados.entries.length} registros de volta no lugar.`);
 }
 
 // ---------- Especialista (IA) ----------
@@ -1125,7 +1151,8 @@ async function enviarPergunta() {
   addBubble('user', texto);
   chat.history.push({ role: 'user', content: texto });
 
-  const pensando = addBubble('assistant', 'Pensando... 🍸');
+  const pensando = addBubble('assistant', '');
+  pensando.innerHTML = '<div class="skeleton"><i></i><i></i><i></i></div>';
   const pesos = tasteProfile();
   const top = [...new Set([...getPessoa('eu').tags, ...topProfileTags(pesos, 4)])];
   const topDrinks = state.entries
@@ -1165,6 +1192,7 @@ async function enviarPergunta() {
 
 // ---------- Navegação ----------
 function trocarAba(aba) {
+  state.animar = true;
   $$('.aba').forEach(s => s.classList.toggle('ativa', s.id === `aba-${aba}`));
   $$('.tab').forEach(b => b.classList.toggle('ativa', b.dataset.aba === aba));
   if (aba === 'sugestoes') renderSugestoes();
@@ -1252,6 +1280,7 @@ function initEventos() {
       const id = ing.dataset.ing;
       state.bar.has(id) ? state.bar.delete(id) : state.bar.add(id);
       Store.setBar(state.bar);
+      if (state.bar.has(id)) vibrar(HAPTICO.toque);
       renderBar();
       return;
     }
@@ -1300,7 +1329,7 @@ function initEventos() {
     const apagar = ev.target.closest('[data-apagar]');
     if (apagar) {
       const id = Number(apagar.dataset.apagar);
-      if (confirm('Apagar este registro do diário?')) {
+      if (await confirmar('Apagar este registro?', 'Essa ação não pode ser desfeita.', 'Apagar', true)) {
         await dbDeleteEntry(id);
         if (state.fotoURLs.has(id)) {
           URL.revokeObjectURL(state.fotoURLs.get(id));
@@ -1314,8 +1343,28 @@ function initEventos() {
   });
 
   // Modal
-  $('#modal').addEventListener('click', ev => {
+  $('#modal').addEventListener('click', async ev => {
     if (ev.target.id === 'modal' || ev.target.closest('#modal-fechar')) fecharModal();
+    const desc = ev.target.closest('[data-descobrir]');
+    if (desc) {
+      const r = RECEITA_MAP[desc.dataset.descobrir];
+      if (!Store.getApiKey()) {
+        toast('Ative o Especialista', 'Com sua chave de API eu pesquiso e escrevo a história.', 'info');
+        return;
+      }
+      $('#area-historia').innerHTML = '<div class="skeleton"><i></i><i></i><i></i></div>';
+      try {
+        const h = await buscarHistoriaIA(r);
+        $('#area-historia').innerHTML = blocoHistoria(r, h);
+        if (!h) toast('Não consegui desta vez', 'Tente de novo em instantes.', 'erro');
+      } catch (err) {
+        $('#area-historia').innerHTML = blocoHistoria(r, null);
+        toast('Não consegui desta vez', err.message, 'erro');
+      }
+      return;
+    }
+    const prep = ev.target.closest('#btn-preparar');
+    if (prep) { abrirPreparo(prep.dataset.receita); return; }
     const reg = ev.target.closest('#btn-registrar');
     if (reg) abrirFormEntrada(null, reg.dataset.receita);
     const favBtn = ev.target.closest('#btn-favoritar');
@@ -1324,6 +1373,12 @@ function initEventos() {
       state.favoritos.has(id) ? state.favoritos.delete(id) : state.favoritos.add(id);
       Store.setFavoritos(state.favoritos);
       favBtn.textContent = state.favoritos.has(id) ? '♥ Favorito' : '♡ Favoritar';
+      if (state.favoritos.has(id)) {
+        favBtn.classList.remove('pulsa');
+        void favBtn.offsetWidth;
+        favBtn.classList.add('pulsa');
+        vibrar(HAPTICO.gostei);
+      }
       renderSugestoes();
     }
     const shareBtn = ev.target.closest('#btn-compartilhar');
@@ -1333,7 +1388,8 @@ function initEventos() {
     if (notaBtn) {
       const id = notaBtn.dataset.receita;
       const notas = Store.getNotas();
-      const texto = prompt('Suas anotações para esta receita:', notas[id] || '');
+      const texto = await perguntar('Suas anotações', notas[id] || '',
+        'Ex.: faço com 2 limões e menos açúcar');
       if (texto !== null) {
         if (texto.trim()) notas[id] = texto.trim(); else delete notas[id];
         Store.setNotas(notas);
@@ -1347,7 +1403,8 @@ function initEventos() {
     const excluirRec = ev.target.closest('#btn-excluir-receita');
     if (excluirRec) {
       const id = excluirRec.dataset.receita;
-      if (confirm(`Excluir a receita "${RECEITA_MAP[id]?.nome}"? Os registros no diário são mantidos.`)) {
+      if (await confirmar(`Excluir "${RECEITA_MAP[id]?.nome}"?`,
+        'Os registros no diário são mantidos.', 'Excluir', true)) {
         excluirReceitaCustom(id);
         fecharModal();
         renderSugestoes();
@@ -1382,6 +1439,7 @@ async function init() {
   state.entries = await dbGetEntries();
   initEventos();
   checarConvite();
+  checarBoasVindas();
   $('#contador-bar').textContent = state.bar.size;
   trocarAba('sugestoes');
 

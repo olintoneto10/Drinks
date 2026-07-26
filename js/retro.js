@@ -58,7 +58,7 @@ function gerarRetrospectiva() {
   const ano = new Date().getFullYear();
   const s = statsDoAno(ano) || statsDoAno(ano - 1);
   if (!s) {
-    alert('Ainda não há registros suficientes no diário para uma retrospectiva.');
+    toast('Ainda é cedo', 'Registre alguns drinks e sua retrospectiva ganha vida.', 'info');
     return;
   }
 

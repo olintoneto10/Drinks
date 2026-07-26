@@ -157,6 +157,13 @@ input:focus, select:focus, textarea:focus { outline: 2px solid var(--acento); bo
   white-space: nowrap;
 }
 .sub { margin-top: 1px; font-size: 0.8rem; }
+/* usada no modal da receita (a lista usa .tags-linha) */
+.tag {
+  color: var(--cinza);
+  font-style: italic;
+  font-size: 0.82rem;
+  margin-right: 10px;
+}
 .match { color: var(--acento); font-style: italic; font-size: 0.8rem; }
 .tags-linha { color: var(--cinza); font-style: italic; }
 .tem-foto { font-size: 0.72rem; margin-left: 7px; }

@@ -1,17 +1,22 @@
 // Service worker do MeuBar: cache do app shell para funcionar offline.
 // Chamadas à API da Anthropic nunca são cacheadas.
 
-const CACHE = 'meubar-v6';
+const CACHE = 'meubar-v9';
 const SHELL = [
   './',
   './index.html',
   './css/style.css',
+  './css/movimento.css',
   './js/data.js',
+  './js/feedback.js',
+  './js/historias.js',
   './js/art.js',
   './js/db.js',
   './js/ai.js',
   './js/app.js',
   './js/retro.js',
+  './js/preparo.js',
+  './js/boasvindas.js',
   './js/convite.js',
   './manifest.webmanifest',
   './icons/icon-192.png',
