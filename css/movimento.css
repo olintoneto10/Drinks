@@ -677,3 +677,100 @@ body.noite .dialogo-fundo { background: rgba(12, 9, 7, .62); }
   color: var(--cinza);
 }
 .linha-lembrete select { width: 100%; margin-top: 4px; }
+
+/* ---------- Kit de compras por gosto ---------- */
+.kit-resumo {
+  font-size: 1.05rem;
+  line-height: 1.5;
+  margin: 14px 0 4px;
+  padding: 12px 0;
+  border-top: 1px solid var(--linha);
+  border-bottom: 1px solid var(--linha);
+}
+.kit-resumo strong { color: var(--acento); font-weight: normal; }
+
+/* ---------- Balcão: nível, conquistas e rotas ---------- */
+#jogo { margin-top: 26px; }
+.nivel {
+  text-align: center;
+  padding: 16px 0 10px;
+  border-top: 1px solid var(--linha);
+  border-bottom: 1px solid var(--linha);
+}
+.nivel-nome {
+  display: block;
+  font-family: var(--serif);
+  font-size: 1.5rem;
+  color: var(--acento);
+}
+.nivel-conta {
+  display: block;
+  font-family: var(--sans);
+  font-size: .66rem;
+  text-transform: uppercase;
+  letter-spacing: 2.2px;
+  color: var(--cinza);
+  margin-top: 4px;
+}
+.nivel .dica { margin: 8px 0 0; }
+.nota-jogo { text-align: center; margin-top: 10px; }
+
+.selos {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(150px, 100%), 1fr));
+  gap: 10px;
+  margin: 10px 0 4px;
+}
+.selo {
+  border: 1px solid var(--linha);
+  padding: 12px 10px;
+  text-align: center;
+  opacity: .4;
+  transition: opacity .3s ease, border-color .3s ease;
+}
+.selo.tem { opacity: 1; border-color: var(--acento); }
+.selo-icone { display: block; font-size: 1.5rem; line-height: 1.2; }
+.selo-nome {
+  display: block;
+  font-family: var(--sans);
+  font-size: .62rem;
+  text-transform: uppercase;
+  letter-spacing: 1.4px;
+  margin-top: 6px;
+}
+.selo.tem .selo-nome { color: var(--acento); }
+.selo-sobre {
+  display: block;
+  font-size: .76rem;
+  font-style: italic;
+  color: var(--cinza);
+  line-height: 1.4;
+  margin-top: 4px;
+}
+
+.rota {
+  border-left: 2px solid var(--linha);
+  padding: 4px 0 4px 14px;
+  margin: 14px 0;
+  transition: border-color .3s ease;
+}
+.rota.completa { border-left-color: var(--acento); }
+.rota-topo { display: flex; align-items: baseline; gap: 10px; }
+.rota-topo h3 { margin: 0; flex: 1; min-width: 0; }
+.rota-conta {
+  font-family: var(--sans);
+  font-size: .68rem;
+  letter-spacing: 1.2px;
+  color: var(--cinza);
+  flex: none;
+}
+.rota.completa .rota-conta { color: var(--acento); }
+.rota .dica { margin: 2px 0 6px; }
+.rota-passos { list-style: none; }
+.rota-passos li {
+  font-size: .88rem;
+  color: var(--cinza);
+  padding: 2px 0;
+}
+.rota-passos li.ok { color: var(--tinta); }

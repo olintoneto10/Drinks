@@ -39,12 +39,15 @@ const INGREDIENTES = [
   { id: 'maraschino', nome: 'Maraschino (licor de marasca)', cat: 'licores' },
   { id: 'absinto', nome: 'Absinto', cat: 'licores' },
   { id: 'espumante', nome: 'Espumante / prosecco', cat: 'licores' },
+  { id: 'licor-coco', nome: 'Licor de coco (Malibu)', cat: 'licores' },
   { id: 'vinho-tinto', nome: 'Vinho tinto', cat: 'licores' },
   // Mixers e sucos
   { id: 'agua-tonica', nome: 'Água tônica', cat: 'mixers' },
   { id: 'agua-com-gas', nome: 'Água com gás', cat: 'mixers' },
   { id: 'refrigerante-cola', nome: 'Refrigerante de cola', cat: 'mixers' },
   { id: 'ginger-beer', nome: 'Ginger beer / ginger ale', cat: 'mixers' },
+  { id: 'refrigerante-limao', nome: 'Refrigerante de limão (Sprite / 7up)', cat: 'mixers' },
+  { id: 'agua-de-coco', nome: 'Água de coco', cat: 'mixers' },
   { id: 'suco-laranja', nome: 'Suco de laranja', cat: 'mixers' },
   { id: 'suco-abacaxi', nome: 'Suco de abacaxi', cat: 'mixers' },
   { id: 'suco-cranberry', nome: 'Suco de cranberry', cat: 'mixers' },
@@ -74,6 +77,7 @@ const INGREDIENTES = [
   { id: 'limao', nome: 'Limão (tahiti)', cat: 'frescos' },
   { id: 'laranja', nome: 'Laranja', cat: 'frescos' },
   { id: 'morango', nome: 'Morango', cat: 'frescos' },
+  { id: 'melancia', nome: 'Melancia', cat: 'frescos' },
   { id: 'abacaxi', nome: 'Abacaxi', cat: 'frescos' },
   { id: 'maracuja', nome: 'Maracujá', cat: 'frescos' },
   { id: 'pessego', nome: 'Pêssego', cat: 'frescos' },
@@ -500,6 +504,58 @@ const RECEITAS = [
     id: 'hemingway-daiquiri', nome: 'Hemingway Daiquiri', copo: 'Taça coupé', tags: ['citrico', 'seco', 'forte'],
     ing: [{ id: 'rum-branco', q: '60 ml' }, { id: 'suco-toranja', q: '30 ml' }, { id: 'maraschino', q: '15 ml' }, { id: 'limao', q: '15 ml' }, { id: 'gelo', q: 'para bater' }],
     preparo: 'Bata tudo bem gelado e coe na taça. Não leva açúcar nenhum — era exatamente assim que Hemingway o pedia no Floridita.',
+  },
+
+  // ---------- Doces e gaseificados: a família do refrigerante alcoólico ----------
+  {
+    id: 'vodka-ice', nome: 'Vodka Ice Caseiro', copo: 'Copo alto', tags: ['doce', 'citrico', 'refrescante'],
+    ing: [{ id: 'vodka', q: '40 ml' }, { id: 'limao', q: '20 ml' }, { id: 'xarope-simples', q: '15 ml' }, { id: 'refrigerante-limao', q: '150 ml' }, { id: 'gelo', q: 'bastante' }],
+    preparo: 'Vodka, limão e xarope no copo cheio de gelo. Complete com o refrigerante e mexa uma vez só. É a versão caseira do Ice de garrafa — e com limão de verdade fica bem melhor.',
+  },
+  {
+    id: 'screwdriver', nome: 'Screwdriver', copo: 'Copo alto', tags: ['doce', 'frutado', 'refrescante'],
+    ing: [{ id: 'vodka', q: '50 ml' }, { id: 'suco-laranja', q: '150 ml' }, { id: 'laranja', q: '1 fatia', opcional: true }, { id: 'gelo', q: 'bastante' }],
+    preparo: 'Vodka sobre o gelo, complete com suco de laranja e mexa. Dois ingredientes: a diferença inteira está em o suco ser fresco ou de caixinha.',
+  },
+  {
+    id: 'cape-codder', nome: 'Cape Codder', copo: 'Copo alto', tags: ['frutado', 'citrico', 'refrescante'],
+    ing: [{ id: 'vodka', q: '50 ml' }, { id: 'suco-cranberry', q: '150 ml' }, { id: 'limao', q: '1 rodela' }, { id: 'gelo', q: 'bastante' }],
+    preparo: 'Vodka e cranberry no copo com gelo, mexa e esprema a rodela de limão por cima. O limão é o que tira o cranberry do enjoativo.',
+  },
+  {
+    id: 'sea-breeze', nome: 'Sea Breeze', copo: 'Copo alto', tags: ['frutado', 'citrico', 'refrescante'],
+    ing: [{ id: 'vodka', q: '50 ml' }, { id: 'suco-cranberry', q: '90 ml' }, { id: 'suco-toranja', q: '60 ml' }, { id: 'gelo', q: 'bastante' }],
+    preparo: 'Tudo no copo cheio de gelo, mexa de leve. O cranberry desce e a toranja fica em cima — sai com duas camadas se você não mexer muito.',
+  },
+  {
+    id: 'bay-breeze', nome: 'Bay Breeze', copo: 'Copo alto', tags: ['doce', 'tropical', 'frutado'],
+    ing: [{ id: 'vodka', q: '50 ml' }, { id: 'suco-cranberry', q: '90 ml' }, { id: 'suco-abacaxi', q: '60 ml' }, { id: 'gelo', q: 'bastante' }],
+    preparo: 'Mesma construção do Sea Breeze, com abacaxi no lugar da toranja. Fica bem mais doce — e é por isso que quase sempre agrada mais.',
+  },
+  {
+    id: 'woo-woo', nome: 'Woo Woo', copo: 'Copo alto', tags: ['doce', 'frutado', 'refrescante'],
+    ing: [{ id: 'vodka', q: '40 ml' }, { id: 'licor-pessego', q: '25 ml' }, { id: 'suco-cranberry', q: '120 ml' }, { id: 'limao', q: '1 rodela' }, { id: 'gelo', q: 'bastante' }],
+    preparo: 'Tudo no copo com gelo e uma mexida. Sem o limão espremido no fim ele fica doce demais — não pule.',
+  },
+  {
+    id: 'fuzzy-navel', nome: 'Fuzzy Navel', copo: 'Copo alto', tags: ['doce', 'frutado', 'refrescante'],
+    ing: [{ id: 'licor-pessego', q: '60 ml' }, { id: 'suco-laranja', q: '150 ml' }, { id: 'gelo', q: 'bastante' }],
+    preparo: 'Duas coisas, sobre bastante gelo. É dos drinks mais leves que existem em teor alcoólico — o licor de pêssego tem menos álcool que a maioria dos destilados.',
+  },
+  {
+    id: 'malibu-abacaxi', nome: 'Malibu com Abacaxi', copo: 'Copo alto', tags: ['doce', 'tropical', 'cremoso'],
+    ing: [{ id: 'licor-coco', q: '50 ml' }, { id: 'suco-abacaxi', q: '150 ml' }, { id: 'limao', q: '1 rodela', opcional: true }, { id: 'gelo', q: 'bastante' }],
+    preparo: 'Licor de coco e abacaxi sobre gelo. É a Piña Colada sem liquidificador e sem creme — mais leve e pronta em vinte segundos.',
+  },
+  {
+    id: 'vodka-melancia', nome: 'Vodka de Melancia', copo: 'Copo alto', tags: ['doce', 'frutado', 'refrescante'],
+    ing: [{ id: 'vodka', q: '45 ml' }, { id: 'melancia', q: '4 cubos' }, { id: 'limao', q: '15 ml' }, { id: 'agua-com-gas', q: '80 ml' }, { id: 'gelo', q: 'bastante' }],
+    preparo: 'Macere a melancia, junte vodka e limão, complete com gelo e água com gás. Melancia é quase toda água: não precisa coar, mas coado fica mais elegante.',
+  },
+  {
+    id: 'coco-limao', nome: 'Coco com Limão', copo: 'Copo alto', tags: ['sem-alcool', 'refrescante', 'citrico'],
+    ing: [{ id: 'agua-de-coco', q: '180 ml' }, { id: 'limao', q: '20 ml' }, { id: 'hortela', q: '5 folhas' }, { id: 'gelo', q: 'bastante' }],
+    preparo: 'Bata a hortelã na palma da mão, junte tudo no copo com gelo. A água de coco já tem sal e açúcar próprios — o limão só acorda os dois.',
   },
 ];
 

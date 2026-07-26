@@ -10,13 +10,18 @@ bar e o seu gosto.
   licores, mixers, **xaropes**, frutas). Açúcar, sal e gelo já contam como
   disponíveis. São 15 xaropes, de tangerina e gengibre a orgeat e falernum, e
   cada um destrava receitas de verdade — nenhum entra só para enfeitar a lista.
-- **🍸 Sugestões** — 80 receitas divididas em *"pode fazer agora"* e
+- **🍸 Sugestões** — 90 receitas divididas em *"pode fazer agora"* e
   *"falta só 1 ingrediente"* (com botão para mandar o item que falta para a
   lista de compras). Filtros por perfil: cítrico, doce, amargo, sem álcool etc.
 - **✎ Autorais** — além do cânone clássico, a leva moderna com autor, ano e
   endereço conhecidos: Paper Plane, Naked & Famous, Last Word, Division Bell,
   Oaxaca Old Fashioned, Gin Basil Smash, Old Cuban, Trinidad Sour, Siesta e
   Eastside. Filtro próprio, que não interfere no perfil de sabor.
+- **🛒 Montar meu bar** — escolha um estilo (doce e fácil, cítrico, amargo,
+  seco, forte, tropical, sem álcool) e o app calcula a **menor lista de compras
+  que destrava o máximo de drinks daquele estilo**, contando o que você já tem.
+  É a pergunta inversa do motor de sugestões: não "o que faço com isto?", mas
+  "o que compro para fazer o que eu gosto?".
 - **📈 Perfil de sabor** — as notas que você dá no diário ensinam o app o que
   você gosta, e as sugestões passam a ser ordenadas pelo seu estilo.
 - **📔 Diário** — registre cada drink com foto, data, nota (1–5 estrelas) e um
@@ -57,7 +62,7 @@ bar e o seu gosto.
 - **O Brinde** — ao concluir, o copo se enche, sobem bolhas e o celular vibra
   *antes* de qualquer formulário; marcos (1º, 10º, 50º…) ganham selo carimbado.
 - **Histórias** — origem, criador, curiosidade, harmonização, variações e
-  aparições culturais. **As 80 receitas têm verbete escrito à mão** (lendas
+  aparições culturais. **As 90 receitas têm verbete escrito à mão** (lendas
   marcadas como lendas — "conta-se que", "há quem reivindique"); nada depende
   da chave de API. Receitas próprias ganham história do Especialista sob demanda.
 - **Trilha** — cada drink sugere o que ouvir enquanto se prepara, escolhido pela
@@ -85,6 +90,12 @@ bar e o seu gosto.
   uma linha que reconhece a ausência, e pode criar um lembrete semanal
   (arquivo `.ics`) no próprio calendário — sem servidor, sem notificação
   intrusiva, cancelável pelo calendário a qualquer momento.
+- **Seu balcão** — nível de bartender, 14 conquistas e 5 rotas guiadas (a
+  árvore do Negroni, a linhagem de partes iguais, a escola do sour, volta ao
+  Brasil, a rota do agave). **Conta repertório, não volume**: só drinks
+  *diferentes* movem os números, e não existe sequência de dias nem meta
+  semanal — um app de bebida não deve premiar quem bebe mais, nem gerar culpa
+  por pular uma noite.
 - **Teclado e leitor de tela** — o cardápio inteiro se percorre no Tab com anel
   de foco visível, Esc fecha modal, Modo Preparo e Brinde na ordem certa, o foco
   fica preso dentro do modal aberto e volta para a linha de origem ao fechar.
@@ -130,6 +141,8 @@ js/retro.js           cartaz da retrospectiva do ano (canvas)
 js/preparo.js         modo preparo passo a passo e o brinde
 js/momentos.js        hora do bar, drink do dia, efemérides e coleção
 js/retorno.js         boas-voltas e lembrete semanal no calendário (.ics)
+js/kit.js             lista de compras calculada a partir do estilo preferido
+js/jogo.js            nível, conquistas e rotas (repertório, nunca volume)
 js/boasvindas.js      primeiro acesso guiado até a primeira receita
 js/convite.js         cartão de convidado (preferências viajam na URL)
 sw.js                 service worker (funciona offline)

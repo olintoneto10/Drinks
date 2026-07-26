@@ -126,6 +126,10 @@ const PAIS_DO_DRINK = {
   'aviation': 'Estados Unidos', 'hemingway-daiquiri': 'Cuba',
   'gin-basil-smash': 'Alemanha', 'pisco-sour': 'Peru',
   'corpse-reviver': 'Inglaterra',
+  'screwdriver': 'Estados Unidos', 'cape-codder': 'Estados Unidos',
+  'sea-breeze': 'Estados Unidos', 'bay-breeze': 'Estados Unidos',
+  'woo-woo': 'Estados Unidos', 'fuzzy-navel': 'Estados Unidos',
+  'malibu-abacaxi': 'Barbados', 'coco-limao': 'Brasil',
 };
 
 function statsColecao() {

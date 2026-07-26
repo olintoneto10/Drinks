@@ -454,6 +454,7 @@ function renderStatsDiario() {
 function renderDiario() {
   renderStatsDiario();
   renderColecao();
+  renderJogo();
   $('#btn-retrospectiva').classList.toggle('escondido', state.entries.length < 3);
   const busca = ($('#busca-diario')?.value || '').trim().toLowerCase();
   const notaMin = Number($('#filtro-nota')?.value || 0);
@@ -1312,6 +1313,11 @@ function initEventos() {
     const peca = ev.target.closest('[data-receita]');
     if (peca) abrirReceita(peca.dataset.receita);
   });
+  $('#btn-montar-bar').addEventListener('click', abrirMontarBar);
+  $('#modal-corpo').addEventListener('click', ev => {
+    const estilo = ev.target.closest('[data-estilo]');
+    if (estilo) mostrarKit(estilo.dataset.estilo);
+  });
   $('#btn-nova-receita').addEventListener('click', () => abrirFormReceita());
   $('#btn-cardapio').addEventListener('click', gerarCardapioFesta);
 
@@ -1507,7 +1513,9 @@ async function init() {
   renderLembrete();
   // guarda "há quanto tempo faz" antes de registrar a visita de agora
   abrirSessao();
-  trocarAba('sugestoes');
+  // Com a estante vazia, Sugestões não tem o que mostrar — o app abre onde há
+  // o que fazer. Quem já abasteceu cai direto no cardápio, como antes.
+  trocarAba(state.bar.size ? 'sugestoes' : 'bar');
 
   if ('serviceWorker' in navigator && location.protocol !== 'file:') {
     navigator.serviceWorker.register('sw.js').catch(() => { /* offline opcional */ });
