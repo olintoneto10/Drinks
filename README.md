@@ -7,8 +7,10 @@ bar e o seu gosto.
 ## Funcionalidades
 
 - **🍾 Meu Bar** — cadastre os ingredientes que você tem em casa (destilados,
-  licores, mixers, frutas). Açúcar, sal e gelo já contam como disponíveis.
-- **🍸 Sugestões** — ~45 receitas clássicas divididas em *"pode fazer agora"* e
+  licores, mixers, **xaropes**, frutas). Açúcar, sal e gelo já contam como
+  disponíveis. São 15 xaropes, de tangerina e gengibre a orgeat e falernum, e
+  cada um destrava receitas de verdade — nenhum entra só para enfeitar a lista.
+- **🍸 Sugestões** — 65 receitas clássicas divididas em *"pode fazer agora"* e
   *"falta só 1 ingrediente"* (com botão para mandar o item que falta para a
   lista de compras). Filtros por perfil: cítrico, doce, amargo, sem álcool etc.
 - **📈 Perfil de sabor** — as notas que você dá no diário ensinam o app o que
@@ -51,8 +53,12 @@ bar e o seu gosto.
 - **O Brinde** — ao concluir, o copo se enche, sobem bolhas e o celular vibra
   *antes* de qualquer formulário; marcos (1º, 10º, 50º…) ganham selo carimbado.
 - **Histórias** — origem, criador, curiosidade, harmonização, variações e
-  aparições culturais. 25 clássicos escritos à mão (lendas marcadas como
-  lendas); os demais o Especialista escreve sob demanda e guarda no aparelho.
+  aparições culturais. **As 65 receitas têm verbete escrito à mão** (lendas
+  marcadas como lendas — "conta-se que", "há quem reivindique"); nada depende
+  da chave de API. Receitas próprias ganham história do Especialista sob demanda.
+- **Trilha** — cada drink sugere o que ouvir enquanto se prepara, escolhido pela
+  origem e pelo destilado: samba para a caipirinha, son cubano para o mojito,
+  blues para o Whiskey Sour, folk irlandês para o Irish Coffee.
 - **Boas-vindas** — em vez da tela vazia, o app leva à primeira vitória:
   marque o que tem em casa e veja na hora o que já dá para fazer.
 - **Movimento** — entrada em cascata, transições entre abas, ingredientes que
@@ -71,6 +77,13 @@ bar e o seu gosto.
   de progresso e os países de origem que você já visitou pelo copo.
 - **Foto-herói** — a sua foto do drink abre a receita em capa sangrada, no
   lugar da miniatura redonda. Come-se e bebe-se pelos olhos.
+- **Boas-voltas e lembrete** — quem some por um tempo é recebido de volta com
+  uma linha que reconhece a ausência, e pode criar um lembrete semanal
+  (arquivo `.ics`) no próprio calendário — sem servidor, sem notificação
+  intrusiva, cancelável pelo calendário a qualquer momento.
+- **Teclado e leitor de tela** — o cardápio inteiro se percorre no Tab com anel
+  de foco visível, Esc fecha modal, Modo Preparo e Brinde na ordem certa, o foco
+  fica preso dentro do modal aberto e volta para a linha de origem ao fechar.
 
 ## Como rodar
 
@@ -104,7 +117,7 @@ css/style.css         tema visual ("Aperitivo Editorial")
 css/movimento.css     camada de experiência: movimento, feedback e modo noite
 js/data.js            catálogo de ingredientes + receitas com tags de sabor
 js/feedback.js        avisos, confirmações, vibração e cascata (sem diálogo nativo)
-js/historias.js       histórias dos clássicos + ficha derivada (nível, tempo)
+js/historias.js       histórias dos clássicos, ficha derivada e trilha
 js/art.js             ilustrações dos drinks geradas em SVG
 js/db.js              persistência (IndexedDB + localStorage)
 js/ai.js              integração com a API da Anthropic (modo Especialista)
@@ -112,6 +125,7 @@ js/app.js             UI, motor de sugestões e perfil de sabor
 js/retro.js           cartaz da retrospectiva do ano (canvas)
 js/preparo.js         modo preparo passo a passo e o brinde
 js/momentos.js        hora do bar, drink do dia, efemérides e coleção
+js/retorno.js         boas-voltas e lembrete semanal no calendário (.ics)
 js/boasvindas.js      primeiro acesso guiado até a primeira receita
 js/convite.js         cartão de convidado (preferências viajam na URL)
 sw.js                 service worker (funciona offline)

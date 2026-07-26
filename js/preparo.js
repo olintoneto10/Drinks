@@ -40,6 +40,7 @@ function abrirPreparo(receitaId) {
       <button class="btn" data-voltar>Passo anterior</button>
     </div>`;
   document.body.appendChild(tela);
+  tela.querySelector('[data-proximo]').focus();
 
   const num = tela.querySelector('.preparo-num');
   const texto = tela.querySelector('.preparo-texto');
@@ -117,6 +118,7 @@ function abrirBrinde(r) {
     </div>`;
   document.body.appendChild(tela);
   vibrar(HAPTICO.brinde);
+  tela.querySelector('[data-registrar]').focus();
 
   const fechar = () => tela.remove();
   tela.querySelector('[data-registrar]').addEventListener('click', () => {
@@ -143,6 +145,8 @@ function celebrarMarco(total) {
     </div>`;
   document.body.appendChild(tela);
   vibrar(HAPTICO.brinde);
-  tela.querySelector('[data-fechar]').addEventListener('click', () => tela.remove());
+  const btn = tela.querySelector('[data-fechar]');
+  btn.focus();
+  btn.addEventListener('click', () => tela.remove());
   return true;
 }

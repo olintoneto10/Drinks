@@ -506,6 +506,11 @@ body.noite .dialogo-fundo { background: rgba(12, 9, 7, .62); }
 
 /* ---------- Drink do dia ---------- */
 .drink-dia {
+  display: block;
+  width: 100%;
+  text-align: left;
+  font: inherit;
+  color: inherit;
   border: 1px solid var(--linha);
   border-left: 3px solid var(--acento);
   background: var(--branco);
@@ -634,3 +639,41 @@ body.noite .dialogo-fundo { background: rgba(12, 9, 7, .62); }
   padding: 2px 8px;
   line-height: 1.6;
 }
+
+/* ---------- Boas-voltas e lembrete ---------- */
+.boas-voltas {
+  border-top: 1px solid var(--linha);
+  border-bottom: 1px solid var(--linha);
+  padding: 14px 0;
+  margin: 0 0 16px;
+  text-align: center;
+  animation: sobeLinha .55s cubic-bezier(.22,.9,.3,1) backwards;
+}
+.boas-voltas p {
+  font-size: 1.05rem;
+  line-height: 1.5;
+  margin-top: 5px;
+}
+.boas-voltas .bv-rodape {
+  font-size: .82rem;
+  font-style: italic;
+  color: var(--cinza);
+  margin-top: 3px;
+}
+
+.lembrete { margin-top: 26px; }
+.linha-lembrete {
+  display: flex;
+  gap: 12px;
+  margin: 10px 0;
+}
+.linha-lembrete label {
+  flex: 1;
+  display: block;
+  font-family: var(--sans);
+  font-size: .68rem;
+  text-transform: uppercase;
+  letter-spacing: 1.4px;
+  color: var(--cinza);
+}
+.linha-lembrete select { width: 100%; margin-top: 4px; }

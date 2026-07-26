@@ -106,6 +106,15 @@ input[type="date"], select, textarea {
 }
 input:focus, select:focus, textarea:focus { outline: 2px solid var(--acento); border-color: transparent; }
 
+/* Foco de teclado: visível em tudo que se opera, e só para quem navega por
+   teclado — :focus-visible não dispara no toque nem no clique do mouse. */
+:focus-visible {
+  outline: 2px solid var(--acento);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+.card-abre:focus-visible, .drink-dia:focus-visible { outline-offset: 1px; }
+
 /* Chips */
 .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
 .chip {
@@ -134,7 +143,19 @@ input:focus, select:focus, textarea:focus { outline: 2px solid var(--acento); bo
   padding: 9px 2px;
   cursor: pointer;
 }
-.card:active { opacity: 0.7; }
+/* O botão que abre a receita não deve parecer botão: ele É a linha do cardápio */
+.card-abre {
+  display: block;
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.card-abre:active { opacity: 0.7; }
 .item { display: flex; align-items: baseline; gap: 8px; }
 .item h3 {
   margin: 0;
@@ -389,13 +410,13 @@ form label {
 #btn-trocar-chave { margin-top: 10px; }
 .escondido { display: none !important; }
 
-/* Botão de vídeos (link) */
-.btn-video {
+/* Botões que são links (vídeos, trilha) */
+.btn-video, .btn-trilha {
   text-decoration: none;
   text-align: center;
   color: var(--tinta);
 }
-.btn-video:visited { color: var(--tinta); }
+.btn-video:visited, .btn-trilha:visited { color: var(--tinta); }
 
 /* Tela do convidado (cartão) */
 /* !important vence o seletor de ID de #tabs/#modal */

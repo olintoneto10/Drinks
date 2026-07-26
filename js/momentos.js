@@ -60,11 +60,11 @@ function blocoDrinkDoDia() {
   const h = historiaDe(d.receita.id);
   const chamada = h?.curiosidade
     || (d.inedito ? 'Você ainda não fez este. Hoje é um bom dia.' : 'Um velho conhecido, sempre bem-vindo.');
-  return `<div class="drink-dia" data-receita="${d.receita.id}">
+  return `<button type="button" class="drink-dia" data-receita="${d.receita.id}">
     <span class="rotulo-dia">✦ Drink do dia</span>
     <h3>${esc(d.receita.nome)}</h3>
     <p>${chamada}</p>
-  </div>`;
+  </button>`;
 }
 
 // ---------- 3. Efemérides ----------
@@ -111,6 +111,13 @@ const PAIS_DO_DRINK = {
   'margarita': 'México', 'paloma': 'México',
   'pina-colada': 'Porto Rico', 'irish-coffee': 'Irlanda',
   'dark-n-stormy': 'Bermudas', 'sangria': 'Espanha',
+  'mai-tai': 'Estados Unidos', 'bees-knees': 'Estados Unidos',
+  'gold-rush': 'Estados Unidos', 'appletini': 'Estados Unidos',
+  'mule-de-gengibre': 'Estados Unidos', 'jungle-bird': 'Malásia',
+  'spritz-de-tangerina': 'Itália', 'daiquiri-morango': 'Cuba',
+  'floradora': 'Estados Unidos', 'mint-julep': 'Estados Unidos',
+  'tommys-margarita': 'Estados Unidos', 'pornstar-martini': 'Inglaterra',
+  'hot-toddy': 'Escócia', 'corn-n-oil': 'Barbados', 'espresso-tonica': 'Suécia',
 };
 
 function statsColecao() {

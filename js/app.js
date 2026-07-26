@@ -244,13 +244,18 @@ function cardReceita({ receita, faltam, score }, destaque, fotos) {
         ${naLista ? '✓ na lista' : '+ lista'}</button></div>`;
   }
   const combina = destaque && score > 0 ? ' combina' : '';
-  return `<div class="card sugestao${combina}" data-receita="${receita.id}">
-    <div class="item">
-      <h3>${esc(receita.nome)}${fav}${foto}</h3>
-      <span class="pontos"></span>
-      <span class="copo-item">${esc(receita.copo.toLowerCase())}</span>
-    </div>
-    <div class="sub">${match}<span class="tags-linha">${receita.custom ? 'sua receita · ' : ''}${tags}</span></div>
+  // O que abre a receita é um <button> de verdade: o cardápio inteiro se
+  // percorre no Tab. O "+ lista" fica fora dele — botão dentro de botão é
+  // HTML inválido e o teclado não alcança o de dentro.
+  return `<div class="card sugestao${combina}">
+    <button type="button" class="card-abre" data-receita="${receita.id}">
+      <div class="item">
+        <h3>${esc(receita.nome)}${fav}${foto}</h3>
+        <span class="pontos"></span>
+        <span class="copo-item">${esc(receita.copo.toLowerCase())}</span>
+      </div>
+      <div class="sub">${match}<span class="tags-linha">${receita.custom ? 'sua receita · ' : ''}${tags}</span></div>
+    </button>
     ${faltaHtml}
   </div>`;
 }
@@ -327,7 +332,7 @@ function renderSugestoes() {
 
   const fotos = fotosPorReceita();
 
-  let html = efemeride() + blocoDrinkDoDia() + perfilHtml;
+  let html = blocoBoasVoltas() + efemeride() + blocoDrinkDoDia() + perfilHtml;
   if (state.bar.size === 0) {
     html += `<div class="vazio">🍾 Seu bar está vazio.<br>
       Cadastre o que você tem em casa na aba <strong>Meu Bar</strong> e eu digo o que dá para fazer.</div>`;
@@ -525,6 +530,7 @@ function abrirReceita(id) {
     <div class="tags">${r.tags.map(t => `<span class="tag">${esc(TAG_NOMES[t] || t)}</span>`).join('')}</div>
     <p class="meta">🥃 ${esc(r.copo)}</p>
     <div id="area-historia">${blocoHistoria(r, h)}</div>
+    ${blocoTrilha(r)}
     <h3>Ingredientes</h3>
     <ul class="ingredientes">${ing}</ul>
     <h3>Preparo</h3>
@@ -551,7 +557,7 @@ function abrirReceita(id) {
       <button class="btn" id="btn-editar-receita" data-receita="${r.id}">Editar receita</button>
       <button class="btn btn-excluir" id="btn-excluir-receita" data-receita="${r.id}">Excluir</button>
     </div>` : ''}`;
-  $('#modal').classList.add('aberto');
+  abrirModal();
 }
 
 async function compartilharTexto(titulo, texto) {
@@ -617,7 +623,7 @@ function abrirFormEntrada(entry = null, receitaId = null) {
       <div id="preview-foto">${entry?.foto ? `<img class="foto" src="${fotoURL(entry)}" alt="Foto atual">` : ''}</div>
       <button class="btn primario" type="submit">Salvar</button>
     </form>`;
-  $('#modal').classList.add('aberto');
+  abrirModal();
 
   const form = $('#form-entrada');
   let novaFoto = null;
@@ -702,7 +708,7 @@ function abrirFormPessoa(id = null) {
       <button class="btn primario" type="submit">Salvar</button>
       ${pessoa && !isEu ? `<button class="btn" type="button" id="btn-apagar-pessoa" style="color:var(--erro)">Remover pessoa</button>` : ''}
     </form>`;
-  $('#modal').classList.add('aberto');
+  abrirModal();
 
   $('#chips-pref').addEventListener('click', ev => {
     const chip = ev.target.closest('[data-tag-pref]');
@@ -808,7 +814,7 @@ function abrirFormReceita(receita = null) {
       </label>
       <button class="btn primario" type="submit">Salvar receita</button>
     </form>`;
-  $('#modal').classList.add('aberto');
+  abrirModal();
 
   $('#chips-receita').addEventListener('click', ev => {
     const chip = ev.target.closest('[data-tag-rec]');
@@ -967,7 +973,7 @@ async function analisarEstante(arquivo) {
   $('#modal-corpo').innerHTML = `<h2>Analisando sua estante</h2>
     <p class="dica">Identificando garrafas e ingredientes...</p>
     <div class="skeleton"><i></i><i></i><i></i></div>`;
-  $('#modal').classList.add('aberto');
+  abrirModal();
   try {
     const base64 = await fotoParaBase64Jpeg(arquivo);
     const ids = await identificarGarrafas(chave, base64);
@@ -1021,7 +1027,7 @@ function abrirFormFesta() {
       ${todos.map(p => `<button type="button" class="chip ${sel.has(p.id) ? 'on' : ''}" data-festa-id="${p.id}">${esc(p.nome)}</button>`).join('')}
     </div>
     <button class="btn primario" id="btn-salvar-festa">Começar a festa</button>`;
-  $('#modal').classList.add('aberto');
+  abrirModal();
 
   $('#chips-festa').addEventListener('click', ev => {
     const chip = ev.target.closest('[data-festa-id]');
@@ -1041,9 +1047,39 @@ function abrirFormFesta() {
   });
 }
 
+// De onde o modal foi aberto, para devolver o foco ao fechar — sem isso quem
+// usa teclado volta para o topo da página a cada receita que espia.
+let focoAnterior = null;
+
+function abrirModal() {
+  focoAnterior = document.activeElement;
+  $('#modal').classList.add('aberto');
+  // O ✕ é o primeiro alvo: garante que o leitor de tela entre na caixa e que
+  // a saída esteja a um Tab de distância.
+  requestAnimationFrame(() => $('#modal-fechar').focus());
+}
+
 function fecharModal() {
   $('#modal').classList.remove('aberto');
   $('#modal-corpo').innerHTML = '';
+  if (focoAnterior?.isConnected) focoAnterior.focus();
+  focoAnterior = null;
+}
+
+// Mantém o Tab dentro do modal enquanto ele está aberto
+function prenderTab(ev) {
+  const modal = $('#modal');
+  if (ev.key !== 'Tab' || !modal.classList.contains('aberto')) return;
+  const foco = [...modal.querySelectorAll(
+    'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])')]
+    .filter(el => !el.disabled && el.offsetParent !== null);
+  if (!foco.length) return;
+  const primeiro = foco[0], ultimo = foco[foco.length - 1];
+  if (ev.shiftKey && document.activeElement === primeiro) {
+    ev.preventDefault(); ultimo.focus();
+  } else if (!ev.shiftKey && document.activeElement === ultimo) {
+    ev.preventDefault(); primeiro.focus();
+  }
 }
 
 // ---------- Backup: exportar e importar tudo ----------
@@ -1352,6 +1388,18 @@ function initEventos() {
     }
   });
 
+  // Teclado: Esc fecha a tela de cima da pilha, uma por vez.
+  // Os diálogos do feedback.js cuidam do próprio Esc e são os mais altos.
+  document.addEventListener('keydown', ev => {
+    if (ev.key === 'Tab') { prenderTab(ev); return; }
+    if (ev.key !== 'Escape' || $('.dialogo-fundo')) return;
+    const brinde = $('#brinde');
+    if (brinde) { brinde.querySelector('[data-fechar]').click(); return; }
+    const preparo = $('#preparo');
+    if (preparo) { preparo.querySelector('.preparo-sair').click(); return; }
+    if ($('#modal').classList.contains('aberto')) fecharModal();
+  });
+
   // Modal
   $('#modal').addEventListener('click', async ev => {
     if (ev.target.id === 'modal' || ev.target.closest('#modal-fechar')) fecharModal();
@@ -1454,6 +1502,9 @@ async function init() {
   checarConvite();
   checarBoasVindas();
   $('#contador-bar').textContent = state.bar.size;
+  renderLembrete();
+  // guarda "há quanto tempo faz" antes de registrar a visita de agora
+  abrirSessao();
   trocarAba('sugestoes');
 
   if ('serviceWorker' in navigator && location.protocol !== 'file:') {

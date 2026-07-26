@@ -105,7 +105,7 @@ function receberPessoaDaURL(dados) {
     <p class="dica">Gosta de: ${lista(gostos)}<br>Evita: ${lista(evita)}</p>
     <button class="btn primario" id="btn-aceitar-pessoa">Adicionar às minhas pessoas</button>
     <button class="btn" id="btn-recusar-pessoa">Agora não</button>`;
-  $('#modal').classList.add('aberto');
+  abrirModal();
 
   const limpar = () => {
     history.replaceState(null, '', urlBase());

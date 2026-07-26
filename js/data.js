@@ -5,6 +5,7 @@ const CATEGORIAS = [
   { id: 'destilados', nome: 'Destilados' },
   { id: 'licores', nome: 'Licores, vermutes e vinhos' },
   { id: 'mixers', nome: 'Mixers e sucos' },
+  { id: 'xaropes', nome: 'Xaropes e adoçantes' },
   { id: 'frescos', nome: 'Frutas e frescos' },
   { id: 'outros', nome: 'Outros' },
 ];
@@ -43,10 +44,25 @@ const INGREDIENTES = [
   { id: 'suco-tomate', nome: 'Suco de tomate', cat: 'mixers' },
   { id: 'suco-toranja', nome: 'Suco de toranja (grapefruit)', cat: 'mixers' },
   { id: 'cafe-espresso', nome: 'Café espresso', cat: 'mixers' },
-  { id: 'grenadine', nome: 'Xarope de romã (grenadine)', cat: 'mixers' },
   { id: 'leite-de-coco', nome: 'Leite de coco', cat: 'mixers' },
   { id: 'leite-condensado', nome: 'Leite condensado', cat: 'mixers' },
   { id: 'creme-de-leite', nome: 'Creme de leite fresco', cat: 'mixers' },
+  // Xaropes e adoçantes — a prateleira que separa o drink caseiro do drink de bar
+  { id: 'xarope-simples', nome: 'Xarope simples (açúcar e água)', cat: 'xaropes' },
+  { id: 'grenadine', nome: 'Xarope de romã (grenadine)', cat: 'xaropes' },
+  { id: 'xarope-tangerina', nome: 'Xarope de tangerina', cat: 'xaropes' },
+  { id: 'xarope-gengibre', nome: 'Xarope de gengibre', cat: 'xaropes' },
+  { id: 'xarope-maca-verde', nome: 'Xarope de maçã verde', cat: 'xaropes' },
+  { id: 'xarope-morango', nome: 'Xarope de morango', cat: 'xaropes' },
+  { id: 'xarope-framboesa', nome: 'Xarope de framboesa', cat: 'xaropes' },
+  { id: 'xarope-maracuja', nome: 'Xarope de maracujá', cat: 'xaropes' },
+  { id: 'xarope-baunilha', nome: 'Xarope de baunilha', cat: 'xaropes' },
+  { id: 'xarope-canela', nome: 'Xarope de canela', cat: 'xaropes' },
+  { id: 'xarope-caramelo', nome: 'Xarope de caramelo', cat: 'xaropes' },
+  { id: 'xarope-hortela', nome: 'Xarope de hortelã / menta', cat: 'xaropes' },
+  { id: 'xarope-orgeat', nome: 'Xarope de amêndoa (orgeat)', cat: 'xaropes' },
+  { id: 'xarope-falernum', nome: 'Falernum (especiarias, cravo e limão)', cat: 'xaropes' },
+  { id: 'xarope-agave', nome: 'Xarope de agave', cat: 'xaropes' },
   // Frutas e frescos
   { id: 'limao', nome: 'Limão (tahiti)', cat: 'frescos' },
   { id: 'laranja', nome: 'Laranja', cat: 'frescos' },
@@ -308,6 +324,96 @@ const RECEITAS = [
     id: 'maracuja-tonica', nome: 'Maracujá Tônica (sem álcool)', copo: 'Taça grande', tags: ['sem-alcool', 'citrico', 'refrescante'],
     ing: [{ id: 'maracuja', q: '1 unidade' }, { id: 'agua-tonica', q: '150 ml' }, { id: 'mel', q: '1 colher', opcional: true }, { id: 'gelo', q: 'bastante' }],
     preparo: 'Polpa do maracujá na taça com gelo, complete com tônica. Um toque de mel equilibra o azedo.',
+  },
+  {
+    id: 'mai-tai', nome: 'Mai Tai', copo: 'Copo baixo', tags: ['tropical', 'citrico', 'forte'],
+    ing: [{ id: 'rum-branco', q: '30 ml' }, { id: 'rum-escuro', q: '30 ml' }, { id: 'licor-laranja', q: '15 ml' }, { id: 'xarope-orgeat', q: '15 ml' }, { id: 'limao', q: '25 ml' }, { id: 'gelo', q: 'picado' }],
+    preparo: 'Bata tudo na coqueteleira com gelo, menos o rum escuro. Sirva no copo com gelo picado e despeje o rum escuro por cima, devagar, para ele ficar boiando.',
+  },
+  {
+    id: 'jungle-bird', nome: 'Jungle Bird', copo: 'Copo baixo', tags: ['tropical', 'amargo', 'frutado'],
+    ing: [{ id: 'rum-escuro', q: '45 ml' }, { id: 'campari', q: '20 ml' }, { id: 'suco-abacaxi', q: '45 ml' }, { id: 'xarope-simples', q: '15 ml' }, { id: 'limao', q: '15 ml' }, { id: 'gelo', q: 'a gosto' }],
+    preparo: 'Bata tudo na coqueteleira com gelo e coe sobre gelo novo. O abacaxi faz espuma sozinho — não precisa de clara.',
+  },
+  {
+    id: 'bees-knees', nome: "Bee's Knees", copo: 'Taça coupé', tags: ['citrico', 'doce', 'seco'],
+    ing: [{ id: 'gin', q: '60 ml' }, { id: 'mel', q: '20 ml' }, { id: 'limao', q: '20 ml' }, { id: 'gelo', q: 'para bater' }],
+    preparo: 'Dissolva o mel em um pouco de água morna antes (mel puro não se mistura com bebida gelada). Bata tudo com gelo e coe na taça, sem gelo.',
+  },
+  {
+    id: 'gold-rush', nome: 'Gold Rush', copo: 'Copo baixo', tags: ['citrico', 'doce', 'forte'],
+    ing: [{ id: 'bourbon', q: '60 ml' }, { id: 'mel', q: '22 ml' }, { id: 'limao', q: '22 ml' }, { id: 'gelo', q: 'pedra grande' }],
+    preparo: 'Dilua o mel em água morna, bata tudo com gelo e coe sobre uma pedra grande. É um Whiskey Sour que trocou o açúcar por mel.',
+  },
+  {
+    id: 'appletini', nome: 'Maçã Verde (Appletini)', copo: 'Taça coupé', tags: ['doce', 'citrico', 'frutado'],
+    ing: [{ id: 'vodka', q: '50 ml' }, { id: 'xarope-maca-verde', q: '25 ml' }, { id: 'licor-laranja', q: '15 ml' }, { id: 'limao', q: '15 ml' }, { id: 'gelo', q: 'para bater' }],
+    preparo: 'Bata tudo na coqueteleira com bastante gelo e coe na taça gelada. O limão é o que impede o xarope de dominar tudo — não pule.',
+  },
+  {
+    id: 'mule-de-gengibre', nome: 'Mule de Gengibre', copo: 'Copo alto', tags: ['refrescante', 'citrico', 'forte'],
+    ing: [{ id: 'vodka', q: '50 ml' }, { id: 'xarope-gengibre', q: '25 ml' }, { id: 'limao', q: '20 ml' }, { id: 'agua-com-gas', q: '100 ml' }, { id: 'gelo', q: 'bastante' }],
+    preparo: 'Vodka, xarope e limão no copo com gelo, mexa e complete com água com gás. É o Moscow Mule para quem não tem ginger beer — e fica mais afiado.',
+  },
+  {
+    id: 'spritz-de-tangerina', nome: 'Spritz de Tangerina', copo: 'Taça grande', tags: ['refrescante', 'frutado', 'doce'],
+    ing: [{ id: 'espumante', q: '90 ml' }, { id: 'xarope-tangerina', q: '20 ml' }, { id: 'agua-com-gas', q: '40 ml' }, { id: 'laranja', q: '1 fatia', opcional: true }, { id: 'gelo', q: 'bastante' }],
+    preparo: 'Xarope no fundo da taça com gelo, complete com espumante e finalize com a água com gás. Mexa uma vez só, de baixo para cima.',
+  },
+  {
+    id: 'tangerina-tonica', nome: 'Tangerina Tônica', copo: 'Taça grande', tags: ['refrescante', 'citrico', 'seco'],
+    ing: [{ id: 'gin', q: '50 ml' }, { id: 'xarope-tangerina', q: '15 ml' }, { id: 'agua-tonica', q: '150 ml' }, { id: 'limao', q: '1 fatia' }, { id: 'gelo', q: 'bastante' }],
+    preparo: 'Encha a taça de gelo, gin e xarope, mexa e complete com tônica gelada. A tangerina arredonda o amargo do quinino sem apagar o gin.',
+  },
+  {
+    id: 'limonada-de-gengibre', nome: 'Limonada de Gengibre (sem álcool)', copo: 'Copo alto', tags: ['sem-alcool', 'citrico', 'refrescante'],
+    ing: [{ id: 'xarope-gengibre', q: '30 ml' }, { id: 'limao', q: '30 ml' }, { id: 'agua-com-gas', q: '150 ml' }, { id: 'hortela', q: '4 folhas', opcional: true }, { id: 'gelo', q: 'bastante' }],
+    preparo: 'Xarope e limão no copo, complete com gelo e água com gás. Bata a hortelã na palma da mão antes de colocar, para soltar o aroma sem amargar.',
+  },
+  {
+    id: 'maca-verde-refresco', nome: 'Maçã Verde com Limão (sem álcool)', copo: 'Copo alto', tags: ['sem-alcool', 'doce', 'refrescante'],
+    ing: [{ id: 'xarope-maca-verde', q: '30 ml' }, { id: 'limao', q: '25 ml' }, { id: 'agua-com-gas', q: '150 ml' }, { id: 'gelo', q: 'bastante' }],
+    preparo: 'Xarope e limão no copo cheio de gelo, complete com água com gás e mexa de leve. Ácido e doce na mesma medida — o verde faz o resto.',
+  },
+  {
+    id: 'daiquiri-morango', nome: 'Daiquiri de Morango', copo: 'Taça coupé', tags: ['frutado', 'citrico', 'doce'],
+    ing: [{ id: 'rum-branco', q: '60 ml' }, { id: 'xarope-morango', q: '20 ml' }, { id: 'limao', q: '25 ml' }, { id: 'morango', q: '2 unidades', opcional: true }, { id: 'gelo', q: 'para bater' }],
+    preparo: 'Bata tudo com bastante gelo e coe na taça, sem gelo. Com morango fresco junto fica mais encorpado; só com xarope fica mais limpo e mais ácido.',
+  },
+  {
+    id: 'floradora', nome: 'Floradora', copo: 'Copo alto', tags: ['frutado', 'citrico', 'refrescante'],
+    ing: [{ id: 'gin', q: '45 ml' }, { id: 'xarope-framboesa', q: '20 ml' }, { id: 'limao', q: '20 ml' }, { id: 'ginger-beer', q: '90 ml' }, { id: 'gelo', q: 'bastante' }],
+    preparo: 'Bata o gin, o xarope e o limão com gelo, coe no copo cheio de gelo e complete com ginger beer. O gengibre é o que impede a framboesa de virar refresco.',
+  },
+  {
+    id: 'pornstar-martini', nome: 'Pornstar Martini', copo: 'Taça coupé', tags: ['frutado', 'tropical', 'doce'],
+    ing: [{ id: 'vodka', q: '50 ml' }, { id: 'maracuja', q: '1 unidade' }, { id: 'xarope-maracuja', q: '15 ml' }, { id: 'xarope-baunilha', q: '15 ml' }, { id: 'limao', q: '15 ml' }, { id: 'espumante', q: '60 ml, à parte' }, { id: 'gelo', q: 'para bater' }],
+    preparo: 'Bata tudo com gelo, menos o espumante, e coe na taça. O espumante vai num copinho separado, ao lado — alterna-se um gole de cada.',
+  },
+  {
+    id: 'hot-toddy', nome: 'Hot Toddy', copo: 'Caneca de vidro', tags: ['quente', 'doce', 'citrico'],
+    ing: [{ id: 'whisky', q: '50 ml' }, { id: 'mel', q: '2 colheres de chá' }, { id: 'limao', q: '20 ml' }, { id: 'xarope-canela', q: '10 ml' }, { id: 'agua-com-gas', q: '120 ml de água quente' }],
+    preparo: 'Dissolva o mel na água quente, junte o uísque, o limão e a canela. Nunca ferva: acima de 80 °C o álcool evapora e o aroma vai junto.',
+  },
+  {
+    id: 'espresso-tonica', nome: 'Espresso Tônica com Caramelo', copo: 'Copo alto', tags: ['sem-alcool', 'amargo', 'refrescante'],
+    ing: [{ id: 'cafe-espresso', q: '1 dose' }, { id: 'xarope-caramelo', q: '15 ml' }, { id: 'agua-tonica', q: '150 ml' }, { id: 'laranja', q: '1 casca', opcional: true }, { id: 'gelo', q: 'bastante' }],
+    preparo: 'Xarope e tônica no copo cheio de gelo. O café vai por último e devagar, por cima — ele fica em camada e desce sozinho, sem precisar mexer.',
+  },
+  {
+    id: 'mint-julep', nome: 'Mint Julep', copo: 'Copo baixo', tags: ['refrescante', 'forte', 'doce'],
+    ing: [{ id: 'bourbon', q: '60 ml' }, { id: 'xarope-hortela', q: '20 ml' }, { id: 'hortela', q: '8 folhas' }, { id: 'gelo', q: 'triturado, bastante' }],
+    preparo: 'Bata a hortelã na palma da mão e passe pelas paredes do copo. Encha de gelo triturado, junte bourbon e xarope e mexa até o copo suar por fora.',
+  },
+  {
+    id: 'corn-n-oil', nome: "Corn 'n' Oil", copo: 'Copo baixo', tags: ['forte', 'doce', 'amargo'],
+    ing: [{ id: 'rum-escuro', q: '60 ml' }, { id: 'xarope-falernum', q: '20 ml' }, { id: 'limao', q: '15 ml' }, { id: 'angostura', q: '4 gotas' }, { id: 'gelo', q: 'pedra grande' }],
+    preparo: 'Mexa o rum, o falernum e o limão com gelo e sirva sobre uma pedra grande. As gotas de angostura vão por cima, sem mexer — é delas que vem o nome.',
+  },
+  {
+    id: 'tommys-margarita', nome: "Tommy's Margarita", copo: 'Copo baixo', tags: ['citrico', 'seco', 'forte'],
+    ing: [{ id: 'tequila', q: '60 ml' }, { id: 'limao', q: '30 ml' }, { id: 'xarope-agave', q: '20 ml' }, { id: 'sal', q: 'na borda', opcional: true }, { id: 'gelo', q: 'para bater' }],
+    preparo: 'Bata tudo com gelo e coe sobre gelo novo. Sem licor de laranja, o agave devolve à tequila o sabor da própria planta — é a Margarita que os bartenders bebem.',
   },
 ];
 
