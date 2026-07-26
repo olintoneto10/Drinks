@@ -220,6 +220,8 @@ function passaFiltro(receita) {
   const busca = state.buscaSugestao.trim().toLowerCase();
   if (busca && !receita.nome.toLowerCase().includes(busca)) return false;
   if (state.filtroTag === 'favoritos') return state.favoritos.has(receita.id);
+  // "autorais" não é sabor: é a leva moderna, com autor, ano e endereço conhecidos
+  if (state.filtroTag === 'autorais') return !!receita.autoral;
   if (state.filtroTag !== 'todos' && !receita.tags.includes(state.filtroTag)) return false;
   return true;
 }

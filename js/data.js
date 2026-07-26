@@ -21,6 +21,8 @@ const INGREDIENTES = [
   { id: 'whisky', nome: 'Whisky', cat: 'destilados' },
   { id: 'bourbon', nome: 'Bourbon', cat: 'destilados' },
   { id: 'conhaque', nome: 'Conhaque', cat: 'destilados' },
+  { id: 'mezcal', nome: 'Mezcal', cat: 'destilados' },
+  { id: 'pisco', nome: 'Pisco', cat: 'destilados' },
   // Licores, vermutes e vinhos
   { id: 'licor-laranja', nome: 'Licor de laranja (triple sec / Cointreau)', cat: 'licores' },
   { id: 'licor-cafe', nome: 'Licor de café', cat: 'licores' },
@@ -31,6 +33,11 @@ const INGREDIENTES = [
   { id: 'vermute-tinto', nome: 'Vermute tinto', cat: 'licores' },
   { id: 'campari', nome: 'Campari', cat: 'licores' },
   { id: 'aperol', nome: 'Aperol', cat: 'licores' },
+  { id: 'amaro', nome: 'Amaro (Nonino, Averna, Ramazzotti)', cat: 'licores' },
+  { id: 'chartreuse-verde', nome: 'Chartreuse verde', cat: 'licores' },
+  { id: 'chartreuse-amarelo', nome: 'Chartreuse amarelo', cat: 'licores' },
+  { id: 'maraschino', nome: 'Maraschino (licor de marasca)', cat: 'licores' },
+  { id: 'absinto', nome: 'Absinto', cat: 'licores' },
   { id: 'espumante', nome: 'Espumante / prosecco', cat: 'licores' },
   { id: 'vinho-tinto', nome: 'Vinho tinto', cat: 'licores' },
   // Mixers e sucos
@@ -71,6 +78,8 @@ const INGREDIENTES = [
   { id: 'maracuja', nome: 'Maracujá', cat: 'frescos' },
   { id: 'pessego', nome: 'Pêssego', cat: 'frescos' },
   { id: 'hortela', nome: 'Hortelã', cat: 'frescos' },
+  { id: 'manjericao', nome: 'Manjericão', cat: 'frescos' },
+  { id: 'pepino', nome: 'Pepino', cat: 'frescos' },
   { id: 'gengibre', nome: 'Gengibre', cat: 'frescos' },
   { id: 'mel', nome: 'Mel', cat: 'frescos' },
   { id: 'ovo', nome: 'Ovo (clara)', cat: 'frescos' },
@@ -414,6 +423,83 @@ const RECEITAS = [
     id: 'tommys-margarita', nome: "Tommy's Margarita", copo: 'Copo baixo', tags: ['citrico', 'seco', 'forte'],
     ing: [{ id: 'tequila', q: '60 ml' }, { id: 'limao', q: '30 ml' }, { id: 'xarope-agave', q: '20 ml' }, { id: 'sal', q: 'na borda', opcional: true }, { id: 'gelo', q: 'para bater' }],
     preparo: 'Bata tudo com gelo e coe sobre gelo novo. Sem licor de laranja, o agave devolve à tequila o sabor da própria planta — é a Margarita que os bartenders bebem.',
+  },
+
+  // ---------- Coquetelaria autoral: drinks com autor, data e endereço ----------
+  {
+    id: 'paper-plane', nome: 'Paper Plane', copo: 'Taça coupé', autoral: true, tags: ['amargo', 'citrico', 'forte'],
+    ing: [{ id: 'bourbon', q: '22 ml' }, { id: 'aperol', q: '22 ml' }, { id: 'amaro', q: '22 ml' }, { id: 'limao', q: '22 ml' }, { id: 'gelo', q: 'para bater' }],
+    preparo: 'Partes iguais dos quatro. Bata com gelo e coe na taça, sem gelo. A simetria é o drink inteiro — mudar uma medida desequilibra tudo.',
+  },
+  {
+    id: 'naked-and-famous', nome: 'Naked & Famous', copo: 'Taça coupé', autoral: true, tags: ['citrico', 'amargo', 'forte'],
+    ing: [{ id: 'mezcal', q: '22 ml' }, { id: 'chartreuse-amarelo', q: '22 ml' }, { id: 'aperol', q: '22 ml' }, { id: 'limao', q: '22 ml' }, { id: 'gelo', q: 'para bater' }],
+    preparo: 'Também em partes iguais. Bata bem gelado e coe na taça. A fumaça do mezcal chega primeiro e o amargo do Aperol fecha.',
+  },
+  {
+    id: 'last-word', nome: 'Last Word', copo: 'Taça coupé', autoral: true, tags: ['citrico', 'seco', 'forte'],
+    ing: [{ id: 'gin', q: '22 ml' }, { id: 'chartreuse-verde', q: '22 ml' }, { id: 'maraschino', q: '22 ml' }, { id: 'limao', q: '22 ml' }, { id: 'gelo', q: 'para bater' }],
+    preparo: 'Quatro partes iguais, batidas com bastante gelo e coadas sem gelo. O Chartreuse domina se o limão não estiver bem fresco.',
+  },
+  {
+    id: 'division-bell', nome: 'Division Bell', copo: 'Taça coupé', autoral: true, tags: ['citrico', 'amargo', 'frutado'],
+    ing: [{ id: 'mezcal', q: '45 ml' }, { id: 'aperol', q: '22 ml' }, { id: 'maraschino', q: '15 ml' }, { id: 'limao', q: '22 ml' }, { id: 'gelo', q: 'para bater' }],
+    preparo: 'Bata tudo com gelo e coe na taça gelada. É o Last Word com mezcal no lugar do gin — mais fumaça, menos ervas.',
+  },
+  {
+    id: 'oaxaca-old-fashioned', nome: 'Oaxaca Old Fashioned', copo: 'Copo baixo', autoral: true, tags: ['forte', 'doce', 'amargo'],
+    ing: [{ id: 'tequila', q: '45 ml' }, { id: 'mezcal', q: '15 ml' }, { id: 'xarope-agave', q: '10 ml' }, { id: 'angostura', q: '2 gotas' }, { id: 'laranja', q: '1 casca' }, { id: 'gelo', q: 'pedra grande' }],
+    preparo: 'Mexa tudo com gelo — nunca bata — e sirva sobre uma pedra grande. Queime a casca de laranja sobre o copo antes de largá-la dentro.',
+  },
+  {
+    id: 'gin-basil-smash', nome: 'Gin Basil Smash', copo: 'Copo baixo', autoral: true, tags: ['citrico', 'refrescante', 'seco'],
+    ing: [{ id: 'gin', q: '60 ml' }, { id: 'manjericao', q: '1 punhado' }, { id: 'limao', q: '25 ml' }, { id: 'xarope-simples', q: '20 ml' }, { id: 'gelo', q: 'para bater' }],
+    preparo: 'Soque o manjericão no fundo da coqueteleira, junte o resto, bata com gelo e coe duas vezes sobre gelo novo. Sim, aqui o manjericão se soca de verdade.',
+  },
+  {
+    id: 'old-cuban', nome: 'Old Cuban', copo: 'Taça coupé', autoral: true, tags: ['refrescante', 'citrico', 'doce'],
+    ing: [{ id: 'rum-escuro', q: '45 ml' }, { id: 'hortela', q: '6 folhas' }, { id: 'limao', q: '22 ml' }, { id: 'xarope-simples', q: '20 ml' }, { id: 'angostura', q: '2 gotas' }, { id: 'espumante', q: '60 ml' }, { id: 'gelo', q: 'para bater' }],
+    preparo: 'Bata tudo com gelo, menos o espumante, e coe na taça. O espumante entra por último, despejado devagar pela borda.',
+  },
+  {
+    id: 'trinidad-sour', nome: 'Trinidad Sour', copo: 'Taça coupé', autoral: true, tags: ['amargo', 'citrico', 'forte'],
+    ing: [{ id: 'angostura', q: '45 ml' }, { id: 'xarope-orgeat', q: '30 ml' }, { id: 'whisky', q: '15 ml' }, { id: 'limao', q: '22 ml' }, { id: 'gelo', q: 'para bater' }],
+    preparo: 'Leu certo: a angostura é a base, não o tempero. Bata tudo com bastante gelo e coe na taça. Uma dose inteira de bitters — e funciona.',
+  },
+  {
+    id: 'siesta', nome: 'Siesta', copo: 'Taça coupé', autoral: true, tags: ['amargo', 'citrico', 'refrescante'],
+    ing: [{ id: 'tequila', q: '50 ml' }, { id: 'campari', q: '15 ml' }, { id: 'suco-toranja', q: '20 ml' }, { id: 'limao', q: '15 ml' }, { id: 'xarope-simples', q: '15 ml' }, { id: 'gelo', q: 'para bater' }],
+    preparo: 'Bata tudo bem gelado e coe na taça, sem gelo. É um Negroni que virou sour e trocou o gin pela tequila.',
+  },
+  {
+    id: 'eastside', nome: 'Eastside', copo: 'Taça coupé', autoral: true, tags: ['refrescante', 'citrico', 'seco'],
+    ing: [{ id: 'gin', q: '55 ml' }, { id: 'pepino', q: '3 rodelas' }, { id: 'hortela', q: '6 folhas' }, { id: 'limao', q: '22 ml' }, { id: 'xarope-simples', q: '20 ml' }, { id: 'gelo', q: 'para bater' }],
+    preparo: 'Macere o pepino, junte o resto, bata com gelo e coe duas vezes para nenhuma folha passar. O pepino é o que segura a hortelã de dominar.',
+  },
+  {
+    id: 'pisco-sour', nome: 'Pisco Sour', copo: 'Taça coupé', tags: ['citrico', 'cremoso', 'forte'],
+    ing: [{ id: 'pisco', q: '60 ml' }, { id: 'limao', q: '30 ml' }, { id: 'xarope-simples', q: '20 ml' }, { id: 'ovo', q: '1 clara' }, { id: 'angostura', q: '3 gotas' }, { id: 'gelo', q: 'para bater' }],
+    preparo: 'Bata tudo sem gelo primeiro, para a clara montar, depois bata de novo com gelo e coe duas vezes. As gotas de angostura vão desenhadas sobre a espuma.',
+  },
+  {
+    id: 'sazerac', nome: 'Sazerac', copo: 'Copo baixo', tags: ['forte', 'amargo', 'seco'],
+    ing: [{ id: 'whisky', q: '60 ml' }, { id: 'absinto', q: 'para lavar o copo' }, { id: 'acucar', q: '1 colher de chá' }, { id: 'angostura', q: '4 gotas' }, { id: 'limao', q: '1 casca' }, { id: 'gelo', q: 'para mexer' }],
+    preparo: 'Gire o absinto no copo gelado e descarte o excesso. Mexa o resto com gelo à parte e coe no copo lavado, sem gelo. A casca de limão é torcida por cima e descartada.',
+  },
+  {
+    id: 'corpse-reviver', nome: 'Corpse Reviver nº 2', copo: 'Taça coupé', tags: ['citrico', 'seco', 'forte'],
+    ing: [{ id: 'gin', q: '25 ml' }, { id: 'licor-laranja', q: '25 ml' }, { id: 'vermute-seco', q: '25 ml' }, { id: 'limao', q: '25 ml' }, { id: 'absinto', q: 'para lavar o copo' }, { id: 'gelo', q: 'para bater' }],
+    preparo: 'Lave a taça com absinto e descarte o excesso. Bata os quatro restantes em partes iguais e coe na taça. O livro original avisa: quatro seguidos e o efeito se inverte.',
+  },
+  {
+    id: 'aviation', nome: 'Aviation', copo: 'Taça coupé', tags: ['citrico', 'seco', 'frutado'],
+    ing: [{ id: 'gin', q: '55 ml' }, { id: 'maraschino', q: '15 ml' }, { id: 'limao', q: '20 ml' }, { id: 'xarope-simples', q: '8 ml', opcional: true }, { id: 'gelo', q: 'para bater' }],
+    preparo: 'Bata tudo com bastante gelo e coe na taça gelada, sem gelo. O maraschino é potente: 15 ml é limite, não sugestão.',
+  },
+  {
+    id: 'hemingway-daiquiri', nome: 'Hemingway Daiquiri', copo: 'Taça coupé', tags: ['citrico', 'seco', 'forte'],
+    ing: [{ id: 'rum-branco', q: '60 ml' }, { id: 'suco-toranja', q: '30 ml' }, { id: 'maraschino', q: '15 ml' }, { id: 'limao', q: '15 ml' }, { id: 'gelo', q: 'para bater' }],
+    preparo: 'Bata tudo bem gelado e coe na taça. Não leva açúcar nenhum — era exatamente assim que Hemingway o pedia no Floridita.',
   },
 ];
 

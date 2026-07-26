@@ -118,6 +118,14 @@ const PAIS_DO_DRINK = {
   'floradora': 'Estados Unidos', 'mint-julep': 'Estados Unidos',
   'tommys-margarita': 'Estados Unidos', 'pornstar-martini': 'Inglaterra',
   'hot-toddy': 'Escócia', 'corn-n-oil': 'Barbados', 'espresso-tonica': 'Suécia',
+  'paper-plane': 'Estados Unidos', 'naked-and-famous': 'Estados Unidos',
+  'last-word': 'Estados Unidos', 'division-bell': 'Estados Unidos',
+  'oaxaca-old-fashioned': 'Estados Unidos', 'old-cuban': 'Estados Unidos',
+  'trinidad-sour': 'Estados Unidos', 'siesta': 'Estados Unidos',
+  'eastside': 'Estados Unidos', 'sazerac': 'Estados Unidos',
+  'aviation': 'Estados Unidos', 'hemingway-daiquiri': 'Cuba',
+  'gin-basil-smash': 'Alemanha', 'pisco-sour': 'Peru',
+  'corpse-reviver': 'Inglaterra',
 };
 
 function statsColecao() {

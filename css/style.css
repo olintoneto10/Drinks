@@ -16,7 +16,7 @@
 /* Todo o texto do app é medido em rem, então a escala inteira sai daqui.
    Em porcentagem, e não em px, para não atropelar quem já aumentou a fonte
    nas preferências do navegador — o ajuste se soma ao dela. */
-html { font-size: 112.5%; }
+html { font-size: 125%; }
 
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
