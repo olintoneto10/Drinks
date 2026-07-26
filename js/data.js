@@ -321,7 +321,7 @@ const RECEITAS = [
     preparo: 'Bata o abacaxi com hortelã, gelo e um pouco de água. Coe se preferir mais leve.',
   },
   {
-    id: 'maracuja-tonica', nome: 'Maracujá Tônica (sem álcool)', copo: 'Taça grande', tags: ['sem-alcool', 'citrico', 'refrescante'],
+    id: 'maracuja-tonica', nome: 'Maracujá Tônica', copo: 'Taça grande', tags: ['sem-alcool', 'citrico', 'refrescante'],
     ing: [{ id: 'maracuja', q: '1 unidade' }, { id: 'agua-tonica', q: '150 ml' }, { id: 'mel', q: '1 colher', opcional: true }, { id: 'gelo', q: 'bastante' }],
     preparo: 'Polpa do maracujá na taça com gelo, complete com tônica. Um toque de mel equilibra o azedo.',
   },
@@ -366,12 +366,12 @@ const RECEITAS = [
     preparo: 'Encha a taça de gelo, gin e xarope, mexa e complete com tônica gelada. A tangerina arredonda o amargo do quinino sem apagar o gin.',
   },
   {
-    id: 'limonada-de-gengibre', nome: 'Limonada de Gengibre (sem álcool)', copo: 'Copo alto', tags: ['sem-alcool', 'citrico', 'refrescante'],
+    id: 'limonada-de-gengibre', nome: 'Limonada de Gengibre', copo: 'Copo alto', tags: ['sem-alcool', 'citrico', 'refrescante'],
     ing: [{ id: 'xarope-gengibre', q: '30 ml' }, { id: 'limao', q: '30 ml' }, { id: 'agua-com-gas', q: '150 ml' }, { id: 'hortela', q: '4 folhas', opcional: true }, { id: 'gelo', q: 'bastante' }],
     preparo: 'Xarope e limão no copo, complete com gelo e água com gás. Bata a hortelã na palma da mão antes de colocar, para soltar o aroma sem amargar.',
   },
   {
-    id: 'maca-verde-refresco', nome: 'Maçã Verde com Limão (sem álcool)', copo: 'Copo alto', tags: ['sem-alcool', 'doce', 'refrescante'],
+    id: 'maca-verde-refresco', nome: 'Maçã Verde com Limão', copo: 'Copo alto', tags: ['sem-alcool', 'doce', 'refrescante'],
     ing: [{ id: 'xarope-maca-verde', q: '30 ml' }, { id: 'limao', q: '25 ml' }, { id: 'agua-com-gas', q: '150 ml' }, { id: 'gelo', q: 'bastante' }],
     preparo: 'Xarope e limão no copo cheio de gelo, complete com água com gás e mexa de leve. Ácido e doce na mesma medida — o verde faz o resto.',
   },
