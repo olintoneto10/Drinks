@@ -18,9 +18,20 @@ bar e o seu gosto.
 - **🛒 Lista de compras** — itens que faltam viram lista; ao marcar "comprei",
   o item entra automaticamente no seu bar.
 - **🤖 Especialista (IA)** — chat com um bartender que sabe o que você tem em
-  casa e o que você já avaliou bem. Requer uma chave da API da Anthropic
-  (criada em [console.anthropic.com](https://console.anthropic.com)), salva
-  apenas no seu aparelho.
+  casa, o que cada pessoa gosta/evita e o que você já avaliou bem. Requer uma
+  chave da API da Anthropic (criada em
+  [console.anthropic.com](https://console.anthropic.com)), salva apenas no seu
+  aparelho. A conversa persiste entre sessões.
+- **👥 Pessoas, restrições e modo festa** — cadastre convidados com gostos
+  ("Marília gosta de doce") e restrições ("João não bebe álcool"); o modo
+  festa 🎉 prioriza drinks que agradam todo mundo respeitando as restrições.
+- **♥ Favoritos e compartilhar** — marque receitas para depois e compartilhe
+  receitas ou registros do diário via WhatsApp e afins (Web Share API).
+- **📊 Diário rico** — filtros por nota mínima e período, resumo neutro do mês
+  (nº de registros, nota média, destaque) e fotos comprimidas automaticamente
+  (~1200px) para não estourar o armazenamento.
+- **💾 Backup** — exporte tudo (bar, pessoas, diário e fotos) em um arquivo
+  único e importe em outro aparelho.
 
 ## Como rodar
 

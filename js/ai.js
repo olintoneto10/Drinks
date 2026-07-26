@@ -22,9 +22,11 @@ DRINKS MAIS BEM AVALIADOS PELO USUÁRIO: ${favoritos}
 
 PESSOAS CADASTRADAS E O QUE CADA UMA GOSTA:
 ${pessoas.length
-    ? pessoas.map(p => `- ${p.nome}: ${p.gostos.length ? p.gostos.join(', ') : 'sem preferências declaradas'}`).join('\n')
+    ? pessoas.map(p => `- ${p.nome}: gosta de ${p.gostos.length ? p.gostos.join(', ') : '(nada declarado)'}${
+        p.evita?.length ? `; NÃO PODE/EVITA: ${p.evita.join(', ')}` : ''}`).join('\n')
     : '- nenhuma pessoa cadastrada além do usuário'}
-Se o usuário pedir um drink para uma dessas pessoas, use as preferências dela.
+Se o usuário pedir um drink para uma dessas pessoas, use as preferências dela e
+respeite rigorosamente as restrições (especialmente álcool).
 
 Regras:
 - Priorize sugestões que usem só o que o usuário tem; se faltar algo, deixe claro o que falta e sugira substituições.

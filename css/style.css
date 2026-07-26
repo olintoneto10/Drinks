@@ -4,7 +4,7 @@
   --papel: #FBFAF7;
   --branco: #FFFFFF;
   --tinta: #201D1A;
-  --cinza: #7A756B;
+  --cinza: #6B665C;
   --acento: #C4372B;   /* vermelho campari */
   --linha: #E5E1D8;
   --ok: #3E7A4E;
@@ -365,6 +365,27 @@ form label {
 #form-chat .btn { width: auto; padding: 0 18px; margin: 0; }
 #btn-trocar-chave { margin-top: 10px; }
 .escondido { display: none !important; }
+
+/* Favoritos, festa, restrições */
+.fav { color: var(--acento); margin-left: 7px; font-size: 0.9rem; }
+.chip.evita.on { background: var(--tinta); border-color: var(--tinta); color: #fff; }
+.botoes-duplos { display: flex; gap: 10px; }
+.botoes-duplos .btn { flex: 1; text-align: center; }
+.btn-importar { display: flex; align-items: center; justify-content: center; cursor: pointer; }
+
+/* Estatísticas e filtros do diário */
+.stats {
+  font-style: italic;
+  color: var(--cinza);
+  font-size: 0.9rem;
+  border-bottom: 1px solid var(--linha);
+  padding: 4px 0 12px;
+  margin-bottom: 10px;
+}
+.stats strong { color: var(--acento); font-weight: normal; }
+.filtros-diario { display: flex; gap: 10px; }
+.filtros-diario select { flex: 1; }
+.backup { margin-top: 34px; border-top: 1px solid var(--linha); padding-top: 4px; }
 
 @media (min-width: 640px) {
   .cards { grid-template-columns: 1fr; }

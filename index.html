@@ -37,7 +37,10 @@
         <button class="chip" data-tag="forte">Forte</button>
         <button class="chip" data-tag="cremoso">Cremoso</button>
         <button class="chip" data-tag="tropical">Tropical</button>
+        <button class="chip" data-tag="salgado">Salgado</button>
+        <button class="chip" data-tag="quente">Quente</button>
         <button class="chip" data-tag="sem-alcool">Sem álcool</button>
+        <button class="chip" data-tag="favoritos">♥ Favoritos</button>
       </div>
       <div id="lista-sugestoes"></div>
     </section>
@@ -51,8 +54,33 @@
     <!-- Diário -->
     <section id="aba-diario" class="aba">
       <button id="btn-nova-entrada" class="btn primario">+ Registrar um drink</button>
+      <div id="stats-diario"></div>
       <input id="busca-diario" type="search" placeholder="Buscar no diário...">
+      <div class="filtros-diario">
+        <select id="filtro-nota" aria-label="Filtrar por nota mínima">
+          <option value="0">Todas as notas</option>
+          <option value="4">Nota 4+</option>
+          <option value="5">Só nota 5</option>
+        </select>
+        <select id="filtro-periodo" aria-label="Filtrar por período">
+          <option value="todos">Todo o período</option>
+          <option value="mes">Este mês</option>
+          <option value="tres-meses">Últimos 3 meses</option>
+          <option value="ano">Este ano</option>
+        </select>
+      </div>
       <div id="lista-diario"></div>
+      <div class="backup">
+        <h2>Backup</h2>
+        <p class="dica">Seus dados vivem só neste aparelho. Exporte de tempos em tempos
+          para não perder o diário — e importe ao trocar de celular.</p>
+        <div class="botoes-duplos">
+          <button id="btn-exportar" class="btn">Exportar meus dados</button>
+          <label class="btn btn-importar">Importar backup
+            <input id="input-importar" type="file" accept="application/json,.json" hidden>
+          </label>
+        </div>
+      </div>
     </section>
 
     <!-- Especialista -->

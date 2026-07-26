@@ -1,7 +1,7 @@
 // Service worker do MeuBar: cache do app shell para funcionar offline.
 // Chamadas à API da Anthropic nunca são cacheadas.
 
-const CACHE = 'meubar-v3';
+const CACHE = 'meubar-v4';
 const SHELL = [
   './',
   './index.html',
@@ -31,6 +31,20 @@ self.addEventListener('activate', ev => {
 self.addEventListener('fetch', ev => {
   const url = new URL(ev.request.url);
   if (ev.request.method !== 'GET' || url.hostname === 'api.anthropic.com') return;
+
+  // HTML: rede primeiro (para novas versões chegarem), cache como fallback offline
+  if (ev.request.mode === 'navigate') {
+    ev.respondWith(
+      fetch(ev.request).then(res => {
+        const clone = res.clone();
+        caches.open(CACHE).then(c => c.put(ev.request, clone));
+        return res;
+      }).catch(() => caches.match(ev.request).then(hit => hit || caches.match('./index.html')))
+    );
+    return;
+  }
+
+  // Demais recursos: cache primeiro
   ev.respondWith(
     caches.match(ev.request).then(hit => hit || fetch(ev.request).then(res => {
       if (res.ok && url.origin === location.origin) {

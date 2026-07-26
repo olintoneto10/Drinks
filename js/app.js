@@ -7,8 +7,10 @@ const state = {
   bar: Store.getBar(),
   shopping: Store.getShopping(),
   entries: [],
-  pessoas: Store.getPessoas(), // [{id, nome, tags: []}]
+  pessoas: Store.getPessoas(), // [{id, nome, tags: [], evita: []}]
   pessoaAtiva: 'eu',
+  festa: Store.getFesta(), // ids das pessoas no modo festa
+  favoritos: Store.getFavoritos(),
   filtroTag: 'todos',
   buscaSugestao: '',
   fotoURLs: new Map(), // entryId -> objectURL
@@ -16,7 +18,11 @@ const state = {
 
 // Tags que uma pessoa pode declarar que gosta
 const TAGS_PREFERENCIA = ['doce', 'citrico', 'amargo', 'seco', 'refrescante',
-  'cremoso', 'frutado', 'forte', 'tropical', 'sem-alcool'];
+  'cremoso', 'frutado', 'forte', 'tropical', 'salgado', 'quente', 'sem-alcool'];
+
+// Restrições: "não pode / evita" — 'alcool' é especial (só mostra sem álcool)
+const TAGS_EVITA = ['alcool', 'doce', 'citrico', 'amargo', 'cremoso', 'forte', 'quente'];
+const EVITA_NOMES = { 'alcool': 'Álcool' };
 
 function getPessoa(id) {
   if (id === 'eu') {
@@ -39,6 +45,28 @@ function fmtData(iso) {
 
 function estrelas(n) {
   return '★'.repeat(n) + '☆'.repeat(5 - n);
+}
+
+// Reduz a foto para no máximo 1200px (JPEG) antes de salvar — evita estourar
+// a cota de armazenamento do navegador com fotos de vários MB.
+function comprimirFoto(file) {
+  return new Promise(resolve => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      URL.revokeObjectURL(url);
+      const max = 1200;
+      const escala = Math.min(1, max / Math.max(img.width, img.height));
+      if (escala === 1 && file.size < 500_000) return resolve(file);
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.round(img.width * escala);
+      canvas.height = Math.round(img.height * escala);
+      canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+      canvas.toBlob(blob => resolve(blob || file), 'image/jpeg', 0.82);
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); resolve(file); };
+    img.src = url;
+  });
 }
 
 // ---------- Perfil de sabor (aprendido por pessoa) ----------
@@ -78,19 +106,49 @@ function topProfileTags(pesos, n = 3) {
 
 // Pesos usados para ordenar as sugestões: preferências declaradas da pessoa
 // ativa e, no caso de "Você", também o que o app aprendeu das notas do diário.
-function pesosAtivos() {
-  const pesos = Object.assign({}, tasteProfile(state.pessoaAtiva));
-  const pessoa = getPessoa(state.pessoaAtiva);
+function pesosDePessoa(id) {
+  const pesos = Object.assign({}, tasteProfile(id));
+  const pessoa = getPessoa(id);
   for (const t of pessoa?.tags || []) pesos[t] = (pesos[t] || 0) + 2;
   return pesos;
+}
+
+function pesosAtivos() {
+  if (state.pessoaAtiva === 'festa') {
+    const pesos = {};
+    for (const id of state.festa) {
+      for (const [t, v] of Object.entries(pesosDePessoa(id))) {
+        pesos[t] = (pesos[t] || 0) + v;
+      }
+    }
+    return pesos;
+  }
+  return pesosDePessoa(state.pessoaAtiva);
+}
+
+// Restrições ativas: da pessoa selecionada, ou a união de todas na festa
+function evitaAtivas() {
+  const ids = state.pessoaAtiva === 'festa' ? state.festa : [state.pessoaAtiva];
+  const evita = new Set();
+  for (const id of ids) {
+    for (const t of getPessoa(id)?.evita || []) evita.add(t);
+  }
+  return evita;
+}
+
+function violaRestricao(receita, evita) {
+  if (evita.has('alcool') && !receita.tags.includes('sem-alcool')) return true;
+  return receita.tags.some(t => t !== 'sem-alcool' && evita.has(t));
 }
 
 // ---------- Motor de sugestões ----------
 function matchRecipes() {
   const pesos = pesosAtivos();
+  const evita = evitaAtivas();
   const ready = [];
   const almost = [];
   for (const r of RECEITAS) {
+    if (violaRestricao(r, evita)) continue;
     const faltam = r.ing
       .filter(i => !i.opcional && !BASICOS.has(i.id) && !state.bar.has(i.id))
       .map(i => i.id);
@@ -107,6 +165,7 @@ function matchRecipes() {
 function passaFiltro(receita) {
   const busca = state.buscaSugestao.trim().toLowerCase();
   if (busca && !receita.nome.toLowerCase().includes(busca)) return false;
+  if (state.filtroTag === 'favoritos') return state.favoritos.has(receita.id);
   if (state.filtroTag !== 'todos' && !receita.tags.includes(state.filtroTag)) return false;
   return true;
 }
@@ -123,9 +182,12 @@ function thumbReceita(receita, fotos, tamanho = 76) {
 
 function cardReceita({ receita, faltam, score }, destaque, fotos) {
   const tags = receita.tags.map(t => `<span class="tag">${esc(TAG_NOMES[t] || t)}</span>`).join('');
-  const pessoa = getPessoa(state.pessoaAtiva);
-  const selo = state.pessoaAtiva === 'eu' ? 'seu estilo' : `p/ ${esc(pessoa?.nome || '')}`;
+  let selo;
+  if (state.pessoaAtiva === 'festa') selo = 'agrada a turma';
+  else if (state.pessoaAtiva === 'eu') selo = 'seu estilo';
+  else selo = `p/ ${esc(getPessoa(state.pessoaAtiva)?.nome || '')}`;
   const match = destaque && score > 0 ? `<span class="match">✨ ${selo}</span>` : '';
+  const fav = state.favoritos.has(receita.id) ? '<span class="fav">♥</span>' : '';
   let faltaHtml = '';
   if (faltam.length) {
     const ing = ING_MAP[faltam[0]];
@@ -137,7 +199,7 @@ function cardReceita({ receita, faltam, score }, destaque, fotos) {
   return `<div class="card sugestao" data-receita="${receita.id}">
     <div class="thumb">${thumbReceita(receita, fotos)}</div>
     <div class="card-corpo">
-      <div class="card-top"><h3>${esc(receita.nome)}</h3>${match}</div>
+      <div class="card-top"><h3>${esc(receita.nome)}${fav}</h3>${match}</div>
       <div class="tags">${tags}</div>
       ${faltaHtml}
     </div>
@@ -166,11 +228,16 @@ function renderPessoasRow() {
     const lapis = on ? ` <span class="lapis" data-editar-pessoa="${p.id}">✎</span>` : '';
     return `<button class="chip ${on ? 'on' : ''}" data-pessoa="${p.id}">${esc(nome)}${lapis}</button>`;
   };
+  const festaOn = state.pessoaAtiva === 'festa';
+  const festaChip = outras.length
+    ? `<button class="chip ${festaOn ? 'on' : ''}" data-festa>🎉 Festa${festaOn ? ' <span class="lapis" data-editar-festa>✎</span>' : ''}</button>`
+    : '';
   $('#pessoas-row').innerHTML = `
     <p class="dica" style="margin-bottom:6px">Para quem vai o drink?</p>
     <div class="chips">
       ${chip(eu, 'Você')}
       ${outras.map(p => chip(p, p.nome)).join('')}
+      ${festaChip}
       <button class="chip" data-nova-pessoa>+ pessoa</button>
     </div>`;
 }
@@ -194,13 +261,19 @@ function renderSugestoes() {
       perfilHtml = `<p class="perfil">Toque no ✎ ao lado de <strong>Você</strong> para dizer
         o que curte — e as notas do diário também me ensinam seu gosto.</p>`;
     }
+  } else if (state.pessoaAtiva === 'festa') {
+    const nomes = state.festa.map(id => id === 'eu' ? 'Você' : getPessoa(id)?.nome).filter(Boolean);
+    perfilHtml = `<p class="perfil">🎉 Modo festa: <strong>${nomes.map(esc).join(', ')}</strong>
+      — priorizando drinks que agradam todo mundo e respeitando as restrições de cada um.</p>`;
   } else {
     const pessoa = getPessoa(state.pessoaAtiva);
     const aprendidas = topProfileTags(tasteProfile(state.pessoaAtiva));
     const gostos = [...new Set([...(pessoa?.tags || []), ...aprendidas])]
       .map(t => esc((TAG_NOMES[t] || t).toLowerCase()));
+    const restricoes = (pessoa?.evita || []).map(t => esc((EVITA_NOMES[t] || TAG_NOMES[t] || t).toLowerCase()));
     perfilHtml = `<p class="perfil">Sugerindo para <strong>${esc(pessoa?.nome || '')}</strong>${
-      gostos.length ? ` — gosta de: <strong>${gostos.join(', ')}</strong>` : ''}.</p>`;
+      gostos.length ? ` — gosta de: <strong>${gostos.join(', ')}</strong>` : ''}${
+      restricoes.length ? ` — evita: <strong>${restricoes.join(', ')}</strong>` : ''}.</p>`;
   }
 
   const fotos = fotosPorReceita();
@@ -285,15 +358,54 @@ function fotoURL(entry) {
   return state.fotoURLs.get(entry.id);
 }
 
+function filtroPeriodo(e) {
+  const periodo = $('#filtro-periodo')?.value || 'todos';
+  if (periodo === 'todos' || !e.data) return periodo === 'todos';
+  const hoje = new Date();
+  const [y, m] = e.data.split('-').map(Number);
+  if (periodo === 'mes') return y === hoje.getFullYear() && m === hoje.getMonth() + 1;
+  if (periodo === 'tres-meses') {
+    const limite = new Date(hoje.getFullYear(), hoje.getMonth() - 2, 1);
+    return new Date(y, m - 1, 1) >= limite;
+  }
+  if (periodo === 'ano') return y === hoje.getFullYear();
+  return true;
+}
+
+// Resumo neutro do mês — informação, não julgamento
+function renderStatsDiario() {
+  const hoje = new Date();
+  const doMes = state.entries.filter(e => {
+    if (!e.data) return false;
+    const [y, m] = e.data.split('-').map(Number);
+    return y === hoje.getFullYear() && m === hoje.getMonth() + 1;
+  });
+  if (!doMes.length) { $('#stats-diario').innerHTML = ''; return; }
+  const comNota = doMes.filter(e => e.nota);
+  const media = comNota.length
+    ? (comNota.reduce((s, e) => s + e.nota, 0) / comNota.length).toFixed(1)
+    : null;
+  const melhor = [...comNota].sort((a, b) => b.nota - a.nota)[0];
+  $('#stats-diario').innerHTML = `<p class="stats">Este mês: <strong>${doMes.length}</strong>
+    ${doMes.length === 1 ? 'registro' : 'registros'}${media ? ` · nota média <strong>${media}</strong>` : ''}${
+    melhor ? ` · destaque: <strong>${esc(melhor.nome)}</strong>` : ''}</p>`;
+}
+
 function renderDiario() {
+  renderStatsDiario();
   const busca = ($('#busca-diario')?.value || '').trim().toLowerCase();
+  const notaMin = Number($('#filtro-nota')?.value || 0);
   const entries = [...state.entries]
     .filter(e => !busca || (e.nome || '').toLowerCase().includes(busca) || (e.texto || '').toLowerCase().includes(busca))
+    .filter(e => !notaMin || (e.nota || 0) >= notaMin)
+    .filter(filtroPeriodo)
     .sort((a, b) => (b.data || '').localeCompare(a.data || '') || b.id - a.id);
 
   if (!entries.length) {
-    $('#lista-diario').innerHTML = `<div class="vazio">📔 Nenhum registro ainda.<br>
-      Bebeu um drink bom (ou ruim)? Registre com foto, nota e a história do momento.</div>`;
+    $('#lista-diario').innerHTML = state.entries.length
+      ? '<div class="vazio">Nenhum registro com esses filtros.</div>'
+      : `<div class="vazio">📔 Nenhum registro ainda.<br>
+        Bebeu um drink bom (ou ruim)? Registre com foto, nota e a história do momento.</div>`;
     return;
   }
 
@@ -301,20 +413,32 @@ function renderDiario() {
     const url = fotoURL(e);
     const foto = url ? `<img class="foto" src="${url}" alt="Foto de ${esc(e.nome)}">` : '';
     const receita = e.receitaId && RECEITA_MAP[e.receitaId];
+    const quem = e.pessoaId && e.pessoaId !== 'eu'
+      ? (getPessoa(e.pessoaId)?.nome || e.pessoaNome) : null;
     return `<div class="card entrada" data-entry="${e.id}">
       ${foto}
       <div class="entrada-corpo">
         <div class="card-top"><h3>${esc(e.nome)}</h3><span class="nota">${estrelas(e.nota || 0)}</span></div>
         <p class="meta">${fmtData(e.data)}${receita ? ` · receita: ${esc(receita.nome)}` : ''}${
-          e.pessoaId && e.pessoaId !== 'eu' ? ` · 👤 ${esc(getPessoa(e.pessoaId)?.nome || '')}` : ''}</p>
+          quem ? ` · 👤 ${esc(quem)}` : ''}</p>
         ${e.texto ? `<p class="texto">${esc(e.texto)}</p>` : ''}
         <div class="acoes">
-          <button class="mini" data-editar="${e.id}">✏️ editar</button>
-          <button class="mini danger" data-apagar="${e.id}">🗑 apagar</button>
+          <button class="mini" data-editar="${e.id}">editar</button>
+          <button class="mini" data-compartilhar-entrada="${e.id}">compartilhar</button>
+          <button class="mini danger" data-apagar="${e.id}">apagar</button>
         </div>
       </div>
     </div>`;
   }).join('');
+}
+
+function compartilharEntrada(id) {
+  const e = state.entries.find(x => x.id === id);
+  if (!e) return;
+  const partes = [`🍸 ${e.nome} ${estrelas(e.nota || 0)}`, fmtData(e.data)];
+  if (e.texto) partes.push(`"${e.texto}"`);
+  partes.push('(do meu diário no MeuBar)');
+  compartilharTexto(e.nome, partes.join('\n'));
 }
 
 // ---------- Modal de receita ----------
@@ -340,8 +464,32 @@ function abrirReceita(id) {
     <ul class="ingredientes">${ing}</ul>
     <h3>Preparo</h3>
     <p>${esc(r.preparo)}</p>
-    <button class="btn primario" id="btn-registrar" data-receita="${r.id}">📔 Fiz esse! Registrar no diário</button>`;
+    <button class="btn primario" id="btn-registrar" data-receita="${r.id}">Fiz esse! Registrar no diário</button>
+    <div class="botoes-duplos">
+      <button class="btn" id="btn-favoritar" data-receita="${r.id}">
+        ${state.favoritos.has(r.id) ? '♥ Favorito' : '♡ Favoritar'}</button>
+      <button class="btn" id="btn-compartilhar" data-receita="${r.id}">Compartilhar</button>
+    </div>`;
   $('#modal').classList.add('aberto');
+}
+
+async function compartilharTexto(titulo, texto) {
+  if (navigator.share) {
+    try { await navigator.share({ title: titulo, text: texto }); } catch { /* cancelado */ }
+  } else {
+    try {
+      await navigator.clipboard.writeText(texto);
+      alert('Copiado! É só colar onde quiser.');
+    } catch { alert('Não consegui compartilhar neste navegador.'); }
+  }
+}
+
+function compartilharReceita(id) {
+  const r = RECEITA_MAP[id];
+  if (!r) return;
+  const ing = r.ing.map(i => `• ${ING_MAP[i.id]?.nome || i.id} — ${i.q}`).join('\n');
+  compartilharTexto(r.nome,
+    `🍸 ${r.nome}\n\n${ing}\n\nPreparo: ${r.preparo}\n\n(via MeuBar)`);
 }
 
 // ---------- Formulário do diário ----------
@@ -374,8 +522,9 @@ function abrirFormEntrada(entry = null, receitaId = null) {
         </select>
       </label>
       <label>Nota</label>
-      <div class="estrelas" id="picker-estrelas">
-        ${[1, 2, 3, 4, 5].map(n => `<button type="button" class="estrela ${n <= nota ? 'on' : ''}" data-n="${n}">★</button>`).join('')}
+      <div class="estrelas" id="picker-estrelas" role="radiogroup" aria-label="Nota de 1 a 5 estrelas">
+        ${[1, 2, 3, 4, 5].map(n => `<button type="button" class="estrela ${n <= nota ? 'on' : ''}" data-n="${n}"
+          role="radio" aria-checked="${n === nota}" aria-label="${n} ${n === 1 ? 'estrela' : 'estrelas'}">★</button>`).join('')}
       </div>
       <input type="hidden" name="nota" value="${nota}">
       <label>Como foi a experiência?
@@ -400,8 +549,9 @@ function abrirFormEntrada(entry = null, receitaId = null) {
     $$('#picker-estrelas .estrela').forEach(b => b.classList.toggle('on', Number(b.dataset.n) <= n));
   });
 
-  form.foto.addEventListener('change', () => {
-    novaFoto = form.foto.files[0] || null;
+  form.foto.addEventListener('change', async () => {
+    const arquivo = form.foto.files[0] || null;
+    novaFoto = arquivo ? await comprimirFoto(arquivo) : null;
     if (novaFoto) {
       $('#preview-foto').innerHTML = `<img class="foto" src="${URL.createObjectURL(novaFoto)}" alt="Prévia da foto">`;
     }
@@ -409,10 +559,13 @@ function abrirFormEntrada(entry = null, receitaId = null) {
 
   form.addEventListener('submit', async ev => {
     ev.preventDefault();
+    const quem = form.pessoaId.value || 'eu';
     const dados = {
       nome: form.nome.value.trim(),
       receitaId: form.receitaId.value || null,
-      pessoaId: form.pessoaId.value || 'eu',
+      pessoaId: quem,
+      // Guarda o nome para o registro sobreviver se a pessoa for removida
+      pessoaNome: quem === 'eu' ? null : (getPessoa(quem)?.nome || null),
       data: form.data.value,
       nota: Number(form.nota.value) || 0,
       texto: form.texto.value.trim(),
@@ -442,8 +595,12 @@ function abrirFormPessoa(id = null) {
   const pessoa = id ? getPessoa(id) : null;
   const isEu = pessoa?.id === 'eu';
   const tags = new Set(pessoa?.tags || []);
+  const evita = new Set(pessoa?.evita || []);
   const chips = TAGS_PREFERENCIA.map(t =>
     `<button type="button" class="chip ${tags.has(t) ? 'on' : ''}" data-tag-pref="${t}">${esc(TAG_NOMES[t])}</button>`
+  ).join('');
+  const chipsEvita = TAGS_EVITA.map(t =>
+    `<button type="button" class="chip evita ${evita.has(t) ? 'on' : ''}" data-tag-evita="${t}">${esc(EVITA_NOMES[t] || TAG_NOMES[t])}</button>`
   ).join('');
 
   $('#modal-corpo').innerHTML = `
@@ -454,8 +611,10 @@ function abrirFormPessoa(id = null) {
       </label>`}
       <label>Gosta de drinks...</label>
       <div class="chips" id="chips-pref">${chips}</div>
-      <p class="dica">Ex.: "Marília gosta de bebida doce" → marque <strong>Doce</strong>.
-        As sugestões passam a priorizar esse estilo quando a pessoa estiver selecionada.</p>
+      <label>Evita / não pode</label>
+      <div class="chips" id="chips-evita">${chipsEvita}</div>
+      <p class="dica">Marcar <strong>Álcool</strong> em "evita" mostra apenas drinks sem álcool
+        para essa pessoa. As demais restrições escondem os drinks daquele estilo.</p>
       <button class="btn primario" type="submit">Salvar</button>
       ${pessoa && !isEu ? `<button class="btn" type="button" id="btn-apagar-pessoa" style="color:var(--erro)">Remover pessoa</button>` : ''}
     </form>`;
@@ -469,15 +628,24 @@ function abrirFormPessoa(id = null) {
     chip.classList.toggle('on', tags.has(t));
   });
 
+  $('#chips-evita').addEventListener('click', ev => {
+    const chip = ev.target.closest('[data-tag-evita]');
+    if (!chip) return;
+    const t = chip.dataset.tagEvita;
+    evita.has(t) ? evita.delete(t) : evita.add(t);
+    chip.classList.toggle('on', evita.has(t));
+  });
+
   $('#form-pessoa').addEventListener('submit', ev => {
     ev.preventDefault();
     const form = ev.target;
     if (pessoa) {
       pessoa.tags = [...tags];
+      pessoa.evita = [...evita];
       if (!isEu) pessoa.nome = form.nome.value.trim();
       if (isEu && !state.pessoas.some(p => p.id === 'eu')) state.pessoas.push(pessoa);
     } else {
-      const nova = { id: 'p' + Date.now(), nome: form.nome.value.trim(), tags: [...tags] };
+      const nova = { id: 'p' + Date.now(), nome: form.nome.value.trim(), tags: [...tags], evita: [...evita] };
       state.pessoas.push(nova);
       state.pessoaAtiva = nova.id;
     }
@@ -489,9 +657,12 @@ function abrirFormPessoa(id = null) {
   const apagar = $('#btn-apagar-pessoa');
   if (apagar) {
     apagar.addEventListener('click', () => {
-      if (!confirm(`Remover ${pessoa.nome}?`)) return;
+      if (!confirm(`Remover ${pessoa.nome}? Os registros dela no diário são mantidos.`)) return;
       state.pessoas = state.pessoas.filter(p => p.id !== pessoa.id);
+      state.festa = state.festa.filter(id => id !== pessoa.id);
+      Store.setFesta(state.festa);
       if (state.pessoaAtiva === pessoa.id) state.pessoaAtiva = 'eu';
+      if (state.pessoaAtiva === 'festa' && state.festa.length < 2) state.pessoaAtiva = 'eu';
       Store.setPessoas(state.pessoas);
       fecharModal();
       renderSugestoes();
@@ -499,18 +670,126 @@ function abrirFormPessoa(id = null) {
   }
 }
 
+// ---------- Modo festa: quem está na roda? ----------
+function abrirFormFesta() {
+  const todos = [{ id: 'eu', nome: 'Você' }, ...state.pessoas.filter(p => p.id !== 'eu')];
+  const sel = new Set(state.festa.length ? state.festa : todos.map(p => p.id));
+  $('#modal-corpo').innerHTML = `
+    <h2>🎉 Quem está na roda?</h2>
+    <p class="dica">Escolha pelo menos duas pessoas. Vou priorizar drinks que agradem
+      todo mundo e respeitar as restrições de cada um.</p>
+    <div class="chips" id="chips-festa">
+      ${todos.map(p => `<button type="button" class="chip ${sel.has(p.id) ? 'on' : ''}" data-festa-id="${p.id}">${esc(p.nome)}</button>`).join('')}
+    </div>
+    <button class="btn primario" id="btn-salvar-festa">Começar a festa</button>`;
+  $('#modal').classList.add('aberto');
+
+  $('#chips-festa').addEventListener('click', ev => {
+    const chip = ev.target.closest('[data-festa-id]');
+    if (!chip) return;
+    const id = chip.dataset.festaId;
+    sel.has(id) ? sel.delete(id) : sel.add(id);
+    chip.classList.toggle('on', sel.has(id));
+  });
+
+  $('#btn-salvar-festa').addEventListener('click', () => {
+    if (sel.size < 2) { alert('Escolha pelo menos duas pessoas.'); return; }
+    state.festa = [...sel];
+    Store.setFesta(state.festa);
+    state.pessoaAtiva = 'festa';
+    fecharModal();
+    renderSugestoes();
+  });
+}
+
 function fecharModal() {
   $('#modal').classList.remove('aberto');
   $('#modal-corpo').innerHTML = '';
 }
 
+// ---------- Backup: exportar e importar tudo ----------
+function blobParaDataURL(blob) {
+  return new Promise(resolve => {
+    const fr = new FileReader();
+    fr.onload = () => resolve(fr.result);
+    fr.onerror = () => resolve(null);
+    fr.readAsDataURL(blob);
+  });
+}
+
+async function exportarDados() {
+  const entries = [];
+  for (const e of state.entries) {
+    const copia = { ...e };
+    if (e.foto instanceof Blob) copia.foto = await blobParaDataURL(e.foto);
+    entries.push(copia);
+  }
+  const dados = {
+    app: 'meubar', versao: 1, exportadoEm: new Date().toISOString(),
+    bar: [...state.bar], shopping: [...state.shopping],
+    pessoas: state.pessoas, favoritos: [...state.favoritos],
+    festa: state.festa, entries,
+  };
+  const blob = new Blob([JSON.stringify(dados)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `meubar-backup-${new Date().toISOString().slice(0, 10)}.json`;
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+}
+
+async function importarDados(arquivo) {
+  let dados;
+  try { dados = JSON.parse(await arquivo.text()); }
+  catch { alert('Arquivo inválido.'); return; }
+  if (dados?.app !== 'meubar' || !Array.isArray(dados.entries)) {
+    alert('Esse arquivo não parece um backup do MeuBar.');
+    return;
+  }
+  if (!confirm(`Importar backup de ${fmtData(dados.exportadoEm?.slice(0, 10))} ` +
+    `(${dados.entries.length} registros)? Isso substitui os dados atuais.`)) return;
+
+  await dbClearEntries();
+  for (const url of state.fotoURLs.values()) URL.revokeObjectURL(url);
+  state.fotoURLs.clear();
+  for (const e of dados.entries) {
+    const copia = { ...e };
+    delete copia.id; // deixa o IndexedDB gerar ids novos
+    if (typeof copia.foto === 'string' && copia.foto.startsWith('data:')) {
+      copia.foto = await (await fetch(copia.foto)).blob();
+    } else if (typeof copia.foto === 'string') {
+      copia.foto = null;
+    }
+    await dbAddEntry(copia);
+  }
+  state.bar = new Set(dados.bar || []);
+  state.shopping = new Set(dados.shopping || []);
+  state.pessoas = dados.pessoas || [];
+  state.favoritos = new Set(dados.favoritos || []);
+  state.festa = dados.festa || [];
+  state.pessoaAtiva = 'eu';
+  Store.setBar(state.bar);
+  Store.setShopping(state.shopping);
+  Store.setPessoas(state.pessoas);
+  Store.setFavoritos(state.favoritos);
+  Store.setFesta(state.festa);
+  state.entries = await dbGetEntries();
+  renderDiario();
+  renderSugestoes();
+  alert('Backup importado! 🍸');
+}
+
 // ---------- Especialista (IA) ----------
-const chat = { history: [] };
+const chat = { history: Store.getChat(), ocupado: false };
 
 function renderExpert() {
   const temChave = !!Store.getApiKey();
   $('#expert-config').classList.toggle('escondido', temChave);
   $('#expert-chat').classList.toggle('escondido', !temChave);
+  // Restaura a conversa salva ao voltar para a aba
+  if (temChave && !$('#chat-mensagens').children.length && chat.history.length) {
+    for (const msg of chat.history) addBubble(msg.role, msg.content);
+  }
 }
 
 function addBubble(role, text) {
@@ -523,10 +802,14 @@ function addBubble(role, text) {
 }
 
 async function enviarPergunta() {
+  if (chat.ocupado) return;
   const input = $('#chat-input');
   const texto = input.value.trim();
   if (!texto) return;
+  chat.ocupado = true;
   input.value = '';
+  input.disabled = true;
+  $('#form-chat button').disabled = true;
   addBubble('user', texto);
   chat.history.push({ role: 'user', content: texto });
 
@@ -541,7 +824,11 @@ async function enviarPergunta() {
 
   const pessoas = state.pessoas
     .filter(p => p.id !== 'eu')
-    .map(p => ({ nome: p.nome, gostos: p.tags.map(t => TAG_NOMES[t] || t) }));
+    .map(p => ({
+      nome: p.nome,
+      gostos: p.tags.map(t => TAG_NOMES[t] || t),
+      evita: (p.evita || []).map(t => EVITA_NOMES[t] || TAG_NOMES[t] || t),
+    }));
 
   try {
     const resposta = await askExpert(
@@ -551,9 +838,15 @@ async function enviarPergunta() {
     );
     pensando.textContent = resposta;
     chat.history.push({ role: 'assistant', content: resposta });
+    Store.setChat(chat.history);
   } catch (err) {
     pensando.textContent = `⚠️ ${err.message}`;
     chat.history.pop(); // remove a pergunta que falhou para poder tentar de novo
+  } finally {
+    chat.ocupado = false;
+    input.disabled = false;
+    $('#form-chat button').disabled = false;
+    input.focus();
   }
   $('#chat-mensagens').scrollTop = $('#chat-mensagens').scrollHeight;
 }
@@ -580,6 +873,19 @@ function initEventos() {
     const editar = ev.target.closest('[data-editar-pessoa]');
     if (editar) {
       abrirFormPessoa(editar.dataset.editarPessoa);
+      return;
+    }
+    if (ev.target.closest('[data-editar-festa]')) {
+      abrirFormFesta();
+      return;
+    }
+    if (ev.target.closest('[data-festa]')) {
+      if (state.festa.length >= 2) {
+        state.pessoaAtiva = 'festa';
+        renderSugestoes();
+      } else {
+        abrirFormFesta();
+      }
       return;
     }
     if (ev.target.closest('[data-nova-pessoa]')) {
@@ -649,11 +955,24 @@ function initEventos() {
   // Diário
   $('#btn-nova-entrada').addEventListener('click', () => abrirFormEntrada());
   $('#busca-diario').addEventListener('input', renderDiario);
+  $('#filtro-nota').addEventListener('change', renderDiario);
+  $('#filtro-periodo').addEventListener('change', renderDiario);
+  $('#btn-exportar').addEventListener('click', exportarDados);
+  $('#input-importar').addEventListener('change', ev => {
+    const arquivo = ev.target.files[0];
+    if (arquivo) importarDados(arquivo);
+    ev.target.value = '';
+  });
   $('#lista-diario').addEventListener('click', async ev => {
     const editar = ev.target.closest('[data-editar]');
     if (editar) {
       const e = state.entries.find(x => x.id === Number(editar.dataset.editar));
       if (e) abrirFormEntrada(e);
+      return;
+    }
+    const compartilhar = ev.target.closest('[data-compartilhar-entrada]');
+    if (compartilhar) {
+      compartilharEntrada(Number(compartilhar.dataset.compartilharEntrada));
       return;
     }
     const apagar = ev.target.closest('[data-apagar]');
@@ -677,6 +996,16 @@ function initEventos() {
     if (ev.target.id === 'modal' || ev.target.closest('#modal-fechar')) fecharModal();
     const reg = ev.target.closest('#btn-registrar');
     if (reg) abrirFormEntrada(null, reg.dataset.receita);
+    const favBtn = ev.target.closest('#btn-favoritar');
+    if (favBtn) {
+      const id = favBtn.dataset.receita;
+      state.favoritos.has(id) ? state.favoritos.delete(id) : state.favoritos.add(id);
+      Store.setFavoritos(state.favoritos);
+      favBtn.textContent = state.favoritos.has(id) ? '♥ Favorito' : '♡ Favoritar';
+      renderSugestoes();
+    }
+    const shareBtn = ev.target.closest('#btn-compartilhar');
+    if (shareBtn) compartilharReceita(shareBtn.dataset.receita);
   });
 
   // Especialista
@@ -688,6 +1017,7 @@ function initEventos() {
   $('#btn-trocar-chave').addEventListener('click', () => {
     Store.setApiKey('');
     chat.history = [];
+    Store.setChat([]);
     $('#chat-mensagens').innerHTML = '';
     renderExpert();
   });

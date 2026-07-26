@@ -51,6 +51,16 @@ async function dbDeleteEntry(id) {
   });
 }
 
+async function dbClearEntries() {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction('entries', 'readwrite');
+    tx.objectStore('entries').clear();
+    tx.oncomplete = () => resolve();
+    tx.onerror = () => reject(tx.error);
+  });
+}
+
 async function dbGetEntries() {
   const db = await openDB();
   return new Promise((resolve, reject) => {
@@ -81,4 +91,10 @@ const Store = {
   setApiKey(k) { localStorage.setItem('meubar.apikey', k); },
   getPessoas() { return LS.get('meubar.pessoas', []); },
   setPessoas(lista) { LS.set('meubar.pessoas', lista); },
+  getFavoritos() { return new Set(LS.get('meubar.favoritos', [])); },
+  setFavoritos(set) { LS.set('meubar.favoritos', [...set]); },
+  getFesta() { return LS.get('meubar.festa', []); },
+  setFesta(ids) { LS.set('meubar.festa', ids); },
+  getChat() { return LS.get('meubar.chat', []); },
+  setChat(h) { LS.set('meubar.chat', h.slice(-30)); },
 };
