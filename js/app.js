@@ -433,6 +433,7 @@ function renderStatsDiario() {
 
 function renderDiario() {
   renderStatsDiario();
+  $('#btn-retrospectiva').classList.toggle('escondido', state.entries.length < 3);
   const busca = ($('#busca-diario')?.value || '').trim().toLowerCase();
   const notaMin = Number($('#filtro-nota')?.value || 0);
   const entries = [...state.entries]
@@ -670,6 +671,8 @@ function abrirFormPessoa(id = null) {
       <div class="chips" id="chips-evita">${chipsEvita}</div>
       <p class="dica">Marcar <strong>Álcool</strong> em "evita" mostra apenas drinks sem álcool
         para essa pessoa. As demais restrições escondem os drinks daquele estilo.</p>
+      ${pessoa ? '' : `<button type="button" class="btn" id="btn-convidar">
+        ✉️ Ou envie um cartão para a pessoa preencher</button>`}
       <button class="btn primario" type="submit">Salvar</button>
       ${pessoa && !isEu ? `<button class="btn" type="button" id="btn-apagar-pessoa" style="color:var(--erro)">Remover pessoa</button>` : ''}
     </form>`;
@@ -682,6 +685,9 @@ function abrirFormPessoa(id = null) {
     tags.has(t) ? tags.delete(t) : tags.add(t);
     chip.classList.toggle('on', tags.has(t));
   });
+
+  const convidar = $('#btn-convidar');
+  if (convidar) convidar.addEventListener('click', compartilharConvite);
 
   $('#chips-evita').addEventListener('click', ev => {
     const chip = ev.target.closest('[data-tag-evita]');
@@ -1272,6 +1278,7 @@ function initEventos() {
   $('#busca-diario').addEventListener('input', renderDiario);
   $('#filtro-nota').addEventListener('change', renderDiario);
   $('#filtro-periodo').addEventListener('change', renderDiario);
+  $('#btn-retrospectiva').addEventListener('click', gerarRetrospectiva);
   $('#btn-exportar').addEventListener('click', exportarDados);
   $('#input-importar').addEventListener('change', ev => {
     const arquivo = ev.target.files[0];
@@ -1370,8 +1377,11 @@ function initEventos() {
 // ---------- Boot ----------
 async function init() {
   aplicarReceitasCustom();
+  // Tela do convidado assume a página inteira — não precisa do app normal
+  if (location.hash === '#convidado') { abrirCartaoConvidado(); return; }
   state.entries = await dbGetEntries();
   initEventos();
+  checarConvite();
   $('#contador-bar').textContent = state.bar.size;
   trocarAba('sugestoes');
 

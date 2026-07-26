@@ -38,6 +38,11 @@ bar e o seu gosto.
   drinks que dá para fazer, pronta para mandar no grupo ou apoiar na mesa.
 - **✍️ Receitas próprias e anotações** — crie seus drinks (entram no motor de
   sugestões, no perfil e no diário) e anote seus ajustes nos clássicos.
+- **🎁 Retrospectiva** — cartaz do seu ano em drinks: total, o campeão, a nota
+  máxima, o mês mais animado, com quem você mais brindou e seu paladar.
+- **✉️ Cartão de convidado** — mande um link, a pessoa marca o que gosta e
+  evita, e devolve um link que a cadastra no seu app. Sem servidor: as
+  preferências viajam dentro da própria URL.
 
 ## Como rodar
 
