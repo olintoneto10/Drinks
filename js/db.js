@@ -79,4 +79,6 @@ const Store = {
   setShopping(set) { LS.set('meubar.shopping', [...set]); },
   getApiKey() { return localStorage.getItem('meubar.apikey') || ''; },
   setApiKey(k) { localStorage.setItem('meubar.apikey', k); },
+  getPessoas() { return LS.get('meubar.pessoas', []); },
+  setPessoas(lista) { LS.set('meubar.pessoas', lista); },
 };

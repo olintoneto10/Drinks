@@ -3,7 +3,7 @@
 
 const AI_MODEL = 'claude-opus-5';
 
-function buildSystemPrompt(barIds, profileTags, topDrinks) {
+function buildSystemPrompt(barIds, profileTags, topDrinks, pessoas = []) {
   const itens = [...barIds].map(id => ING_MAP[id]?.nome).filter(Boolean);
   const perfil = profileTags.length
     ? profileTags.map(t => TAG_NOMES[t] || t).join(', ')
@@ -19,6 +19,12 @@ ${itens.length ? itens.join(', ') : 'nada cadastrado ainda — sugira drinks ace
 
 PERFIL DE SABOR (aprendido das avaliações no diário): ${perfil}
 DRINKS MAIS BEM AVALIADOS PELO USUÁRIO: ${favoritos}
+
+PESSOAS CADASTRADAS E O QUE CADA UMA GOSTA:
+${pessoas.length
+    ? pessoas.map(p => `- ${p.nome}: ${p.gostos.length ? p.gostos.join(', ') : 'sem preferências declaradas'}`).join('\n')
+    : '- nenhuma pessoa cadastrada além do usuário'}
+Se o usuário pedir um drink para uma dessas pessoas, use as preferências dela.
 
 Regras:
 - Priorize sugestões que usem só o que o usuário tem; se faltar algo, deixe claro o que falta e sugira substituições.

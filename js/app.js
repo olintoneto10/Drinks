@@ -7,10 +7,23 @@ const state = {
   bar: Store.getBar(),
   shopping: Store.getShopping(),
   entries: [],
+  pessoas: Store.getPessoas(), // [{id, nome, tags: []}]
+  pessoaAtiva: 'eu',
   filtroTag: 'todos',
   buscaSugestao: '',
   fotoURLs: new Map(), // entryId -> objectURL
 };
+
+// Tags que uma pessoa pode declarar que gosta
+const TAGS_PREFERENCIA = ['doce', 'citrico', 'amargo', 'seco', 'refrescante',
+  'cremoso', 'frutado', 'forte', 'tropical', 'sem-alcool'];
+
+function getPessoa(id) {
+  if (id === 'eu') {
+    return state.pessoas.find(p => p.id === 'eu') || { id: 'eu', nome: 'Você', tags: [] };
+  }
+  return state.pessoas.find(p => p.id === id) || null;
+}
 
 function esc(s) {
   return String(s ?? '').replace(/[&<>"']/g, c => ({
@@ -51,9 +64,19 @@ function topProfileTags(pesos, n = 3) {
     .map(([t]) => t);
 }
 
+// Pesos usados para ordenar as sugestões: preferências declaradas da pessoa
+// ativa e, no caso de "Você", também o que o app aprendeu das notas do diário.
+function pesosAtivos() {
+  const pesos = {};
+  if (state.pessoaAtiva === 'eu') Object.assign(pesos, tasteProfile());
+  const pessoa = getPessoa(state.pessoaAtiva);
+  for (const t of pessoa?.tags || []) pesos[t] = (pesos[t] || 0) + 2;
+  return pesos;
+}
+
 // ---------- Motor de sugestões ----------
 function matchRecipes() {
-  const pesos = tasteProfile();
+  const pesos = pesosAtivos();
   const ready = [];
   const almost = [];
   for (const r of RECEITAS) {
@@ -80,7 +103,9 @@ function passaFiltro(receita) {
 // ---------- Render: Sugestões ----------
 function cardReceita({ receita, faltam, score }, destaque) {
   const tags = receita.tags.map(t => `<span class="tag">${esc(TAG_NOMES[t] || t)}</span>`).join('');
-  const match = destaque && score > 0 ? '<span class="match">✨ seu estilo</span>' : '';
+  const pessoa = getPessoa(state.pessoaAtiva);
+  const selo = state.pessoaAtiva === 'eu' ? 'seu estilo' : `p/ ${esc(pessoa?.nome || '')}`;
+  const match = destaque && score > 0 ? `<span class="match">✨ ${selo}</span>` : '';
   let faltaHtml = '';
   if (faltam.length) {
     const ing = ING_MAP[faltam[0]];
@@ -96,18 +121,47 @@ function cardReceita({ receita, faltam, score }, destaque) {
   </div>`;
 }
 
+function renderPessoasRow() {
+  const eu = getPessoa('eu');
+  const outras = state.pessoas.filter(p => p.id !== 'eu');
+  const chip = (p, nome) => {
+    const on = state.pessoaAtiva === p.id;
+    const lapis = on ? ` <span class="lapis" data-editar-pessoa="${p.id}">✎</span>` : '';
+    return `<button class="chip ${on ? 'on' : ''}" data-pessoa="${p.id}">${esc(nome)}${lapis}</button>`;
+  };
+  $('#pessoas-row').innerHTML = `
+    <p class="dica" style="margin-bottom:6px">Para quem vai o drink?</p>
+    <div class="chips">
+      ${chip(eu, 'Você')}
+      ${outras.map(p => chip(p, p.nome)).join('')}
+      <button class="chip" data-nova-pessoa>+ pessoa</button>
+    </div>`;
+}
+
 function renderSugestoes() {
+  renderPessoasRow();
   const { ready, almost } = matchRecipes();
   const readyF = ready.filter(x => passaFiltro(x.receita));
   const almostF = almost.filter(x => passaFiltro(x.receita));
-  const pesos = tasteProfile();
-  const top = topProfileTags(pesos);
 
   let perfilHtml = '';
-  if (top.length) {
-    perfilHtml = `<p class="perfil">Seu perfil: você curte drinks
-      <strong>${top.map(t => esc((TAG_NOMES[t] || t).toLowerCase())).join(', ')}</strong>
-      — as sugestões já levam isso em conta.</p>`;
+  if (state.pessoaAtiva === 'eu') {
+    const declaradas = getPessoa('eu').tags;
+    const aprendidas = topProfileTags(tasteProfile());
+    const todas = [...new Set([...declaradas, ...aprendidas])];
+    if (todas.length) {
+      perfilHtml = `<p class="perfil">Seu perfil: você curte drinks
+        <strong>${todas.map(t => esc((TAG_NOMES[t] || t).toLowerCase())).join(', ')}</strong>
+        — as sugestões já levam isso em conta.</p>`;
+    } else {
+      perfilHtml = `<p class="perfil">Toque no ✎ ao lado de <strong>Você</strong> para dizer
+        o que curte — e as notas do diário também me ensinam seu gosto.</p>`;
+    }
+  } else {
+    const pessoa = getPessoa(state.pessoaAtiva);
+    const gostos = (pessoa?.tags || []).map(t => esc((TAG_NOMES[t] || t).toLowerCase()));
+    perfilHtml = `<p class="perfil">Sugerindo para <strong>${esc(pessoa?.nome || '')}</strong>${
+      gostos.length ? ` — gosta de: <strong>${gostos.join(', ')}</strong>` : ''}.</p>`;
   }
 
   let html = perfilHtml;
@@ -310,6 +364,68 @@ function abrirFormEntrada(entry = null, receitaId = null) {
   });
 }
 
+// ---------- Formulário de pessoa (preferências) ----------
+function abrirFormPessoa(id = null) {
+  const pessoa = id ? getPessoa(id) : null;
+  const isEu = pessoa?.id === 'eu';
+  const tags = new Set(pessoa?.tags || []);
+  const chips = TAGS_PREFERENCIA.map(t =>
+    `<button type="button" class="chip ${tags.has(t) ? 'on' : ''}" data-tag-pref="${t}">${esc(TAG_NOMES[t])}</button>`
+  ).join('');
+
+  $('#modal-corpo').innerHTML = `
+    <h2>${pessoa ? (isEu ? 'O que você curte' : `Preferências de ${esc(pessoa.nome)}`) : '👤 Nova pessoa'}</h2>
+    <form id="form-pessoa">
+      ${isEu ? '' : `<label>Nome
+        <input name="nome" required maxlength="40" value="${esc(pessoa?.nome || '')}" placeholder="Ex.: Marília">
+      </label>`}
+      <label>Gosta de drinks...</label>
+      <div class="chips" id="chips-pref">${chips}</div>
+      <p class="dica">Ex.: "Marília gosta de bebida doce" → marque <strong>Doce</strong>.
+        As sugestões passam a priorizar esse estilo quando a pessoa estiver selecionada.</p>
+      <button class="btn primario" type="submit">Salvar</button>
+      ${pessoa && !isEu ? `<button class="btn" type="button" id="btn-apagar-pessoa" style="color:var(--erro)">Remover pessoa</button>` : ''}
+    </form>`;
+  $('#modal').classList.add('aberto');
+
+  $('#chips-pref').addEventListener('click', ev => {
+    const chip = ev.target.closest('[data-tag-pref]');
+    if (!chip) return;
+    const t = chip.dataset.tagPref;
+    tags.has(t) ? tags.delete(t) : tags.add(t);
+    chip.classList.toggle('on', tags.has(t));
+  });
+
+  $('#form-pessoa').addEventListener('submit', ev => {
+    ev.preventDefault();
+    const form = ev.target;
+    if (pessoa) {
+      pessoa.tags = [...tags];
+      if (!isEu) pessoa.nome = form.nome.value.trim();
+      if (isEu && !state.pessoas.some(p => p.id === 'eu')) state.pessoas.push(pessoa);
+    } else {
+      const nova = { id: 'p' + Date.now(), nome: form.nome.value.trim(), tags: [...tags] };
+      state.pessoas.push(nova);
+      state.pessoaAtiva = nova.id;
+    }
+    Store.setPessoas(state.pessoas);
+    fecharModal();
+    renderSugestoes();
+  });
+
+  const apagar = $('#btn-apagar-pessoa');
+  if (apagar) {
+    apagar.addEventListener('click', () => {
+      if (!confirm(`Remover ${pessoa.nome}?`)) return;
+      state.pessoas = state.pessoas.filter(p => p.id !== pessoa.id);
+      if (state.pessoaAtiva === pessoa.id) state.pessoaAtiva = 'eu';
+      Store.setPessoas(state.pessoas);
+      fecharModal();
+      renderSugestoes();
+    });
+  }
+}
+
 function fecharModal() {
   $('#modal').classList.remove('aberto');
   $('#modal-corpo').innerHTML = '';
@@ -343,17 +459,21 @@ async function enviarPergunta() {
 
   const pensando = addBubble('assistant', 'Pensando... 🍸');
   const pesos = tasteProfile();
-  const top = topProfileTags(pesos, 4);
+  const top = [...new Set([...getPessoa('eu').tags, ...topProfileTags(pesos, 4)])];
   const topDrinks = state.entries
     .filter(e => e.nota >= 4)
     .sort((a, b) => b.nota - a.nota)
     .slice(0, 5)
     .map(e => ({ nome: e.nome, nota: e.nota }));
 
+  const pessoas = state.pessoas
+    .filter(p => p.id !== 'eu')
+    .map(p => ({ nome: p.nome, gostos: p.tags.map(t => TAG_NOMES[t] || t) }));
+
   try {
     const resposta = await askExpert(
       Store.getApiKey(),
-      buildSystemPrompt(state.bar, top, topDrinks),
+      buildSystemPrompt(state.bar, top, topDrinks, pessoas),
       chat.history,
     );
     pensando.textContent = resposta;
@@ -382,7 +502,24 @@ function initEventos() {
     if (btn) trocarAba(btn.dataset.aba);
   });
 
-  // Sugestões: filtros, cards e lista de compras
+  // Sugestões: pessoas, filtros, cards e lista de compras
+  $('#pessoas-row').addEventListener('click', ev => {
+    const editar = ev.target.closest('[data-editar-pessoa]');
+    if (editar) {
+      abrirFormPessoa(editar.dataset.editarPessoa);
+      return;
+    }
+    if (ev.target.closest('[data-nova-pessoa]')) {
+      abrirFormPessoa();
+      return;
+    }
+    const chip = ev.target.closest('[data-pessoa]');
+    if (chip) {
+      state.pessoaAtiva = chip.dataset.pessoa;
+      renderSugestoes();
+    }
+  });
+
   $('#filtros').addEventListener('click', ev => {
     const chip = ev.target.closest('.chip');
     if (!chip) return;
@@ -491,6 +628,7 @@ function initEventos() {
 async function init() {
   state.entries = await dbGetEntries();
   initEventos();
+  $('#contador-bar').textContent = state.bar.size;
   trocarAba('sugestoes');
 
   if ('serviceWorker' in navigator && location.protocol !== 'file:') {

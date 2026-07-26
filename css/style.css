@@ -65,6 +65,8 @@ input:focus, select:focus, textarea:focus { outline: 2px solid var(--acento); bo
   cursor: pointer;
 }
 .chip.on { background: var(--acento); border-color: var(--acento); color: #241a08; font-weight: bold; }
+#pessoas-row { margin: 4px 0 12px; }
+.lapis { opacity: 0.75; margin-left: 4px; }
 
 /* Cards */
 .cards { display: grid; gap: 10px; }
