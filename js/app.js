@@ -24,6 +24,32 @@ const TAGS_PREFERENCIA = ['doce', 'citrico', 'amargo', 'seco', 'refrescante',
 const TAGS_EVITA = ['alcool', 'doce', 'citrico', 'amargo', 'cremoso', 'forte', 'quente'];
 const EVITA_NOMES = { 'alcool': 'Álcool' };
 
+// Receitas criadas pelo usuário entram no catálogo global (motor, diário, perfil)
+function aplicarReceitasCustom() {
+  for (const r of Store.getReceitasCustom()) {
+    if (!RECEITA_MAP[r.id]) RECEITAS.push(r);
+    RECEITA_MAP[r.id] = r;
+  }
+}
+
+function salvarReceitaCustom(receita) {
+  const custom = Store.getReceitasCustom().filter(r => r.id !== receita.id);
+  custom.push(receita);
+  Store.setReceitasCustom(custom);
+  const idx = RECEITAS.findIndex(r => r.id === receita.id);
+  if (idx >= 0) RECEITAS[idx] = receita; else RECEITAS.push(receita);
+  RECEITA_MAP[receita.id] = receita;
+}
+
+function excluirReceitaCustom(id) {
+  Store.setReceitasCustom(Store.getReceitasCustom().filter(r => r.id !== id));
+  const idx = RECEITAS.findIndex(r => r.id === id);
+  if (idx >= 0) RECEITAS.splice(idx, 1);
+  delete RECEITA_MAP[id];
+  state.favoritos.delete(id);
+  Store.setFavoritos(state.favoritos);
+}
+
 function getPessoa(id) {
   if (id === 'eu') {
     return state.pessoas.find(p => p.id === 'eu') || { id: 'eu', nome: 'Você', tags: [] };
@@ -45,6 +71,26 @@ function fmtData(iso) {
 
 function estrelas(n) {
   return '★'.repeat(n) + '☆'.repeat(5 - n);
+}
+
+// Converte qualquer imagem em JPEG base64 (máx. 1200px) para enviar à IA
+function fotoParaBase64Jpeg(file) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      URL.revokeObjectURL(url);
+      const max = 1200;
+      const escala = Math.min(1, max / Math.max(img.width, img.height));
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.round(img.width * escala);
+      canvas.height = Math.round(img.height * escala);
+      canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+      resolve(canvas.toDataURL('image/jpeg', 0.85).split(',')[1]);
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('Imagem inválida')); };
+    img.src = url;
+  });
 }
 
 // Reduz a foto para no máximo 1200px (JPEG) antes de salvar — evita estourar
@@ -195,7 +241,7 @@ function cardReceita({ receita, faltam, score }, destaque, fotos) {
       <span class="pontos"></span>
       <span class="copo-item">${esc(receita.copo.toLowerCase())}</span>
     </div>
-    <div class="sub">${match}<span class="tags-linha">${tags}</span></div>
+    <div class="sub">${match}<span class="tags-linha">${receita.custom ? 'sua receita · ' : ''}${tags}</span></div>
     ${faltaHtml}
   </div>`;
 }
@@ -458,6 +504,14 @@ function abrirReceita(id) {
     <ul class="ingredientes">${ing}</ul>
     <h3>Preparo</h3>
     <p>${esc(r.preparo)}</p>
+    ${r.ingExtra ? `<p class="dica">Outros: ${esc(r.ingExtra)}</p>` : ''}
+    <h3>Minhas anotações</h3>
+    <div id="nota-area">
+      ${Store.getNotas()[r.id]
+        ? `<p class="nota-texto">${esc(Store.getNotas()[r.id])}</p>`
+        : '<p class="dica">Seus ajustes na receita — ex.: "faço com 2 limões e menos açúcar".</p>'}
+      <button class="mini" id="btn-editar-nota" data-receita="${r.id}">✎ ${Store.getNotas()[r.id] ? 'editar' : 'anotar'}</button>
+    </div>
     <a class="btn btn-video" target="_blank" rel="noopener"
       href="https://www.youtube.com/results?search_query=${encodeURIComponent('como fazer ' + r.nome + ' drink receita')}">
       ▶ Ver vídeos do preparo</a>
@@ -466,7 +520,11 @@ function abrirReceita(id) {
       <button class="btn" id="btn-favoritar" data-receita="${r.id}">
         ${state.favoritos.has(r.id) ? '♥ Favorito' : '♡ Favoritar'}</button>
       <button class="btn" id="btn-compartilhar" data-receita="${r.id}">Compartilhar</button>
-    </div>`;
+    </div>
+    ${r.custom ? `<div class="botoes-duplos">
+      <button class="btn" id="btn-editar-receita" data-receita="${r.id}">Editar receita</button>
+      <button class="btn btn-excluir" id="btn-excluir-receita" data-receita="${r.id}">Excluir</button>
+    </div>` : ''}`;
   $('#modal').classList.add('aberto');
 }
 
@@ -667,6 +725,253 @@ function abrirFormPessoa(id = null) {
   }
 }
 
+// ---------- Receita própria: criar e editar ----------
+const COPOS_OPCOES = ['Copo baixo', 'Copo alto', 'Taça coupé', 'Taça martini',
+  'Taça de vinho', 'Taça flute', 'Caneca de vidro'];
+
+function linhaIngrediente(sel = '', q = '') {
+  const opcoes = ['<option value="">— ingrediente —</option>']
+    .concat(CATEGORIAS.map(cat => {
+      const itens = INGREDIENTES.filter(i => i.cat === cat.id)
+        .map(i => `<option value="${i.id}" ${i.id === sel ? 'selected' : ''}>${esc(i.nome)}</option>`);
+      return `<optgroup label="${esc(cat.nome)}">${itens.join('')}</optgroup>`;
+    })).join('');
+  return `<div class="linha-ing">
+    <select class="ing-sel">${opcoes}</select>
+    <input class="ing-q" type="text" placeholder="qtd. (ex.: 50 ml)" maxlength="40" value="${esc(q)}">
+    <button type="button" class="mini danger ing-tira">✕</button>
+  </div>`;
+}
+
+function abrirFormReceita(receita = null) {
+  const tagsSel = new Set(receita?.tags || []);
+  const chips = TAGS_PREFERENCIA.map(t =>
+    `<button type="button" class="chip ${tagsSel.has(t) ? 'on' : ''}" data-tag-rec="${t}">${esc(TAG_NOMES[t])}</button>`
+  ).join('');
+  const linhas = (receita?.ing?.length ? receita.ing : [{ id: '', q: '' }, { id: '', q: '' }])
+    .filter(i => !i.basico)
+    .map(i => linhaIngrediente(i.id, i.q)).join('');
+
+  $('#modal-corpo').innerHTML = `
+    <h2>${receita ? 'Editar receita' : '🍸 Minha receita'}</h2>
+    <form id="form-receita">
+      <label>Nome do drink
+        <input name="nome" required maxlength="60" value="${esc(receita?.nome || '')}" placeholder="Ex.: Drink da casa">
+      </label>
+      <label>Copo
+        <select name="copo">${COPOS_OPCOES.map(c =>
+          `<option ${receita?.copo === c ? 'selected' : ''}>${c}</option>`).join('')}</select>
+      </label>
+      <label>Perfil de sabor (alimenta as sugestões)</label>
+      <div class="chips" id="chips-receita">${chips}</div>
+      <label>Ingredientes do catálogo (para eu saber quando você pode fazer)</label>
+      <div id="linhas-ing">${linhas}</div>
+      <button type="button" class="mini" id="btn-mais-ing">+ ingrediente</button>
+      <label style="margin-top:12px">Outros ingredientes (fora do catálogo, opcional)
+        <input name="ingExtra" maxlength="120" value="${esc(receita?.ingExtra || '')}" placeholder="Ex.: xarope de gengibre caseiro">
+      </label>
+      <label>Preparo
+        <textarea name="preparo" rows="3" required maxlength="600" placeholder="Como fazer...">${esc(receita?.preparo || '')}</textarea>
+      </label>
+      <button class="btn primario" type="submit">Salvar receita</button>
+    </form>`;
+  $('#modal').classList.add('aberto');
+
+  $('#chips-receita').addEventListener('click', ev => {
+    const chip = ev.target.closest('[data-tag-rec]');
+    if (!chip) return;
+    const t = chip.dataset.tagRec;
+    tagsSel.has(t) ? tagsSel.delete(t) : tagsSel.add(t);
+    chip.classList.toggle('on', tagsSel.has(t));
+  });
+
+  $('#btn-mais-ing').addEventListener('click', () => {
+    $('#linhas-ing').insertAdjacentHTML('beforeend', linhaIngrediente());
+  });
+  $('#linhas-ing').addEventListener('click', ev => {
+    const tira = ev.target.closest('.ing-tira');
+    if (tira) tira.closest('.linha-ing').remove();
+  });
+
+  $('#form-receita').addEventListener('submit', ev => {
+    ev.preventDefault();
+    const form = ev.target;
+    const ing = $$('#linhas-ing .linha-ing')
+      .map(l => ({ id: l.querySelector('.ing-sel').value, q: l.querySelector('.ing-q').value.trim() || 'a gosto' }))
+      .filter(i => i.id);
+    if (!ing.length) { alert('Escolha pelo menos 1 ingrediente do catálogo.'); return; }
+    const nova = {
+      id: receita?.id || 'custom-' + Date.now(),
+      custom: true,
+      nome: form.nome.value.trim(),
+      copo: form.copo.value,
+      tags: tagsSel.size ? [...tagsSel] : ['classico'],
+      ing: [...ing, { id: 'gelo', q: 'a gosto' }],
+      ingExtra: form.ingExtra.value.trim(),
+      preparo: form.preparo.value.trim(),
+    };
+    salvarReceitaCustom(nova);
+    fecharModal();
+    renderSugestoes();
+  });
+}
+
+// ---------- Cardápio da noite (imagem para compartilhar) ----------
+function gerarCardapioFesta() {
+  const { ready } = matchRecipes();
+  const drinks = ready.slice(0, 8);
+  if (!drinks.length) { alert('Nenhum drink disponível — adicione itens ao seu bar.'); return; }
+  const nomes = state.pessoaAtiva === 'festa'
+    ? state.festa.map(id => id === 'eu' ? 'Você' : getPessoa(id)?.nome).filter(Boolean)
+    : [];
+
+  const W = 1080;
+  const H = 560 + drinks.length * 96 + (nomes.length ? 60 : 0);
+  const canvas = document.createElement('canvas');
+  canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext('2d');
+
+  // papel
+  ctx.fillStyle = '#FBFAF7';
+  ctx.fillRect(0, 0, W, H);
+  // moldura fina
+  ctx.strokeStyle = '#201D1A';
+  ctx.lineWidth = 3;
+  ctx.strokeRect(40, 40, W - 80, H - 80);
+  ctx.strokeStyle = '#C4372B';
+  ctx.lineWidth = 1.5;
+  ctx.strokeRect(52, 52, W - 104, H - 104);
+
+  ctx.textAlign = 'center';
+  // marca
+  ctx.fillStyle = '#201D1A';
+  ctx.font = 'normal 88px Georgia, serif';
+  const meuW = ctx.measureText('Meu').width;
+  const barW = ctx.measureText('Bar').width;
+  ctx.textAlign = 'left';
+  ctx.fillText('Meu', W / 2 - (meuW + barW) / 2, 175);
+  ctx.fillStyle = '#C4372B';
+  ctx.font = 'italic 88px Georgia, serif';
+  ctx.fillText('Bar', W / 2 - (meuW + barW) / 2 + meuW, 175);
+  ctx.textAlign = 'center';
+
+  ctx.fillStyle = '#6B665C';
+  ctx.font = 'italic 34px Georgia, serif';
+  ctx.fillText('cardápio da noite', W / 2, 230);
+  const hoje = new Date();
+  ctx.font = '28px Helvetica, sans-serif';
+  ctx.fillText(hoje.toLocaleDateString('pt-BR', { day: 'numeric', month: 'long', year: 'numeric' }).toUpperCase(), W / 2, 280);
+
+  let y = 330;
+  if (nomes.length) {
+    ctx.fillStyle = '#201D1A';
+    ctx.font = 'italic 32px Georgia, serif';
+    ctx.fillText(`para ${nomes.join(', ')}`, W / 2, y);
+    y += 60;
+  }
+  ctx.fillStyle = '#C4372B';
+  ctx.font = '36px Georgia, serif';
+  ctx.fillText('· · ✦ · ·', W / 2, y + 10);
+  y += 80;
+
+  for (const { receita } of drinks) {
+    ctx.textAlign = 'left';
+    ctx.fillStyle = '#201D1A';
+    ctx.font = '44px Georgia, serif';
+    ctx.fillText(receita.nome, 110, y);
+    const nomeW = ctx.measureText(receita.nome).width;
+    ctx.fillStyle = '#6B665C';
+    ctx.font = 'italic 30px Georgia, serif';
+    ctx.textAlign = 'right';
+    const copoTxt = receita.copo.toLowerCase();
+    ctx.fillText(copoTxt, W - 110, y);
+    const copoW = ctx.measureText(copoTxt).width;
+    // pontilhado
+    ctx.strokeStyle = '#b8b2a4';
+    ctx.lineWidth = 2;
+    ctx.setLineDash([3, 9]);
+    ctx.beginPath();
+    ctx.moveTo(110 + nomeW + 18, y - 8);
+    ctx.lineTo(W - 110 - copoW - 18, y - 8);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    // tags
+    ctx.textAlign = 'left';
+    ctx.fillStyle = '#6B665C';
+    ctx.font = 'italic 26px Georgia, serif';
+    ctx.fillText(receita.tags.map(t => (TAG_NOMES[t] || t).toLowerCase()).join(', '), 110, y + 36);
+    y += 96;
+    ctx.textAlign = 'center';
+  }
+
+  ctx.fillStyle = '#6B665C';
+  ctx.font = '24px Helvetica, sans-serif';
+  ctx.fillText('FEITO COM ♥ NO MEUBAR', W / 2, H - 85);
+
+  canvas.toBlob(async blob => {
+    if (!blob) return;
+    const arquivo = new File([blob], 'cardapio-meubar.png', { type: 'image/png' });
+    if (navigator.canShare && navigator.canShare({ files: [arquivo] })) {
+      try { await navigator.share({ files: [arquivo], title: 'Cardápio da noite' }); return; }
+      catch { /* cancelado — cai para download */ }
+    }
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'cardapio-meubar.png';
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+  }, 'image/png');
+}
+
+// ---------- Foto da estante: IA cadastra o bar ----------
+async function analisarEstante(arquivo) {
+  const chave = Store.getApiKey();
+  if (!chave) {
+    alert('Para usar a leitura da estante, configure sua chave de API na aba IA.');
+    trocarAba('expert');
+    return;
+  }
+  $('#modal-corpo').innerHTML = '<h2>📸 Analisando sua estante...</h2><p class="dica">Identificando garrafas e ingredientes. Isso leva alguns segundos.</p>';
+  $('#modal').classList.add('aberto');
+  try {
+    const base64 = await fotoParaBase64Jpeg(arquivo);
+    const ids = await identificarGarrafas(chave, base64);
+    if (!ids.length) {
+      $('#modal-corpo').innerHTML = `<h2>📸 Hmm...</h2>
+        <p>Não reconheci nenhum item do catálogo nessa foto. Tenta uma foto mais de perto,
+        com os rótulos visíveis?</p>
+        <button class="btn" id="modal-ok">Fechar</button>`;
+      $('#modal-ok').addEventListener('click', fecharModal);
+      return;
+    }
+    const sel = new Set(ids);
+    $('#modal-corpo').innerHTML = `<h2>📸 Encontrei isto</h2>
+      <p class="dica">Toque para desmarcar o que eu errei, e confirme.</p>
+      <div class="chips" id="chips-estante">
+        ${ids.map(id => `<button type="button" class="chip on" data-estante-id="${id}">${esc(ING_MAP[id].nome)}</button>`).join('')}
+      </div>
+      <button class="btn primario" id="btn-confirmar-estante">Adicionar ao meu bar</button>`;
+    $('#chips-estante').addEventListener('click', ev => {
+      const chip = ev.target.closest('[data-estante-id]');
+      if (!chip) return;
+      const id = chip.dataset.estanteId;
+      sel.has(id) ? sel.delete(id) : sel.add(id);
+      chip.classList.toggle('on', sel.has(id));
+    });
+    $('#btn-confirmar-estante').addEventListener('click', () => {
+      for (const id of sel) state.bar.add(id);
+      Store.setBar(state.bar);
+      fecharModal();
+      renderBar();
+      alert(`${sel.size} ${sel.size === 1 ? 'item adicionado' : 'itens adicionados'} ao seu bar! 🍾`);
+    });
+  } catch (err) {
+    $('#modal-corpo').innerHTML = `<h2>⚠️ Não deu certo</h2><p>${esc(err.message)}</p>
+      <button class="btn" id="modal-ok">Fechar</button>`;
+    $('#modal-ok').addEventListener('click', fecharModal);
+  }
+}
+
 // ---------- Modo festa: quem está na roda? ----------
 function abrirFormFesta() {
   const todos = [{ id: 'eu', nome: 'Você' }, ...state.pessoas.filter(p => p.id !== 'eu')];
@@ -722,10 +1027,11 @@ async function exportarDados() {
     entries.push(copia);
   }
   const dados = {
-    app: 'meubar', versao: 1, exportadoEm: new Date().toISOString(),
+    app: 'meubar', versao: 2, exportadoEm: new Date().toISOString(),
     bar: [...state.bar], shopping: [...state.shopping],
     pessoas: state.pessoas, favoritos: [...state.favoritos],
     festa: state.festa, entries,
+    receitas: Store.getReceitasCustom(), notas: Store.getNotas(),
   };
   const blob = new Blob([JSON.stringify(dados)], { type: 'application/json' });
   const a = document.createElement('a');
@@ -770,6 +1076,9 @@ async function importarDados(arquivo) {
   Store.setPessoas(state.pessoas);
   Store.setFavoritos(state.favoritos);
   Store.setFesta(state.festa);
+  Store.setReceitasCustom(dados.receitas || []);
+  Store.setNotas(dados.notas || {});
+  aplicarReceitasCustom();
   state.entries = await dbGetEntries();
   renderDiario();
   renderSugestoes();
@@ -920,7 +1229,16 @@ function initEventos() {
     if (card) abrirReceita(card.dataset.receita);
   });
 
+  // Sugestões: criar receita própria e cardápio da noite
+  $('#btn-nova-receita').addEventListener('click', () => abrirFormReceita());
+  $('#btn-cardapio').addEventListener('click', gerarCardapioFesta);
+
   // Meu Bar
+  $('#input-estante').addEventListener('change', ev => {
+    const arquivo = ev.target.files[0];
+    if (arquivo) analisarEstante(arquivo);
+    ev.target.value = '';
+  });
   $('#busca-bar').addEventListener('input', renderBar);
   $('#conteudo-bar').addEventListener('click', ev => {
     const ing = ev.target.closest('[data-ing]');
@@ -1003,6 +1321,31 @@ function initEventos() {
     }
     const shareBtn = ev.target.closest('#btn-compartilhar');
     if (shareBtn) compartilharReceita(shareBtn.dataset.receita);
+
+    const notaBtn = ev.target.closest('#btn-editar-nota');
+    if (notaBtn) {
+      const id = notaBtn.dataset.receita;
+      const notas = Store.getNotas();
+      const texto = prompt('Suas anotações para esta receita:', notas[id] || '');
+      if (texto !== null) {
+        if (texto.trim()) notas[id] = texto.trim(); else delete notas[id];
+        Store.setNotas(notas);
+        abrirReceita(id);
+      }
+    }
+
+    const editarRec = ev.target.closest('#btn-editar-receita');
+    if (editarRec) abrirFormReceita(RECEITA_MAP[editarRec.dataset.receita]);
+
+    const excluirRec = ev.target.closest('#btn-excluir-receita');
+    if (excluirRec) {
+      const id = excluirRec.dataset.receita;
+      if (confirm(`Excluir a receita "${RECEITA_MAP[id]?.nome}"? Os registros no diário são mantidos.`)) {
+        excluirReceitaCustom(id);
+        fecharModal();
+        renderSugestoes();
+      }
+    }
   });
 
   // Especialista
@@ -1026,6 +1369,7 @@ function initEventos() {
 
 // ---------- Boot ----------
 async function init() {
+  aplicarReceitasCustom();
   state.entries = await dbGetEntries();
   initEventos();
   $('#contador-bar').textContent = state.bar.size;

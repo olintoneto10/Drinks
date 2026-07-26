@@ -30,8 +30,14 @@ bar e o seu gosto.
 - **📊 Diário rico** — filtros por nota mínima e período, resumo neutro do mês
   (nº de registros, nota média, destaque) e fotos comprimidas automaticamente
   (~1200px) para não estourar o armazenamento.
-- **💾 Backup** — exporte tudo (bar, pessoas, diário e fotos) em um arquivo
-  único e importe em outro aparelho.
+- **💾 Backup** — exporte tudo (bar, pessoas, receitas, diário e fotos) em um
+  arquivo único e importe em outro aparelho.
+- **📸 Foto da estante** — tire uma foto das suas garrafas e a IA identifica os
+  itens e preenche o Meu Bar sozinha (você confere antes de confirmar).
+- **📜 Cardápio da noite** — gera uma imagem no estilo carta impressa com os
+  drinks que dá para fazer, pronta para mandar no grupo ou apoiar na mesa.
+- **✍️ Receitas próprias e anotações** — crie seus drinks (entram no motor de
+  sugestões, no perfil e no diário) e anote seus ajustes nos clássicos.
 
 ## Como rodar
 

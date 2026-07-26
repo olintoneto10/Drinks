@@ -35,6 +35,65 @@ Regras:
 - Incentive o consumo responsável quando fizer sentido, sem sermão.`;
 }
 
+// Analisa a foto da estante e devolve os ids dos ingredientes do catálogo
+// que aparecem na imagem.
+async function identificarGarrafas(apiKey, base64Jpeg) {
+  const catalogo = INGREDIENTES
+    .filter(i => !i.basico)
+    .map(i => `${i.id}: ${i.nome}`)
+    .join('\n');
+
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      'x-api-key': apiKey,
+      'anthropic-version': '2023-06-01',
+      'anthropic-dangerous-direct-browser-access': 'true',
+    },
+    body: JSON.stringify({
+      model: AI_MODEL,
+      max_tokens: 800,
+      messages: [{
+        role: 'user',
+        content: [
+          { type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: base64Jpeg } },
+          {
+            type: 'text',
+            text: `Esta é a foto do bar/estante de bebidas de um usuário. Identifique quais itens do catálogo abaixo aparecem na foto (garrafas, latas, frutas, etc.).
+
+CATÁLOGO (id: nome):
+${catalogo}
+
+Responda APENAS com um array JSON de ids do catálogo, sem nenhum outro texto. Exemplo: ["gin","campari","limao"]. Se não reconhecer nada, responda [].
+Inclua um item apenas se estiver razoavelmente confiante. Rum claro conta como rum-branco; whisky americano/bourbon como bourbon; triple sec/Cointreau como licor-laranja.`,
+          },
+        ],
+      }],
+    }),
+  });
+
+  if (!res.ok) {
+    let msg = `Erro ${res.status}`;
+    try {
+      const err = await res.json();
+      if (err?.error?.message) msg += `: ${err.error.message}`;
+    } catch { /* corpo não-JSON */ }
+    if (res.status === 401) msg = 'Chave de API inválida. Confira na aba IA.';
+    throw new Error(msg);
+  }
+
+  const data = await res.json();
+  if (data.stop_reason === 'refusal') throw new Error('Não consegui analisar essa imagem.');
+  const texto = (data.content || []).filter(b => b.type === 'text').map(b => b.text).join('');
+  const m = texto.match(/\[[\s\S]*?\]/);
+  if (!m) return [];
+  try {
+    const ids = JSON.parse(m[0]);
+    return ids.filter(id => ING_MAP[id] && !ING_MAP[id].basico);
+  } catch { return []; }
+}
+
 async function askExpert(apiKey, systemPrompt, history) {
   const res = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',

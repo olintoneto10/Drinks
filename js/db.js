@@ -97,4 +97,8 @@ const Store = {
   setFesta(ids) { LS.set('meubar.festa', ids); },
   getChat() { return LS.get('meubar.chat', []); },
   setChat(h) { LS.set('meubar.chat', h.slice(-30)); },
+  getReceitasCustom() { return LS.get('meubar.receitas', []); },
+  setReceitasCustom(lista) { LS.set('meubar.receitas', lista); },
+  getNotas() { return LS.get('meubar.notas', {}); },
+  setNotas(obj) { LS.set('meubar.notas', obj); },
 };

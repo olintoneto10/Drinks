@@ -43,10 +43,19 @@
         <button class="chip" data-tag="favoritos">♥ Favoritos</button>
       </div>
       <div id="lista-sugestoes"></div>
+      <div class="acoes-sugestoes">
+        <button id="btn-nova-receita" class="btn">＋ Criar minha receita</button>
+        <button id="btn-cardapio" class="btn">📜 Cardápio da noite</button>
+      </div>
     </section>
 
     <!-- Meu Bar -->
     <section id="aba-bar" class="aba">
+      <label class="btn primario btn-estante">📸 Fotografar minha estante
+        <input id="input-estante" type="file" accept="image/*" capture="environment" hidden>
+      </label>
+      <p class="dica" style="text-align:center">A IA identifica as garrafas e preenche seu bar
+        sozinha (precisa da chave de API configurada na aba IA).</p>
       <input id="busca-bar" type="search" placeholder="Buscar ingrediente...">
       <div id="conteudo-bar"></div>
     </section>
