@@ -171,38 +171,32 @@ function passaFiltro(receita) {
 }
 
 // ---------- Render: Sugestões ----------
-function thumbReceita(receita, fotos, tamanho = 76) {
-  const entrada = fotos[receita.id];
-  if (entrada) {
-    return `<img class="thumb-foto" src="${fotoURL(entrada)}" alt="Sua foto de ${esc(receita.nome)}">
-      <span class="sua-foto">sua foto</span>`;
-  }
-  return svgDrink(receita, tamanho);
-}
-
+// Linha de cardápio: nome ..... copo, com detalhes na linha de baixo
 function cardReceita({ receita, faltam, score }, destaque, fotos) {
-  const tags = receita.tags.map(t => `<span class="tag">${esc(TAG_NOMES[t] || t)}</span>`).join('');
+  const tags = receita.tags.map(t => esc((TAG_NOMES[t] || t).toLowerCase())).join(', ');
   let selo;
   if (state.pessoaAtiva === 'festa') selo = 'agrada a turma';
   else if (state.pessoaAtiva === 'eu') selo = 'seu estilo';
   else selo = `p/ ${esc(getPessoa(state.pessoaAtiva)?.nome || '')}`;
-  const match = destaque && score > 0 ? `<span class="match">✨ ${selo}</span>` : '';
+  const match = destaque && score > 0 ? `<span class="match">✨ ${selo} — </span>` : '';
   const fav = state.favoritos.has(receita.id) ? '<span class="fav">♥</span>' : '';
+  const foto = fotos[receita.id] ? '<span class="tem-foto" title="Você tem foto desse">📷</span>' : '';
   let faltaHtml = '';
   if (faltam.length) {
     const ing = ING_MAP[faltam[0]];
     const naLista = state.shopping.has(ing.id);
-    faltaHtml = `<div class="falta">Falta: <strong>${esc(ing.nome)}</strong>
+    faltaHtml = `<div class="falta">falta: <strong>${esc(ing.nome)}</strong>
       <button class="mini ${naLista ? 'ok' : ''}" data-shop="${ing.id}">
-        ${naLista ? '✓ na lista' : '+ lista de compras'}</button></div>`;
+        ${naLista ? '✓ na lista' : '+ lista'}</button></div>`;
   }
   return `<div class="card sugestao" data-receita="${receita.id}">
-    <div class="thumb">${thumbReceita(receita, fotos)}</div>
-    <div class="card-corpo">
-      <div class="card-top"><h3>${esc(receita.nome)}${fav}</h3>${match}</div>
-      <div class="tags">${tags}</div>
-      ${faltaHtml}
+    <div class="item">
+      <h3>${esc(receita.nome)}${fav}${foto}</h3>
+      <span class="pontos"></span>
+      <span class="copo-item">${esc(receita.copo.toLowerCase())}</span>
     </div>
+    <div class="sub">${match}<span class="tags-linha">${tags}</span></div>
+    ${faltaHtml}
   </div>`;
 }
 
