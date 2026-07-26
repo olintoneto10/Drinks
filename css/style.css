@@ -323,10 +323,6 @@ input:focus, select:focus, textarea:focus { outline: 2px solid var(--acento); bo
 
 .arte-modal { text-align: center; position: relative; margin-bottom: 4px; }
 .arte-modal svg { display: inline-block; }
-.arte-foto {
-  width: 140px; height: 140px; object-fit: cover;
-  border-radius: 50%; border: 3px solid var(--acento);
-}
 
 /* Formulário */
 form label {

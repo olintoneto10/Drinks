@@ -1,4 +1,4 @@
-/* MeuBar — camada de movimento e feedback.
+/* MeuBar — camada de experiência: movimento, feedback e a hora do bar.
    Tempos seguem a HIG: 200–350 ms, saída suave na entrada,
    mola só nos gestos de recompensa. Tudo cede a prefers-reduced-motion. */
 
@@ -448,3 +448,189 @@
 .bv-nome { font-family: var(--serif); font-size: 1.1rem; }
 .bv-pontos { flex: 1; border-bottom: 1px dotted #b8b2a4; transform: translateY(-4px); }
 .bv-copo { font-style: italic; font-size: .8rem; color: var(--cinza); }
+
+/* ==========================================================
+   A HORA DO BAR
+   O cardápio de papel é a sala de dia. A partir das 18h a
+   mesma sala escurece para nogueira e ganha a luz quente de
+   cima — mesma tipografia, mesma estrutura, outra iluminação.
+   ========================================================== */
+.btn-luz {
+  position: absolute;
+  top: 20px; right: 18px;
+  background: none;
+  border: 1px solid var(--linha);
+  border-radius: 50%;
+  width: 34px; height: 34px;
+  color: var(--cinza);
+  font-size: .95rem;
+  cursor: pointer;
+  transition: color .3s, border-color .3s, transform .3s;
+}
+.btn-luz:hover { color: var(--acento); border-color: var(--acento); }
+.btn-luz:active { transform: scale(.9); }
+header { position: relative; }
+
+body {
+  transition: background-color .8s ease, color .8s ease;
+}
+
+body.noite {
+  --papel: #241C17;
+  --branco: #2E251E;
+  --tinta: #F2E7D8;
+  --cinza: #A08D7C;
+  --acento: #E4553C;
+  --linha: #3C2E24;
+  --ok: #7FA86B;
+  --erro: #E4553C;
+}
+/* a luz da luminária, vinda de cima */
+body.noite::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background: radial-gradient(120% 48% at 50% -8%, rgba(228, 160, 88, .13), transparent 62%);
+}
+body.noite header, body.noite main, body.noite #tabs { position: relative; z-index: 1; }
+body.noite .card:not(.drink-dia),
+body.noite .entrada { background: transparent; }
+body.noite .arte-modal svg path[stroke],
+body.noite .thumb svg path[stroke] { stroke: var(--tinta); }
+body.noite .pontos, body.noite .bv-pontos { border-color: #52402F; }
+body.noite .toast { box-shadow: 0 10px 34px -12px rgba(0, 0, 0, .6); }
+body.noite #modal { background: rgba(12, 9, 7, .62); }
+body.noite .dialogo-fundo { background: rgba(12, 9, 7, .62); }
+
+/* ---------- Drink do dia ---------- */
+.drink-dia {
+  border: 1px solid var(--linha);
+  border-left: 3px solid var(--acento);
+  background: var(--branco);
+  padding: 16px 18px;
+  margin: 4px 0 16px;
+  cursor: pointer;
+  animation: sobeLinha .5s cubic-bezier(.22,.9,.3,1) backwards;
+  transition: transform .25s ease;
+}
+.drink-dia:active { transform: scale(.99); }
+.rotulo-dia {
+  font-family: var(--sans);
+  font-size: .62rem;
+  text-transform: uppercase;
+  letter-spacing: 2.4px;
+  color: var(--acento);
+}
+.drink-dia h3 { font-size: 1.35rem; margin: 4px 0 3px; }
+.drink-dia p {
+  color: var(--cinza);
+  font-style: italic;
+  font-size: .9rem;
+  line-height: 1.5;
+}
+
+/* ---------- Efeméride ---------- */
+.efemeride {
+  font-family: var(--serif);
+  font-size: .95rem;
+  line-height: 1.55;
+  color: var(--tinta);
+  border-top: 1px solid var(--linha);
+  border-bottom: 1px solid var(--linha);
+  padding: 12px 2px;
+  margin-bottom: 14px;
+  text-align: center;
+  animation: sobeLinha .5s backwards;
+}
+.efemeride strong { color: var(--acento); font-weight: normal; }
+.efemeride em { color: var(--cinza); }
+
+/* ---------- Coleção e passaporte ---------- */
+#colecao { margin-top: 30px; }
+.barra-colecao {
+  height: 3px;
+  background: var(--linha);
+  margin: 10px 0 14px;
+  overflow: hidden;
+}
+.barra-colecao i {
+  display: block;
+  height: 100%;
+  background: var(--acento);
+  animation: enchebarra 1.1s cubic-bezier(.22,.9,.3,1) backwards;
+}
+@keyframes enchebarra { from { width: 0 !important; } }
+.passaporte {
+  font-size: .9rem;
+  color: var(--cinza);
+  font-style: italic;
+  margin-bottom: 14px;
+}
+.passaporte strong { color: var(--acento); font-weight: normal; font-style: normal; }
+.grade-colecao { display: flex; flex-wrap: wrap; gap: 6px; }
+.peca {
+  border: 1px solid var(--linha);
+  background: transparent;
+  color: var(--cinza);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: .78rem;
+  padding: 4px 10px;
+  border-radius: 2px;
+  cursor: pointer;
+  opacity: .55;
+  transition: opacity .3s, color .3s, border-color .3s;
+}
+.peca.feito {
+  opacity: 1;
+  color: var(--tinta);
+  border-color: var(--acento);
+  font-style: normal;
+}
+.peca:hover { opacity: 1; }
+
+/* ---------- Foto do usuário como capa ---------- */
+.foto-heroi {
+  position: relative;
+  margin: -24px -22px 12px;
+  line-height: 0;
+}
+.foto-heroi img {
+  width: 100%;
+  max-height: 260px;
+  object-fit: cover;
+  display: block;
+}
+.foto-heroi::after {
+  content: '';
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 55%;
+  background: linear-gradient(to top, var(--papel), transparent);
+  pointer-events: none;
+}
+/* a capa sangra até o topo do modal: o ✕ precisa ficar por cima e legível */
+#modal-fechar { z-index: 3; }
+#modal-caixa:has(.foto-heroi) #modal-fechar {
+  background: rgba(32, 29, 26, .55);
+  color: #fff;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  line-height: 1;
+}
+.foto-heroi figcaption {
+  position: absolute;
+  left: 14px; bottom: 10px;
+  z-index: 1;
+  font-family: var(--sans);
+  font-size: .58rem;
+  text-transform: uppercase;
+  letter-spacing: 1.6px;
+  color: #fff;
+  background: var(--acento);
+  padding: 2px 8px;
+  line-height: 1.6;
+}

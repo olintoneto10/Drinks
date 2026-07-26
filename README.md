@@ -59,6 +59,18 @@ bar e o seu gosto.
   se preenchem, bolhas nas ilustrações, skeleton nas esperas, avisos próprios
   no lugar dos diálogos do sistema e resposta tátil (vibração). Tudo respeita
   `prefers-reduced-motion`.
+- **Hora do bar** — das 18h às 6h o app acende a luz de bar: fundo nogueira,
+  um facho quente vindo de cima e o campari brilhando. O ☀/☾ no topo alterna
+  à mão e volta ao automático no toque seguinte.
+- **Drink do dia** — uma sugestão só sua, estável do primeiro ao último acesso
+  do dia, com preferência pelo que você ainda não fez. Some quando você filtra
+  ou busca, para não atrapalhar quem já sabe o que quer.
+- **Efemérides** — "há um ano você tomou um Daiquiri hoje": o diário volta
+  sozinho na data em que a memória foi feita.
+- **Coleção e passaporte** — os clássicos viram peças a conquistar, com barra
+  de progresso e os países de origem que você já visitou pelo copo.
+- **Foto-herói** — a sua foto do drink abre a receita em capa sangrada, no
+  lugar da miniatura redonda. Come-se e bebe-se pelos olhos.
 
 ## Como rodar
 
@@ -88,11 +100,20 @@ python3 -m http.server 8080
 
 ```
 index.html            interface (4 abas: Sugestões, Meu Bar, Diário, Especialista)
-css/style.css         tema visual
+css/style.css         tema visual ("Aperitivo Editorial")
+css/movimento.css     camada de experiência: movimento, feedback e modo noite
 js/data.js            catálogo de ingredientes + receitas com tags de sabor
+js/feedback.js        avisos, confirmações, vibração e cascata (sem diálogo nativo)
+js/historias.js       histórias dos clássicos + ficha derivada (nível, tempo)
+js/art.js             ilustrações dos drinks geradas em SVG
 js/db.js              persistência (IndexedDB + localStorage)
-js/app.js             UI, motor de sugestões e perfil de sabor
 js/ai.js              integração com a API da Anthropic (modo Especialista)
+js/app.js             UI, motor de sugestões e perfil de sabor
+js/retro.js           cartaz da retrospectiva do ano (canvas)
+js/preparo.js         modo preparo passo a passo e o brinde
+js/momentos.js        hora do bar, drink do dia, efemérides e coleção
+js/boasvindas.js      primeiro acesso guiado até a primeira receita
+js/convite.js         cartão de convidado (preferências viajam na URL)
 sw.js                 service worker (funciona offline)
 manifest.webmanifest  manifesto do PWA
 ```

@@ -99,6 +99,8 @@ const Store = {
   setChat(h) { LS.set('meubar.chat', h.slice(-30)); },
   getReceitasCustom() { return LS.get('meubar.receitas', []); },
   setReceitasCustom(lista) { LS.set('meubar.receitas', lista); },
+  getLuz() { return LS.get('meubar.luz', 'auto'); },
+  setLuz(v) { LS.set('meubar.luz', v); },
   getBoasVindas() { return LS.get('meubar.boasvindas', false); },
   setBoasVindas(v) { LS.set('meubar.boasvindas', v); },
   getHistorias() { return LS.get('meubar.historias', {}); },

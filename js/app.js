@@ -327,7 +327,7 @@ function renderSugestoes() {
 
   const fotos = fotosPorReceita();
 
-  let html = perfilHtml;
+  let html = efemeride() + blocoDrinkDoDia() + perfilHtml;
   if (state.bar.size === 0) {
     html += `<div class="vazio">🍾 Seu bar está vazio.<br>
       Cadastre o que você tem em casa na aba <strong>Meu Bar</strong> e eu digo o que dá para fazer.</div>`;
@@ -446,6 +446,7 @@ function renderStatsDiario() {
 
 function renderDiario() {
   renderStatsDiario();
+  renderColecao();
   $('#btn-retrospectiva').classList.toggle('escondido', state.entries.length < 3);
   const busca = ($('#busca-diario')?.value || '').trim().toLowerCase();
   const notaMin = Number($('#filtro-nota')?.value || 0);
@@ -508,8 +509,12 @@ function abrirReceita(id) {
   }).join('');
   const fotos = fotosPorReceita();
   const entrada = fotos[r.id];
+  // A foto do usuário é o ativo emocional mais forte: vira capa, não miniatura.
   const arte = entrada
-    ? `<img class="arte-foto" src="${fotoURL(entrada)}" alt="Sua foto de ${esc(r.nome)}"><span class="sua-foto">📷 sua foto</span>`
+    ? `<figure class="foto-heroi">
+        <img src="${fotoURL(entrada)}" alt="Sua foto de ${esc(r.nome)}">
+        <figcaption>📷 sua foto</figcaption>
+      </figure>`
     : svgDrink(r, 140);
   const h = historiaDe(r.id);
   const nivel = nivelDaReceita(r);
@@ -1264,6 +1269,11 @@ function initEventos() {
   });
 
   // Sugestões: criar receita própria e cardápio da noite
+  $('#btn-luz').addEventListener('click', alternarLuz);
+  $('#colecao').addEventListener('click', ev => {
+    const peca = ev.target.closest('[data-receita]');
+    if (peca) abrirReceita(peca.dataset.receita);
+  });
   $('#btn-nova-receita').addEventListener('click', () => abrirFormReceita());
   $('#btn-cardapio').addEventListener('click', gerarCardapioFesta);
 
@@ -1434,6 +1444,9 @@ function initEventos() {
 // ---------- Boot ----------
 async function init() {
   aplicarReceitasCustom();
+  aplicarLuz();
+  // a sala escurece sozinha ao cruzar as 18h com o app aberto
+  setInterval(aplicarLuz, 5 * 60 * 1000);
   // Tela do convidado assume a página inteira — não precisa do app normal
   if (location.hash === '#convidado') { abrirCartaoConvidado(); return; }
   state.entries = await dbGetEntries();
