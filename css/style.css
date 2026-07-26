@@ -93,6 +93,41 @@ input:focus, select:focus, textarea:focus { outline: 2px solid var(--acento); bo
 .falta { margin-top: 8px; font-size: 0.9rem; color: var(--texto2); display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .falta strong { color: var(--acento2); }
 
+/* Card de sugestão com ilustração/foto */
+.card.sugestao { display: flex; gap: 12px; align-items: flex-start; }
+.thumb { flex-shrink: 0; position: relative; width: 76px; }
+.thumb svg { display: block; }
+.thumb-foto {
+  width: 76px; height: 76px; object-fit: cover;
+  border-radius: 50%; display: block;
+  border: 2px solid var(--acento);
+}
+.sua-foto {
+  position: absolute; bottom: -4px; left: 50%; transform: translateX(-50%);
+  background: var(--acento); color: #241a08;
+  font-size: 0.58rem; font-weight: bold;
+  border-radius: 999px; padding: 1px 7px; white-space: nowrap;
+}
+.card-corpo { flex: 1; min-width: 0; }
+
+/* Arte no modal da receita */
+.arte-modal { text-align: center; position: relative; margin-bottom: 6px; }
+.arte-modal svg { display: inline-block; }
+.arte-foto {
+  width: 140px; height: 140px; object-fit: cover;
+  border-radius: 50%; border: 3px solid var(--acento);
+}
+.arte-modal .sua-foto { bottom: 2px; }
+
+/* Compras inteligentes */
+.compras-inteligentes { list-style: none; }
+.compras-inteligentes li {
+  display: flex; justify-content: space-between; align-items: center; gap: 10px;
+  background: var(--card); border: 1px solid var(--borda);
+  border-radius: 12px; padding: 10px 12px; margin-bottom: 8px;
+}
+.compras-inteligentes .meta { display: block; margin: 2px 0 0; }
+
 .badge {
   background: var(--fundo2);
   color: var(--acento);

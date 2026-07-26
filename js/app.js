@@ -41,11 +41,12 @@ function estrelas(n) {
   return '★'.repeat(n) + '☆'.repeat(5 - n);
 }
 
-// ---------- Perfil de sabor ----------
-function tasteProfile() {
+// ---------- Perfil de sabor (aprendido por pessoa) ----------
+function tasteProfile(pessoaId = 'eu') {
   const pesos = {};
   for (const e of state.entries) {
     if (!e.nota) continue;
+    if ((e.pessoaId || 'eu') !== pessoaId) continue;
     const receita = e.receitaId && RECEITA_MAP[e.receitaId];
     if (!receita) continue;
     const peso = e.nota - 3; // 4-5 puxa para cima, 1-2 para baixo
@@ -54,6 +55,17 @@ function tasteProfile() {
     }
   }
   return pesos;
+}
+
+// Foto mais recente do diário para cada receita — a foto do usuário
+// vale mais que qualquer ilustração.
+function fotosPorReceita() {
+  const mapa = {};
+  const ordenadas = [...state.entries]
+    .filter(e => e.receitaId && e.foto)
+    .sort((a, b) => (a.data || '').localeCompare(b.data || ''));
+  for (const e of ordenadas) mapa[e.receitaId] = e;
+  return mapa;
 }
 
 function topProfileTags(pesos, n = 3) {
@@ -67,8 +79,7 @@ function topProfileTags(pesos, n = 3) {
 // Pesos usados para ordenar as sugestões: preferências declaradas da pessoa
 // ativa e, no caso de "Você", também o que o app aprendeu das notas do diário.
 function pesosAtivos() {
-  const pesos = {};
-  if (state.pessoaAtiva === 'eu') Object.assign(pesos, tasteProfile());
+  const pesos = Object.assign({}, tasteProfile(state.pessoaAtiva));
   const pessoa = getPessoa(state.pessoaAtiva);
   for (const t of pessoa?.tags || []) pesos[t] = (pesos[t] || 0) + 2;
   return pesos;
@@ -101,7 +112,16 @@ function passaFiltro(receita) {
 }
 
 // ---------- Render: Sugestões ----------
-function cardReceita({ receita, faltam, score }, destaque) {
+function thumbReceita(receita, fotos, tamanho = 76) {
+  const entrada = fotos[receita.id];
+  if (entrada) {
+    return `<img class="thumb-foto" src="${fotoURL(entrada)}" alt="Sua foto de ${esc(receita.nome)}">
+      <span class="sua-foto">sua foto</span>`;
+  }
+  return svgDrink(receita, tamanho);
+}
+
+function cardReceita({ receita, faltam, score }, destaque, fotos) {
   const tags = receita.tags.map(t => `<span class="tag">${esc(TAG_NOMES[t] || t)}</span>`).join('');
   const pessoa = getPessoa(state.pessoaAtiva);
   const selo = state.pessoaAtiva === 'eu' ? 'seu estilo' : `p/ ${esc(pessoa?.nome || '')}`;
@@ -114,11 +134,28 @@ function cardReceita({ receita, faltam, score }, destaque) {
       <button class="mini ${naLista ? 'ok' : ''}" data-shop="${ing.id}">
         ${naLista ? '✓ na lista' : '+ lista de compras'}</button></div>`;
   }
-  return `<div class="card" data-receita="${receita.id}">
-    <div class="card-top"><h3>${esc(receita.nome)}</h3>${match}</div>
-    <div class="tags">${tags}</div>
-    ${faltaHtml}
+  return `<div class="card sugestao" data-receita="${receita.id}">
+    <div class="thumb">${thumbReceita(receita, fotos)}</div>
+    <div class="card-corpo">
+      <div class="card-top"><h3>${esc(receita.nome)}</h3>${match}</div>
+      <div class="tags">${tags}</div>
+      ${faltaHtml}
+    </div>
   </div>`;
+}
+
+// Ingredientes que mais desbloqueiam drinks do perfil ativo
+function ingredientesQueValemAPena(almost) {
+  const ganho = {};
+  for (const { receita, faltam, score } of almost) {
+    const id = faltam[0];
+    if (!ganho[id]) ganho[id] = { score: 0, drinks: [] };
+    ganho[id].score += 1 + Math.max(0, score);
+    ganho[id].drinks.push(receita.nome);
+  }
+  return Object.entries(ganho)
+    .sort((a, b) => b[1].score - a[1].score || b[1].drinks.length - a[1].drinks.length)
+    .slice(0, 3);
 }
 
 function renderPessoasRow() {
@@ -159,10 +196,14 @@ function renderSugestoes() {
     }
   } else {
     const pessoa = getPessoa(state.pessoaAtiva);
-    const gostos = (pessoa?.tags || []).map(t => esc((TAG_NOMES[t] || t).toLowerCase()));
+    const aprendidas = topProfileTags(tasteProfile(state.pessoaAtiva));
+    const gostos = [...new Set([...(pessoa?.tags || []), ...aprendidas])]
+      .map(t => esc((TAG_NOMES[t] || t).toLowerCase()));
     perfilHtml = `<p class="perfil">Sugerindo para <strong>${esc(pessoa?.nome || '')}</strong>${
       gostos.length ? ` — gosta de: <strong>${gostos.join(', ')}</strong>` : ''}.</p>`;
   }
+
+  const fotos = fotosPorReceita();
 
   let html = perfilHtml;
   if (state.bar.size === 0) {
@@ -171,12 +212,29 @@ function renderSugestoes() {
   }
   html += `<h2>🍸 Pode fazer agora <span class="badge">${readyF.length}</span></h2>`;
   html += readyF.length
-    ? `<div class="cards">${readyF.map(x => cardReceita(x, true)).join('')}</div>`
+    ? `<div class="cards">${readyF.map(x => cardReceita(x, true, fotos)).join('')}</div>`
     : '<p class="dica">Nada por enquanto — adicione mais itens ao seu bar.</p>';
+
+  // Compras inteligentes: o que mais desbloqueia drinks do perfil ativo
+  if (state.bar.size > 0 && almost.length) {
+    const dicas = ingredientesQueValemAPena(almost);
+    if (dicas.length) {
+      const quem = state.pessoaAtiva === 'eu' ? 'seu perfil' : getPessoa(state.pessoaAtiva)?.nome;
+      html += `<h2>💡 Vale a pena comprar</h2>
+        <p class="dica">Pensando em ${esc(quem)}, estes ingredientes desbloqueiam mais drinks:</p>
+        <ul class="compras-inteligentes">` +
+        dicas.map(([id, g]) => {
+          const naLista = state.shopping.has(id);
+          return `<li><div><strong>${esc(ING_MAP[id]?.nome || id)}</strong>
+            <span class="meta">desbloqueia: ${g.drinks.slice(0, 3).map(esc).join(', ')}${g.drinks.length > 3 ? '…' : ''}</span></div>
+            <button class="mini ${naLista ? 'ok' : ''}" data-shop="${id}">${naLista ? '✓ na lista' : '+ lista'}</button></li>`;
+        }).join('') + '</ul>';
+    }
+  }
 
   html += `<h2>🛒 Falta só 1 ingrediente <span class="badge">${almostF.length}</span></h2>`;
   html += almostF.length
-    ? `<div class="cards">${almostF.map(x => cardReceita(x, false)).join('')}</div>`
+    ? `<div class="cards">${almostF.map(x => cardReceita(x, false, fotos)).join('')}</div>`
     : '<p class="dica">Nenhuma sugestão aqui com os filtros atuais.</p>';
 
   $('#lista-sugestoes').innerHTML = html;
@@ -247,7 +305,8 @@ function renderDiario() {
       ${foto}
       <div class="entrada-corpo">
         <div class="card-top"><h3>${esc(e.nome)}</h3><span class="nota">${estrelas(e.nota || 0)}</span></div>
-        <p class="meta">${fmtData(e.data)}${receita ? ` · receita: ${esc(receita.nome)}` : ''}</p>
+        <p class="meta">${fmtData(e.data)}${receita ? ` · receita: ${esc(receita.nome)}` : ''}${
+          e.pessoaId && e.pessoaId !== 'eu' ? ` · 👤 ${esc(getPessoa(e.pessoaId)?.nome || '')}` : ''}</p>
         ${e.texto ? `<p class="texto">${esc(e.texto)}</p>` : ''}
         <div class="acoes">
           <button class="mini" data-editar="${e.id}">✏️ editar</button>
@@ -267,7 +326,13 @@ function abrirReceita(id) {
     const tem = BASICOS.has(i.id) || state.bar.has(i.id);
     return `<li class="${tem ? 'tem' : 'nao-tem'}">${tem ? '✓' : '✕'} ${esc(nome)} — ${esc(i.q)}${i.opcional ? ' <em>(opcional)</em>' : ''}</li>`;
   }).join('');
+  const fotos = fotosPorReceita();
+  const entrada = fotos[r.id];
+  const arte = entrada
+    ? `<img class="arte-foto" src="${fotoURL(entrada)}" alt="Sua foto de ${esc(r.nome)}"><span class="sua-foto">📷 sua foto</span>`
+    : svgDrink(r, 140);
   $('#modal-corpo').innerHTML = `
+    <div class="arte-modal">${arte}</div>
     <h2>${esc(r.nome)}</h2>
     <div class="tags">${r.tags.map(t => `<span class="tag">${esc(TAG_NOMES[t] || t)}</span>`).join('')}</div>
     <p class="meta">🥃 ${esc(r.copo)}</p>
@@ -300,6 +365,13 @@ function abrirFormEntrada(entry = null, receitaId = null) {
       </label>
       <label>Quando bebi
         <input type="date" name="data" required value="${entry?.data || hoje}">
+      </label>
+      <label>Quem bebeu? (a nota ensina o gosto dessa pessoa)
+        <select name="pessoaId">
+          <option value="eu">Você</option>
+          ${state.pessoas.filter(p => p.id !== 'eu').map(p =>
+            `<option value="${p.id}" ${entry?.pessoaId === p.id ? 'selected' : ''}>${esc(p.nome)}</option>`).join('')}
+        </select>
       </label>
       <label>Nota</label>
       <div class="estrelas" id="picker-estrelas">
@@ -340,6 +412,7 @@ function abrirFormEntrada(entry = null, receitaId = null) {
     const dados = {
       nome: form.nome.value.trim(),
       receitaId: form.receitaId.value || null,
+      pessoaId: form.pessoaId.value || 'eu',
       data: form.data.value,
       nota: Number(form.nota.value) || 0,
       texto: form.texto.value.trim(),
