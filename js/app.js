@@ -464,6 +464,9 @@ function abrirReceita(id) {
     <ul class="ingredientes">${ing}</ul>
     <h3>Preparo</h3>
     <p>${esc(r.preparo)}</p>
+    <a class="btn btn-video" target="_blank" rel="noopener"
+      href="https://www.youtube.com/results?search_query=${encodeURIComponent('como fazer ' + r.nome + ' drink receita')}">
+      ▶ Ver vídeos do preparo</a>
     <button class="btn primario" id="btn-registrar" data-receita="${r.id}">Fiz esse! Registrar no diário</button>
     <div class="botoes-duplos">
       <button class="btn" id="btn-favoritar" data-receita="${r.id}">

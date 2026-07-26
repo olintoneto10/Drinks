@@ -366,6 +366,14 @@ form label {
 #btn-trocar-chave { margin-top: 10px; }
 .escondido { display: none !important; }
 
+/* Botão de vídeos (link) */
+.btn-video {
+  text-decoration: none;
+  text-align: center;
+  color: var(--tinta);
+}
+.btn-video:visited { color: var(--tinta); }
+
 /* Favoritos, festa, restrições */
 .fav { color: var(--acento); margin-left: 7px; font-size: 0.9rem; }
 .chip.evita.on { background: var(--tinta); border-color: var(--tinta); color: #fff; }
