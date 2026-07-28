@@ -13,6 +13,7 @@ const state = {
   favoritos: Store.getFavoritos(),
   animar: true, // cascata só ao entrar na aba, não a cada toque
   filtroTag: 'todos',
+  rende: 1,
   buscaSugestao: '',
   fotoURLs: new Map(), // entryId -> objectURL
 };
@@ -75,6 +76,10 @@ function fmtData(iso) {
   if (!iso) return '';
   const [y, m, d] = iso.split('-');
   return `${d}/${m}/${y}`;
+}
+
+function fmtPreco(v) {
+  return v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 }
 
 function estrelas(n) {
@@ -483,7 +488,8 @@ function renderDiario() {
       <div class="entrada-corpo">
         <div class="card-top"><h3>${esc(e.nome)}</h3><span class="nota">${estrelas(e.nota || 0)}</span></div>
         <p class="meta">${fmtData(e.data)}${receita ? ` · receita: ${esc(receita.nome)}` : ''}${
-          quem ? ` · 👤 ${esc(quem)}` : ''}</p>
+          quem ? ` · 👤 ${esc(quem)}` : ''}${e.lugar ? ` · 📍 ${esc(e.lugar)}` : ''}${
+          e.preco != null ? ` · ${fmtPreco(e.preco)}` : ''}</p>
         ${e.texto ? `<p class="texto">${esc(e.texto)}</p>` : ''}
         <div class="acoes">
           <button class="mini" data-editar="${e.id}">editar</button>
@@ -506,15 +512,27 @@ function compartilharEntrada(id) {
   compartilharTexto(e.nome, partes.join('\n'));
 }
 
+// Lista de ingredientes já escalada, na unidade escolhida, com o substituto
+// que existe na estante quando o item falta.
+function listaIngredientes(r) {
+  return r.ing.map(i => {
+    const nome = ING_MAP[i.id]?.nome || i.id;
+    const tem = BASICOS.has(i.id) || state.bar.has(i.id);
+    const q = formatarQuantidade(i.q, state.rende, Store.getUnidade());
+    let troca = '';
+    if (!tem) {
+      const alt = substitutosDisponiveis(i.id, state.bar)[0];
+      if (alt) troca = `<span class="troca">↳ use ${esc(ING_MAP[alt.id].nome)} — ${esc(alt.nota)}</span>`;
+    }
+    return `<li class="${tem ? 'tem' : 'nao-tem'}">${tem ? '✓' : '✕'} ${esc(nome)} — ${esc(q)}${i.opcional ? ' <em>(opcional)</em>' : ''}${troca}</li>`;
+  }).join('');
+}
+
 // ---------- Modal de receita ----------
 function abrirReceita(id) {
   const r = RECEITA_MAP[id];
   if (!r) return;
-  const ing = r.ing.map(i => {
-    const nome = ING_MAP[i.id]?.nome || i.id;
-    const tem = BASICOS.has(i.id) || state.bar.has(i.id);
-    return `<li class="${tem ? 'tem' : 'nao-tem'}">${tem ? '✓' : '✕'} ${esc(nome)} — ${esc(i.q)}${i.opcional ? ' <em>(opcional)</em>' : ''}</li>`;
-  }).join('');
+  state.rende = 1; // a escala é por visita, não fica presa entre receitas
   const fotos = fotosPorReceita();
   const entrada = fotos[r.id];
   // A foto do usuário é o ativo emocional mais forte: vira capa, não miniatura.
@@ -535,7 +553,15 @@ function abrirReceita(id) {
     <div id="area-historia">${blocoHistoria(r, h)}</div>
     ${blocoTrilha(r)}
     <h3>Ingredientes</h3>
-    <ul class="ingredientes">${ing}</ul>
+    <div class="controle-medidas">
+      <div class="rende" role="group" aria-label="Quantas doses preparar">
+        <button type="button" data-rende="-" aria-label="Menos uma dose">−</button>
+        <span id="rende-rotulo">${rotuloRende(1)}</span>
+        <button type="button" data-rende="+" aria-label="Mais uma dose">+</button>
+      </div>
+      <button type="button" id="btn-unidade" aria-label="Trocar unidade de medida">${Store.getUnidade()}</button>
+    </div>
+    <ul class="ingredientes" id="lista-ing">${listaIngredientes(r)}</ul>
     <h3>Preparo</h3>
     <p>${esc(r.preparo)}</p>
     ${r.ingExtra ? `<p class="dica">Outros: ${esc(r.ingExtra)}</p>` : ''}
@@ -618,6 +644,15 @@ function abrirFormEntrada(entry = null, receitaId = null) {
           role="radio" aria-checked="${n === nota}" aria-label="${n} ${n === 1 ? 'estrela' : 'estrelas'}">★</button>`).join('')}
       </div>
       <input type="hidden" name="nota" value="${nota}">
+      <div class="filtros-diario">
+        <label>Onde
+          <input name="lugar" maxlength="60" value="${esc(entry?.lugar || '')}" placeholder="Em casa, Bar do Zé...">
+        </label>
+        <label>Quanto custou
+          <input name="preco" type="number" min="0" step="0.01" inputmode="decimal"
+            value="${entry?.preco ?? ''}" placeholder="R$">
+        </label>
+      </div>
       <label>Como foi a experiência?
         <textarea name="texto" rows="3" maxlength="1000" placeholder="Onde estava, com quem, o que achou...">${esc(entry?.texto || '')}</textarea>
       </label>
@@ -660,6 +695,8 @@ function abrirFormEntrada(entry = null, receitaId = null) {
       data: form.data.value,
       nota: Number(form.nota.value) || 0,
       texto: form.texto.value.trim(),
+      lugar: form.lugar.value.trim(),
+      preco: form.preco.value === '' ? null : Number(form.preco.value),
       foto: novaFoto || entry?.foto || null,
       criadoEm: entry?.criadoEm || Date.now(),
     };
@@ -1454,6 +1491,17 @@ function initEventos() {
     const cartaoBtn = ev.target.closest('#btn-cartao');
     if (cartaoBtn) gerarCartaoReceita(cartaoBtn.dataset.receita);
 
+    const rende = ev.target.closest('[data-rende]');
+    if (rende) {
+      const passo = rende.dataset.rende === '+' ? 1 : -1;
+      state.rende = Math.min(24, Math.max(1, state.rende + passo));
+      atualizarMedidas();
+    }
+    if (ev.target.closest('#btn-unidade')) {
+      Store.setUnidade(Store.getUnidade() === 'ml' ? 'oz' : 'ml');
+      atualizarMedidas();
+    }
+
     const notaBtn = ev.target.closest('#btn-editar-nota');
     if (notaBtn) {
       const id = notaBtn.dataset.receita;
@@ -1528,3 +1576,14 @@ async function init() {
 }
 
 document.addEventListener('DOMContentLoaded', init);
+
+// Redesenha só a lista de ingredientes ao mudar escala ou unidade
+function atualizarMedidas() {
+  const lista = $('#lista-ing');
+  if (!lista) return;
+  const r = RECEITA_MAP[$('#btn-preparar')?.dataset.receita];
+  if (!r) return;
+  lista.innerHTML = listaIngredientes(r);
+  $('#rende-rotulo').textContent = rotuloRende(state.rende);
+  $('#btn-unidade').textContent = Store.getUnidade();
+}

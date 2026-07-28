@@ -22,10 +22,19 @@ bar e o seu gosto.
   que destrava o máximo de drinks daquele estilo**, contando o que você já tem.
   É a pergunta inversa do motor de sugestões: não "o que faço com isto?", mas
   "o que compro para fazer o que eu gosto?".
+- **⚖️ Escala e medida** — "vou fazer para 8" multiplica a receita inteira, e
+  o Modo Preparo herda a conta. Alterna entre **ml e oz** (arredondado ao quarto
+  de onça, como se mede atrás do balcão). O que é instrução — "a gosto", "para
+  completar" — passa intacto, porque não é medida.
+- **🔄 Substituições** — faltou o bourbon e você tem whisky? A receita diz o que
+  serve no lugar **e o que muda no copo**. Só sugere o que está na sua estante, e
+  de propósito **não** entra no motor de sugestões: "pode fazer agora" continua
+  significando que você tem o que a receita pede.
 - **📈 Perfil de sabor** — as notas que você dá no diário ensinam o app o que
   você gosta, e as sugestões passam a ser ordenadas pelo seu estilo.
 - **📔 Diário** — registre cada drink com foto, data, nota (1–5 estrelas) e um
-  texto sobre a experiência. Tudo fica salvo no aparelho (IndexedDB), com busca.
+  texto sobre a experiência, mais **onde foi e quanto custou**. Tudo fica salvo
+  no aparelho (IndexedDB), com busca.
 - **🛒 Lista de compras** — itens que faltam viram lista; ao marcar "comprei",
   o item entra automaticamente no seu bar.
 - **🤖 Especialista (IA)** — chat com um bartender que sabe o que você tem em
@@ -146,6 +155,7 @@ js/retro.js           cartaz da retrospectiva do ano (canvas)
 js/preparo.js         modo preparo passo a passo e o brinde
 js/momentos.js        hora do bar, drink do dia, efemérides e coleção
 js/retorno.js         boas-voltas e lembrete semanal no calendário (.ics)
+js/medidas.js         escala de receita e conversão ml/oz
 js/qr.js              gerador de QR Code em JS puro (modo byte, correção M)
 js/cartao.js          cartão de receita em imagem + importação pelo QR
 js/kit.js             lista de compras calculada a partir do estilo preferido

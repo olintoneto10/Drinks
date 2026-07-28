@@ -182,7 +182,7 @@ function gerarCartaoReceita(receitaId) {
     ctx.font = '30px Georgia, serif';
     for (const i of ings) {
       ctx.fillStyle = '#FFFFFF';
-      ctx.fillText(`${ING_MAP[i.id]?.nome || i.id} — ${i.q}`, L / 2, y);
+      ctx.fillText(`${ING_MAP[i.id]?.nome || i.id} — ${formatarQuantidade(i.q, 1, Store.getUnidade())}`, L / 2, y);
       y += 42;
     }
     y += 18;

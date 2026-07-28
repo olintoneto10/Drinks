@@ -567,3 +567,47 @@ const TAG_NOMES = {
   'forte': 'Forte', 'quente': 'Quente', 'tropical': 'Tropical',
   'sem-alcool': 'Sem álcool', 'salgado': 'Salgado',
 };
+
+// Substituições: o que serve no lugar de quê, e o que muda no copo.
+// Não entram no motor de sugestões de propósito — "pode fazer agora" continua
+// significando que você tem o que a receita pede. Isto é conselho de balcão
+// para quando falta algo, não uma forma de inflar a lista.
+const SUBSTITUTOS = {
+  'xarope-simples': [{ id: 'acucar', nota: 'dissolva antes num pouco de água quente' },
+                     { id: 'mel', nota: 'mais encorpado e com gosto próprio' }],
+  'xarope-agave': [{ id: 'mel', nota: 'mais floral' },
+                   { id: 'xarope-simples', nota: 'mais neutro' }],
+  'mel': [{ id: 'xarope-simples', nota: 'perde o floral' },
+          { id: 'xarope-agave', nota: 'bem parecido' }],
+  'bourbon': [{ id: 'whisky', nota: 'menos doce, mais seco' }],
+  'whisky': [{ id: 'bourbon', nota: 'mais doce e redondo' }],
+  'conhaque': [{ id: 'bourbon', nota: 'menos frutado' }],
+  'mezcal': [{ id: 'tequila', nota: 'perde a fumaça, que é o ponto do drink' }],
+  'tequila': [{ id: 'mezcal', nota: 'fica defumado' }],
+  'pisco': [{ id: 'cachaca', nota: 'de cana em vez de uva, mas mesma família' }],
+  'rum-escuro': [{ id: 'rum-branco', nota: 'mais leve, perde o caramelo' }],
+  'rum-branco': [{ id: 'cachaca', nota: 'mais herbáceo' }],
+  'amaro': [{ id: 'campari', nota: 'bem mais amargo' },
+            { id: 'aperol', nota: 'bem mais doce' }],
+  'aperol': [{ id: 'campari', nota: 'quase o dobro de amargor' }],
+  'chartreuse-amarelo': [{ id: 'chartreuse-verde', nota: 'mais forte e mais herbáceo' }],
+  'chartreuse-verde': [{ id: 'chartreuse-amarelo', nota: 'mais suave e mais doce' }],
+  'maraschino': [{ id: 'licor-laranja', nota: 'perde o amargo de amêndoa' }],
+  'licor-coco': [{ id: 'leite-de-coco', nota: 'sem álcool; adoce um pouco' }],
+  'suco-toranja': [{ id: 'suco-laranja', nota: 'bem mais doce, perde o amargo' }],
+  'ginger-beer': [{ id: 'xarope-gengibre', nota: 'complete com água com gás' }],
+  'agua-com-gas': [{ id: 'agua-tonica', nota: 'entra um amargo de quinino' }],
+  'refrigerante-limao': [{ id: 'agua-com-gas', nota: 'adoce com xarope simples' }],
+  'xarope-framboesa': [{ id: 'xarope-morango', nota: 'mais doce, menos ácido' },
+                       { id: 'grenadine', nota: 'muda para romã' }],
+  'xarope-morango': [{ id: 'morango', nota: 'macere com açúcar' }],
+  'creme-de-leite': [{ id: 'leite-condensado', nota: 'bem mais doce' }],
+  'espumante': [{ id: 'agua-com-gas', nota: 'vira versão sem álcool' }],
+  'vermute-seco': [{ id: 'vermute-tinto', nota: 'mais doce e mais escuro' }],
+  'licor-laranja': [{ id: 'maraschino', nota: 'mais seco e amendoado' }],
+};
+
+// O que da minha estante serve no lugar do que falta
+function substitutosDisponiveis(id, bar) {
+  return (SUBSTITUTOS[id] || []).filter(s => bar.has(s.id) || BASICOS.has(s.id));
+}

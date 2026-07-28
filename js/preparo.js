@@ -14,9 +14,11 @@ function abrirPreparo(receitaId) {
   const r = RECEITA_MAP[receitaId];
   if (!r) return;
   const passos = passosDaReceita(r);
+  // Herda a escala e a unidade escolhidas no modal — quem vai preparar para
+  // oito pessoas não quer ver a medida de uma.
   const ings = r.ing
     .filter(i => !BASICOS.has(i.id))
-    .map(i => `${ING_MAP[i.id]?.nome || i.id} — ${i.q}`);
+    .map(i => `${ING_MAP[i.id]?.nome || i.id} — ${formatarQuantidade(i.q, state.rende, Store.getUnidade())}`);
   let atual = 0;
 
   fecharModal();

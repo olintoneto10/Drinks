@@ -107,6 +107,9 @@ const Store = {
   setHistorias(obj) { LS.set('meubar.historias', obj); },
   getNotas() { return LS.get('meubar.notas', {}); },
   setNotas(obj) { LS.set('meubar.notas', obj); },
+  // ml ou oz — preferência de quem mede, vale para o app todo
+  getUnidade() { return LS.get('meubar.unidade', 'ml'); },
+  setUnidade(v) { LS.set('meubar.unidade', v); },
   // Último acesso encerrado, para saber há quanto tempo a pessoa não aparece
   getUltimoAcesso() { return LS.get('meubar.ultimoAcesso', null); },
   setUltimoAcesso(iso) { LS.set('meubar.ultimoAcesso', iso); },

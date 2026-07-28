@@ -773,3 +773,61 @@ body.noite .dialogo-fundo { background: rgba(12, 9, 7, .62); }
   padding: 2px 0;
 }
 .rota-passos li.ok { color: var(--tinta); }
+
+/* ---------- Escala e unidade de medida ---------- */
+.controle-medidas {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 6px 0 10px;
+}
+.rende {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  border: 1px solid var(--linha);
+}
+.rende button {
+  background: none;
+  border: none;
+  color: var(--tinta);
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  line-height: 1;
+  padding: 7px 13px;
+  cursor: pointer;
+}
+.rende button:active { color: var(--acento); }
+.rende span {
+  font-family: var(--sans);
+  font-size: .7rem;
+  text-transform: uppercase;
+  letter-spacing: 1.4px;
+  color: var(--cinza);
+  min-width: 6.6em;
+  text-align: center;
+}
+#btn-unidade {
+  background: none;
+  border: 1px solid var(--linha);
+  color: var(--cinza);
+  font-family: var(--sans);
+  font-size: .7rem;
+  text-transform: uppercase;
+  letter-spacing: 1.6px;
+  padding: 8px 15px;
+  cursor: pointer;
+  transition: color .2s, border-color .2s;
+}
+#btn-unidade:active { color: var(--acento); border-color: var(--acento); }
+
+/* Substituto disponível na estante */
+.troca {
+  display: block;
+  font-size: .8rem;
+  font-style: italic;
+  color: var(--cinza);
+  padding-left: 1.1em;
+  margin-top: 1px;
+}
