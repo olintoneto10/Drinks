@@ -888,3 +888,12 @@ body.noite .dialogo-fundo { background: rgba(12, 9, 7, .62); }
   color: var(--acento);
   margin-top: 8px;
 }
+
+/* ---------- Explorar o acervo ---------- */
+/* Receitas fora de alcance existem para dar desejo, não para competir com o
+   que dá para fazer agora — por isso vêm em tom mais baixo. */
+.card.acervo .item h3 { color: var(--cinza); }
+.card.acervo .copo-item { color: var(--acento); font-style: normal; font-size: .72rem; }
+.card.acervo .tags-linha { font-style: normal; font-size: .8rem; }
+.card.acervo .falta { margin-top: 4px; }
+#btn-abrir-acervo { margin-top: 4px; }

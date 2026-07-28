@@ -15,6 +15,18 @@ bar e o seu gosto.
   lista de compras). Os filtros de perfil **combinam entre si**: marque cítrico
   e forte e veja só o que é as duas coisas. Quando o cruzamento não devolve nada,
   o app afrouxa para "pelo menos uma" e avisa, em vez de mostrar tela vazia.
+- **🔎 Explorar o acervo** — a terceira seção da aba, com tudo que pede dois ou
+  mais ingredientes que faltam. Sem ela, uma estante de iniciante enxergava 32
+  receitas e escondia 166 — 84% do catálogo era invisível, sem lista, busca nem
+  filtro que chegasse lá. Agora as 198 estão alcançáveis. Vem fechada por padrão
+  para não competir com o que dá para fazer agora, ordenada pelas que estão mais
+  perto, cada linha dizendo **o que** falta pelo nome, e um botão *"+ tudo na
+  lista"* que manda todos os itens de uma vez para as compras.
+- **🔍 Busca por ingrediente** — a busca casa nome do drink **e** nome de
+  ingrediente. "Comprei mezcal, e agora?" é a pergunta que se faz na loja, com a
+  garrafa na mão, e antes não tinha resposta no app. Ignora acento, então
+  *maracuja* acha *maracujá*, e abre o acervo sozinha — a resposta costuma estar
+  lá.
 - **✦ Lendas da casa** — dez drinks originais, criados para o app, cada um com
   uma história **assumidamente inventada**. A ficção fica só em drink da casa,
   nunca colada num clássico: lenda em drink real competiria com a história

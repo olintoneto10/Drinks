@@ -13,6 +13,7 @@ const state = {
   favoritos: Store.getFavoritos(),
   animar: true, // cascata só ao entrar na aba, não a cada toque
   afrouxou: false,
+  acervoAberto: false,
   filtros: new Set(),   // vazio = todos; vários combinam entre si
   rende: 1,
   buscaSugestao: '',
@@ -207,6 +208,7 @@ function matchRecipes() {
   const evita = evitaAtivas();
   const ready = [];
   const almost = [];
+  const longe = [];
   for (const r of RECEITAS) {
     if (violaRestricao(r, evita)) continue;
     const faltam = r.ing
@@ -216,10 +218,15 @@ function matchRecipes() {
     const item = { receita: r, faltam, score };
     if (faltam.length === 0) ready.push(item);
     else if (faltam.length === 1) almost.push(item);
+    else longe.push(item);
   }
   ready.sort((a, b) => b.score - a.score || a.receita.nome.localeCompare(b.receita.nome));
   almost.sort((a, b) => b.score - a.score || a.receita.nome.localeCompare(b.receita.nome));
-  return { ready, almost };
+  // No acervo o que manda é a distância: quem está a dois itens vem antes de
+  // quem está a seis. Score só desempata.
+  longe.sort((a, b) => a.faltam.length - b.faltam.length
+    || b.score - a.score || a.receita.nome.localeCompare(b.receita.nome));
+  return { ready, almost, longe };
 }
 
 // "favoritos" e "autorais" não são sabores — são recortes do acervo, e por isso
@@ -263,9 +270,20 @@ function pintarFiltros() {
   });
 }
 
+// A busca casa nome do drink E nome de ingrediente: "comprei mezcal, e agora?"
+// é a pergunta que se faz na loja, com a garrafa na mão, e antes não tinha
+// resposta no app. Ignora acento para "maracuja" achar "maracujá".
+const semAcento = s => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+
+function casaBusca(receita, busca) {
+  if (semAcento(receita.nome.toLowerCase()).includes(busca)) return true;
+  return receita.ing.some(i =>
+    semAcento((ING_MAP[i.id]?.nome || i.id).toLowerCase()).includes(busca));
+}
+
 function passaFiltro(receita) {
-  const busca = state.buscaSugestao.trim().toLowerCase();
-  if (busca && !receita.nome.toLowerCase().includes(busca)) return false;
+  const busca = semAcento(state.buscaSugestao.trim().toLowerCase());
+  if (busca && !casaBusca(receita, busca)) return false;
   return combinaComFiltros(receita, state.filtros, !state.afrouxou);
 }
 
@@ -343,17 +361,19 @@ function renderPessoasRow() {
 
 function renderSugestoes() {
   renderPessoasRow();
-  const { ready, almost } = matchRecipes();
+  const { ready, almost, longe } = matchRecipes();
 
   // Cruzar sabores é o comportamento certo, mas não vale entregar tela vazia:
   // se nada é as duas coisas ao mesmo tempo, mostra o que é pelo menos uma.
   state.afrouxou = false;
   let readyF = ready.filter(x => passaFiltro(x.receita));
   let almostF = almost.filter(x => passaFiltro(x.receita));
+  let longeF = longe.filter(x => passaFiltro(x.receita));
   if (!readyF.length && !almostF.length && saboresMarcados().length > 1) {
     state.afrouxou = true;
     readyF = ready.filter(x => passaFiltro(x.receita));
     almostF = almost.filter(x => passaFiltro(x.receita));
+    longeF = longe.filter(x => passaFiltro(x.receita));
   }
 
   let perfilHtml = '';
@@ -402,8 +422,10 @@ function renderSugestoes() {
     ? `<div class="cards">${readyF.map(x => cardReceita(x, true, fotos)).join('')}</div>`
     : '<p class="dica">Nada por enquanto — adicione mais itens ao seu bar.</p>';
 
-  // Compras inteligentes: o que mais desbloqueia drinks do perfil ativo
-  if (state.bar.size > 0 && almost.length) {
+  // Compras inteligentes: o que mais desbloqueia drinks do perfil ativo.
+  // Some durante a busca — quem procurou "mezcal" não quer ver sugestão de
+  // comprar vermute, que é de outra pergunta.
+  if (state.bar.size > 0 && almost.length && !state.buscaSugestao.trim()) {
     const dicas = ingredientesQueValemAPena(almost);
     if (dicas.length) {
       const quem = state.pessoaAtiva === 'eu' ? 'seu perfil' : getPessoa(state.pessoaAtiva)?.nome;
@@ -424,8 +446,50 @@ function renderSugestoes() {
     ? `<div class="cards">${almostF.map(x => cardReceita(x, false, fotos)).join('')}</div>`
     : '<p class="dica">Nenhuma sugestão aqui com os filtros atuais.</p>';
 
+  html += blocoAcervo(longeF, fotos);
+
   $('#lista-sugestoes').innerHTML = html;
   if (consumirAnimacao()) escalonar($('#lista-sugestoes'));
+}
+
+// O acervo: tudo que falta dois ou mais ingredientes. Antes desta seção, 55% a
+// 84% do catálogo era invisível — não aparecia em lista, busca nem filtro. Vem
+// fechado por padrão para não competir com o que dá para fazer agora.
+function blocoAcervo(longeF, fotos) {
+  if (!longeF.length) return '';
+  const busca = state.buscaSugestao.trim();
+  // Quem buscou por "mezcal" quer ver o acervo aberto: a resposta está aí.
+  const aberto = state.acervoAberto || !!busca;
+  const mostrar = aberto ? longeF.slice(0, 60) : [];
+
+  const linhas = mostrar.map(x => {
+    const faltam = x.faltam.map(id => ING_MAP[id]?.nome || id);
+    const naLista = x.faltam.every(id => state.shopping.has(id));
+    return `<div class="card acervo">
+      <button type="button" class="card-abre" data-receita="${x.receita.id}">
+        <div class="item">
+          <h3>${esc(x.receita.nome)}</h3>
+          <span class="pontos"></span>
+          <span class="copo-item">faltam ${x.faltam.length}</span>
+        </div>
+        <div class="sub"><span class="tags-linha">${esc(faltam.join(', '))}</span></div>
+      </button>
+      <div class="falta">
+        <button class="mini ${naLista ? 'ok' : ''}" data-shop-varios="${esc(x.faltam.join(','))}">
+          ${naLista ? '✓ na lista' : '+ tudo na lista'}</button>
+      </div>
+    </div>`;
+  }).join('');
+
+  const sobra = aberto && longeF.length > mostrar.length
+    ? `<p class="dica">Mostrando ${mostrar.length} de ${longeF.length}. Use a busca
+       — ela também procura por ingrediente.</p>` : '';
+
+  return `<h2>Explorar o acervo <span class="badge">${longeF.length}</span></h2>
+    <p class="dica">Receitas que pedem mais do que você tem hoje. É daqui que sai
+      a próxima garrafa.</p>
+    ${aberto ? '' : `<button class="btn" id="btn-abrir-acervo">Ver as ${longeF.length} receitas</button>`}
+    ${aberto ? `<div class="cards">${linhas}</div>${sobra}` : ''}`;
 }
 
 // ---------- Render: Meu Bar ----------
@@ -1389,6 +1453,23 @@ function initEventos() {
     renderSugestoes();
   });
   $('#lista-sugestoes').addEventListener('click', ev => {
+    if (ev.target.closest('#btn-abrir-acervo')) {
+      state.acervoAberto = true;
+      renderSugestoes();
+      return;
+    }
+    // "+ tudo na lista": o acervo precisa de vários itens de uma vez
+    const varios = ev.target.closest('[data-shop-varios]');
+    if (varios) {
+      const ids = varios.dataset.shopVarios.split(',');
+      const todosJa = ids.every(id => state.shopping.has(id));
+      ids.forEach(id => todosJa ? state.shopping.delete(id) : state.shopping.add(id));
+      Store.setShopping(state.shopping);
+      renderSugestoes();
+      if (!todosJa) toast('Na lista de compras',
+        `${ids.length} ${ids.length === 1 ? 'item' : 'itens'} para destravar esta receita.`);
+      return;
+    }
     const shop = ev.target.closest('[data-shop]');
     if (shop) {
       const id = shop.dataset.shop;
