@@ -855,19 +855,33 @@ body.noite .dialogo-fundo { background: rgba(12, 9, 7, .62); }
   margin: 8px 0 10px;
 }
 
-/* ---------- Lenda da casa: ficção, e tem que parecer ---------- */
-.historia.e-lenda {
-  border-left: 2px dashed var(--acento);
-  padding-left: 14px;
-}
-.historia.e-lenda .rotulo-hist { color: var(--acento); }
-.aviso-lenda {
+/* ---------- Carimbo de veracidade ----------
+   Marca os dois lados, não só a ficção: um selo "real" sozinho não diria nada,
+   e um selo só na lenda pareceria ressalva. Com os dois, é classificação. */
+.selo-verdade {
+  display: inline-block;
   font-family: var(--sans);
-  font-size: .74rem;
-  line-height: 1.5;
-  letter-spacing: .2px;
+  font-size: .56rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.4px;
+  line-height: 1;
+  padding: 3px 6px 2px;
+  margin-left: 6px;
+  border: 1px solid currentColor;
+  border-radius: 2px;
+  vertical-align: 2px;
+  cursor: help;
+}
+.selo-verdade.e-real { color: var(--cinza); }
+.selo-verdade.e-lenda { color: var(--acento); }
+
+.historia.e-lenda { border-left: 2px dashed var(--acento); padding-left: 14px; }
+.historia.e-lenda .rotulo-hist { color: var(--acento); }
+.rodape-lenda {
+  font-family: var(--sans);
+  font-size: .68rem;
+  letter-spacing: .3px;
   color: var(--acento);
-  border: 1px dashed var(--acento);
-  padding: 8px 10px;
-  margin: 8px 0 10px;
+  margin-top: 8px;
 }

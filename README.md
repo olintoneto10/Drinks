@@ -20,7 +20,10 @@ bar e o seu gosto.
   nunca colada num clássico: lenda em drink real competiria com a história
   verdadeira dele. Todo verbete fictício abre com aviso em destaque —
   *"Esta história é invenção nossa, não fato histórico"* — antes do texto, e o
-  drink em si é receita de verdade, com proporções que funcionam.
+  drink em si é receita de verdade, com proporções que funcionam. Cada verbete
+  leva um **carimbo `real` ou `lenda`** ao lado do título — os dois lados são
+  marcados, porque selo só na ficção pareceria ressalva, e selo só no fato não
+  diria nada.
 - **✎ Autorais** — além do cânone clássico, a leva moderna com autor, ano e
   endereço conhecidos: Paper Plane, Naked & Famous, Last Word, Division Bell,
   Oaxaca Old Fashioned, Gin Basil Smash, Old Cuban, Trinidad Sour, Siesta e

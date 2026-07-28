@@ -1753,9 +1753,10 @@ function blocoHistoria(r, h) {
 
   return `
     <div class="historia${h.lenda ? ' e-lenda' : ''}">
-      <span class="rotulo-hist">${h.lenda ? '✦ Lenda da casa' : 'A história'}</span>
-      ${h.lenda ? `<p class="aviso-lenda">Esta história é invenção nossa, não fato
-        histórico. O drink é de verdade — só o passado dele que não é.</p>` : ''}
+      <span class="rotulo-hist">${h.lenda ? '✦ Lenda da casa' : 'A história'}
+        <b class="selo-verdade ${h.lenda ? 'e-lenda' : 'e-real'}"
+          title="${h.lenda ? 'História inventada para este app' : 'História pesquisada, de fontes verificáveis'}"
+        >${h.lenda ? 'lenda' : 'real'}</b></span>
       <p>${h.historia}</p>
       ${h.criador ? `<p class="assinatura">— ${h.criador}</p>` : ''}
       ${h.curiosidade ? `<p class="curiosidade">${h.curiosidade}</p>` : ''}
@@ -1766,6 +1767,7 @@ function blocoHistoria(r, h) {
         ${linha('Variações', h.variacoes)}
         ${linha('Na cultura', h.cultura)}
       </ul>
+      ${h.lenda ? '<p class="rodape-lenda">História inventada para este app. A receita, não.</p>' : ''}
       ${h.porIA ? '<p class="dica">História escrita pelo Especialista.</p>' : ''}
     </div>`;
 }
