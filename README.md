@@ -80,6 +80,20 @@ bar e o seu gosto.
   evita, e devolve um link que a cadastra no seu app. Sem servidor: as
   preferências viajam dentro da própria URL.
 
+### Ilustração
+
+As imagens são **geradas em SVG**, não fotografadas: sem licença, sem CDN, sem
+peso e cobrindo **198 de 198** receitas — inclusive as Lendas da casa, que não
+existem em banco de imagem nenhum. A sua foto do drink substitui a ilustração
+assim que você registra o preparo no diário.
+
+A cor do líquido é **calculada a partir dos ingredientes**, com peso por poder
+de tingimento (Campari pinta quase sozinho; vodka quase não pinta) e realce de
+saturação, porque média de cores em RGB puxa tudo para o cinza. Entram ainda o
+copo certo para cada receita, gelo conforme o que o preparo pede (pedra grande,
+triturado, cubos), camada densa no fundo quando há granadina, espuma de clara,
+sal na borda, reflexo no vidro e guarnição escolhida entre 16 possibilidades.
+
 ### Camada de experiência
 
 - **Modo Preparo** — tela cheia, um passo por vez, tipografia grande para quem

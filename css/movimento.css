@@ -497,8 +497,11 @@ body.noite::before {
 body.noite header, body.noite main, body.noite #tabs { position: relative; z-index: 1; }
 body.noite .card:not(.drink-dia),
 body.noite .entrada { background: transparent; }
-body.noite .arte-modal svg path[stroke],
 body.noite .pontos, body.noite .bv-pontos { border-color: #52402F; }
+/* O contorno do copo é stroke de SVG, não borda: a regra antiga aplicava
+   border-color num <path> e não fazia nada — o copo sumia no escuro. */
+body.noite .copo-traco { stroke: var(--tinta); }
+body.noite .copo-brilho { opacity: .3; }
 body.noite .toast { box-shadow: 0 10px 34px -12px rgba(0, 0, 0, .6); }
 body.noite #modal { background: rgba(12, 9, 7, .62); }
 body.noite .dialogo-fundo { background: rgba(12, 9, 7, .62); }
