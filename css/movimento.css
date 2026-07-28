@@ -831,3 +831,15 @@ body.noite .dialogo-fundo { background: rgba(12, 9, 7, .62); }
   padding-left: 1.1em;
   margin-top: 1px;
 }
+
+/* Aviso de que o cruzamento de sabores não devolveu nada */
+.afrouxou {
+  font-size: .88rem;
+  font-style: italic;
+  color: var(--cinza);
+  line-height: 1.5;
+  border-left: 2px solid var(--acento);
+  padding: 6px 0 6px 12px;
+  margin: 4px 0 12px;
+}
+.afrouxou strong { color: var(--acento); font-weight: normal; font-style: normal; }

@@ -10,9 +10,11 @@ bar e o seu gosto.
   licores, mixers, **xaropes**, frutas). Açúcar, sal e gelo já contam como
   disponíveis. São 15 xaropes, de tangerina e gengibre a orgeat e falernum, e
   cada um destrava receitas de verdade — nenhum entra só para enfeitar a lista.
-- **🍸 Sugestões** — 90 receitas divididas em *"pode fazer agora"* e
+- **🍸 Sugestões** — 136 receitas divididas em *"pode fazer agora"* e
   *"falta só 1 ingrediente"* (com botão para mandar o item que falta para a
-  lista de compras). Filtros por perfil: cítrico, doce, amargo, sem álcool etc.
+  lista de compras). Os filtros de perfil **combinam entre si**: marque cítrico
+  e forte e veja só o que é as duas coisas. Quando o cruzamento não devolve nada,
+  o app afrouxa para "pelo menos uma" e avisa, em vez de mostrar tela vazia.
 - **✎ Autorais** — além do cânone clássico, a leva moderna com autor, ano e
   endereço conhecidos: Paper Plane, Naked & Famous, Last Word, Division Bell,
   Oaxaca Old Fashioned, Gin Basil Smash, Old Cuban, Trinidad Sour, Siesta e
@@ -76,7 +78,7 @@ bar e o seu gosto.
 - **O Brinde** — ao concluir, o copo se enche, sobem bolhas e o celular vibra
   *antes* de qualquer formulário; marcos (1º, 10º, 50º…) ganham selo carimbado.
 - **Histórias** — origem, criador, curiosidade, harmonização, variações e
-  aparições culturais. **As 90 receitas têm verbete escrito à mão** (lendas
+  aparições culturais. **As 136 receitas têm verbete escrito à mão** (lendas
   marcadas como lendas — "conta-se que", "há quem reivindique"); nada depende
   da chave de API. Receitas próprias ganham história do Especialista sob demanda.
 - **Trilha** — cada drink sugere o que ouvir enquanto se prepara, escolhido pela

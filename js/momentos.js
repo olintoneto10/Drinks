@@ -54,7 +54,7 @@ function drinkDoDia() {
 
 function blocoDrinkDoDia() {
   // só na visão pessoal e sem filtro ativo — não atrapalha quem está buscando
-  if (state.pessoaAtiva !== 'eu' || state.filtroTag !== 'todos' || state.buscaSugestao.trim()) return '';
+  if (state.pessoaAtiva !== 'eu' || state.filtros.size || state.buscaSugestao.trim()) return '';
   const d = drinkDoDia();
   if (!d) return '';
   const h = historiaDe(d.receita.id);
@@ -137,6 +137,28 @@ const PAIS_DO_DRINK = {
   'maracuja-tonica': 'Brasil', 'limonada-de-gengibre': 'Brasil',
   'maca-verde-refresco': 'Estados Unidos', 'vodka-melancia': 'Brasil',
   'tangerina-tonica': 'Espanha', 'vodka-ice': 'Austrália',
+  // Ampliação de 2026: clássicos de balcão, tiki e repertório brasileiro
+  'garibaldi': 'Itália', 'bicicletta': 'Itália', 'negroni-sbagliato': 'Itália',
+  'batanga': 'México', 'el-presidente': 'Cuba', 'mary-pickford': 'Cuba',
+  'between-the-sheets': 'França', 'scofflaw': 'França',
+  'vieux-carre': 'Estados Unidos', 'brooklyn': 'Estados Unidos',
+  'rob-roy': 'Estados Unidos', 'martinez': 'Estados Unidos',
+  'bijou': 'Estados Unidos', 'tuxedo': 'Estados Unidos',
+  'casino': 'Inglaterra', 'pink-lady': 'Estados Unidos',
+  'ward-8': 'Estados Unidos', 'air-mail': 'Cuba',
+  'saturn': 'Estados Unidos', 'zombie': 'Estados Unidos',
+  'fog-cutter': 'Estados Unidos', 'bitter-mai-tai': 'Estados Unidos',
+  'kingston-negroni': 'Estados Unidos', 'chartreuse-swizzle': 'Estados Unidos',
+  'amaretto-sour': 'Estados Unidos', 'godfather': 'Estados Unidos',
+  'grasshopper': 'Estados Unidos', 'stinger': 'Estados Unidos',
+  'brandy-alexander': 'Estados Unidos', 'sherry-cobbler': 'Estados Unidos',
+  'whiskey-smash': 'Estados Unidos', 'southside': 'Estados Unidos',
+  'gin-fizz': 'Estados Unidos', 'vesper': 'Inglaterra',
+  'french-connection': 'Estados Unidos', 'blood-and-sand': 'Inglaterra',
+  'hanky-panky': 'Inglaterra', 'toronto': 'Canadá',
+  'painkiller': 'Ilhas Virgens', 'bamboo': 'Japão', 'adonis': 'Estados Unidos',
+  'michelada': 'México', 'radler': 'Alemanha',
+  'quentao': 'Brasil', 'vinho-quente': 'Brasil', 'leite-de-onca': 'Brasil',
 };
 
 function statsColecao() {

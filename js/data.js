@@ -40,6 +40,12 @@ const INGREDIENTES = [
   { id: 'absinto', nome: 'Absinto', cat: 'licores' },
   { id: 'espumante', nome: 'Espumante / prosecco', cat: 'licores' },
   { id: 'licor-coco', nome: 'Licor de coco (Malibu)', cat: 'licores' },
+  { id: 'licor-cacau', nome: 'Licor de cacau (crème de cacao)', cat: 'licores' },
+  { id: 'licor-menta', nome: 'Licor de menta (crème de menthe)', cat: 'licores' },
+  { id: 'amaretto', nome: 'Amaretto', cat: 'licores' },
+  { id: 'fernet', nome: 'Fernet', cat: 'licores' },
+  { id: 'xerez', nome: 'Xerez seco (fino / manzanilla)', cat: 'licores' },
+  { id: 'vinho-branco', nome: 'Vinho branco seco', cat: 'licores' },
   { id: 'vinho-tinto', nome: 'Vinho tinto', cat: 'licores' },
   // Mixers e sucos
   { id: 'agua-tonica', nome: 'Água tônica', cat: 'mixers' },
@@ -47,6 +53,7 @@ const INGREDIENTES = [
   { id: 'refrigerante-cola', nome: 'Refrigerante de cola', cat: 'mixers' },
   { id: 'ginger-beer', nome: 'Ginger beer / ginger ale', cat: 'mixers' },
   { id: 'refrigerante-limao', nome: 'Refrigerante de limão (Sprite / 7up)', cat: 'mixers' },
+  { id: 'cerveja', nome: 'Cerveja (pilsen / lager)', cat: 'mixers' },
   { id: 'agua-de-coco', nome: 'Água de coco', cat: 'mixers' },
   { id: 'suco-laranja', nome: 'Suco de laranja', cat: 'mixers' },
   { id: 'suco-abacaxi', nome: 'Suco de abacaxi', cat: 'mixers' },
@@ -556,6 +563,238 @@ const RECEITAS = [
     id: 'coco-limao', nome: 'Coco com Limão', copo: 'Copo alto', tags: ['sem-alcool', 'refrescante', 'citrico'],
     ing: [{ id: 'agua-de-coco', q: '180 ml' }, { id: 'limao', q: '20 ml' }, { id: 'hortela', q: '5 folhas' }, { id: 'gelo', q: 'bastante' }],
     preparo: 'Bata a hortelã na palma da mão, junte tudo no copo com gelo. A água de coco já tem sal e açúcar próprios — o limão só acorda os dois.',
+  },
+
+  // ---------- Ampliação: clássicos de balcão, tiki e o repertório brasileiro ----------
+  {
+    id: 'garibaldi', nome: 'Garibaldi', copo: 'Copo alto', tags: ['amargo', 'frutado', 'refrescante'],
+    ing: [{ id: 'campari', q: '50 ml' }, { id: 'suco-laranja', q: '150 ml' }, { id: 'gelo', q: 'bastante' }],
+    preparo: 'Campari no copo com gelo e complete com suco de laranja batido até ficar espumoso. A espuma é o drink — suco parado deixa o Campari amargo demais.',
+  },
+  {
+    id: 'bicicletta', nome: 'Bicicletta', copo: 'Taça grande', tags: ['amargo', 'seco', 'refrescante'],
+    ing: [{ id: 'campari', q: '45 ml' }, { id: 'vinho-branco', q: '90 ml' }, { id: 'agua-com-gas', q: '60 ml' }, { id: 'laranja', q: '1 fatia', opcional: true }, { id: 'gelo', q: 'bastante' }],
+    preparo: 'Campari e vinho branco gelado na taça com gelo, complete com água com gás. Mexa uma vez só.',
+  },
+  {
+    id: 'negroni-sbagliato', nome: 'Negroni Sbagliato', copo: 'Copo baixo', tags: ['amargo', 'refrescante'],
+    ing: [{ id: 'campari', q: '30 ml' }, { id: 'vermute-tinto', q: '30 ml' }, { id: 'espumante', q: '60 ml' }, { id: 'laranja', q: '1 fatia', opcional: true }, { id: 'gelo', q: 'a gosto' }],
+    preparo: 'Campari e vermute no copo com gelo, complete com espumante bem gelado. O espumante entra por último e devagar, para não perder o gás.',
+  },
+  {
+    id: 'batanga', nome: 'Batanga', copo: 'Copo alto', tags: ['refrescante', 'citrico', 'forte'],
+    ing: [{ id: 'tequila', q: '50 ml' }, { id: 'refrigerante-cola', q: '150 ml' }, { id: 'limao', q: '1/2 unidade' }, { id: 'sal', q: 'na borda' }, { id: 'gelo', q: 'bastante' }],
+    preparo: 'Borda salgada, suco de meio limão, tequila e gelo. Complete com cola e mexa com a faca — no bar onde nasceu, a mesma faca que cortou o limão.',
+  },
+  {
+    id: 'el-presidente', nome: 'El Presidente', copo: 'Taça coupé', tags: ['seco', 'frutado', 'forte'],
+    ing: [{ id: 'rum-branco', q: '50 ml' }, { id: 'vermute-seco', q: '25 ml' }, { id: 'licor-laranja', q: '10 ml' }, { id: 'grenadine', q: '5 ml' }, { id: 'gelo', q: 'para mexer' }],
+    preparo: 'Mexa tudo com gelo — nunca bata — e coe na taça gelada. A granadina entra em gota: é cor e um fundo doce, não sabor principal.',
+  },
+  {
+    id: 'mary-pickford', nome: 'Mary Pickford', copo: 'Taça coupé', tags: ['doce', 'tropical', 'frutado'],
+    ing: [{ id: 'rum-branco', q: '55 ml' }, { id: 'suco-abacaxi', q: '55 ml' }, { id: 'maraschino', q: '10 ml' }, { id: 'grenadine', q: '5 ml' }, { id: 'gelo', q: 'para bater' }],
+    preparo: 'Bata tudo com gelo e coe na taça. O abacaxi faz uma espuma clara que assenta em segundos — sirva na hora.',
+  },
+  {
+    id: 'between-the-sheets', nome: 'Between the Sheets', copo: 'Taça coupé', tags: ['citrico', 'forte', 'seco'],
+    ing: [{ id: 'rum-branco', q: '30 ml' }, { id: 'conhaque', q: '30 ml' }, { id: 'licor-laranja', q: '20 ml' }, { id: 'limao', q: '20 ml' }, { id: 'gelo', q: 'para bater' }],
+    preparo: 'Bata tudo bem gelado e coe na taça, sem gelo. É um Sidecar que ganhou rum — e ficou bem mais forte do que parece.',
+  },
+  {
+    id: 'vieux-carre', nome: 'Vieux Carré', copo: 'Copo baixo', tags: ['forte', 'doce', 'amargo'],
+    ing: [{ id: 'whisky', q: '30 ml' }, { id: 'conhaque', q: '30 ml' }, { id: 'vermute-tinto', q: '30 ml' }, { id: 'angostura', q: '2 gotas' }, { id: 'gelo', q: 'pedra grande' }],
+    preparo: 'Mexa tudo com gelo e sirva sobre uma pedra grande. Dois destilados em partes iguais pedem diluição lenta — pedra pequena estraga.',
+  },
+  {
+    id: 'brooklyn', nome: 'Brooklyn', copo: 'Taça coupé', tags: ['seco', 'amargo', 'forte'],
+    ing: [{ id: 'whisky', q: '55 ml' }, { id: 'vermute-seco', q: '25 ml' }, { id: 'maraschino', q: '8 ml' }, { id: 'angostura', q: '2 gotas' }, { id: 'gelo', q: 'para mexer' }],
+    preparo: 'Mexa com gelo e coe na taça gelada. É o Manhattan do outro lado do rio: vermute seco no lugar do tinto.',
+  },
+  {
+    id: 'rob-roy', nome: 'Rob Roy', copo: 'Taça coupé', tags: ['forte', 'doce'],
+    ing: [{ id: 'whisky', q: '60 ml' }, { id: 'vermute-tinto', q: '25 ml' }, { id: 'angostura', q: '2 gotas' }, { id: 'gelo', q: 'para mexer' }],
+    preparo: 'Mexa com gelo por 20 segundos e coe na taça. Manhattan com uísque escocês — a turfa muda tudo.',
+  },
+  {
+    id: 'martinez', nome: 'Martinez', copo: 'Taça coupé', tags: ['doce', 'seco', 'forte'],
+    ing: [{ id: 'gin', q: '45 ml' }, { id: 'vermute-tinto', q: '30 ml' }, { id: 'maraschino', q: '8 ml' }, { id: 'angostura', q: '2 gotas' }, { id: 'gelo', q: 'para mexer' }],
+    preparo: 'Mexa com gelo e coe na taça gelada. Muito mais doce que um Dry Martini — e veio antes dele.',
+  },
+  {
+    id: 'bijou', nome: 'Bijou', copo: 'Taça coupé', tags: ['forte', 'doce', 'seco'],
+    ing: [{ id: 'gin', q: '30 ml' }, { id: 'vermute-tinto', q: '30 ml' }, { id: 'chartreuse-verde', q: '30 ml' }, { id: 'angostura', q: '1 gota', opcional: true }, { id: 'gelo', q: 'para mexer' }],
+    preparo: 'Partes iguais, mexidas com gelo e coadas sem gelo. Três joias: gin diamante, vermute rubi e Chartreuse esmeralda.',
+  },
+  {
+    id: 'hanky-panky', nome: 'Hanky Panky', copo: 'Taça coupé', tags: ['amargo', 'forte', 'doce'],
+    ing: [{ id: 'gin', q: '45 ml' }, { id: 'vermute-tinto', q: '45 ml' }, { id: 'fernet', q: '8 ml' }, { id: 'laranja', q: '1 casca' }, { id: 'gelo', q: 'para mexer' }],
+    preparo: 'Mexa com gelo e coe na taça. O Fernet entra em dose mínima: mais que isso e ele engole o resto.',
+  },
+  {
+    id: 'tuxedo', nome: 'Tuxedo', copo: 'Taça coupé', tags: ['seco', 'forte'],
+    ing: [{ id: 'gin', q: '45 ml' }, { id: 'vermute-seco', q: '45 ml' }, { id: 'maraschino', q: '5 ml' }, { id: 'absinto', q: '2 gotas' }, { id: 'gelo', q: 'para mexer' }],
+    preparo: 'Mexa tudo com gelo e coe na taça gelada. O absinto vai em gotas dentro, não a lavar o copo.',
+  },
+  {
+    id: 'casino', nome: 'Casino', copo: 'Taça coupé', tags: ['citrico', 'seco', 'frutado'],
+    ing: [{ id: 'gin', q: '55 ml' }, { id: 'maraschino', q: '15 ml' }, { id: 'limao', q: '15 ml' }, { id: 'angostura', q: '2 gotas' }, { id: 'gelo', q: 'para bater' }],
+    preparo: 'Bata com gelo e coe na taça. Primo do Aviation, sem o licor de violeta e com bitters.',
+  },
+  {
+    id: 'pink-lady', nome: 'Pink Lady', copo: 'Taça coupé', tags: ['frutado', 'doce', 'cremoso'],
+    ing: [{ id: 'gin', q: '50 ml' }, { id: 'grenadine', q: '15 ml' }, { id: 'limao', q: '15 ml' }, { id: 'ovo', q: '1 clara' }, { id: 'gelo', q: 'para bater' }],
+    preparo: 'Bata sem gelo primeiro para montar a clara, depois com gelo, e coe duas vezes. A espuma rosada tem que ficar firme na superfície.',
+  },
+  {
+    id: 'ward-8', nome: 'Ward 8', copo: 'Taça coupé', tags: ['citrico', 'doce', 'forte'],
+    ing: [{ id: 'whisky', q: '60 ml' }, { id: 'limao', q: '20 ml' }, { id: 'suco-laranja', q: '20 ml' }, { id: 'grenadine', q: '10 ml' }, { id: 'gelo', q: 'para bater' }],
+    preparo: 'Bata tudo com gelo e coe. Dois cítricos em vez de um: a laranja arredonda o que o limão deixa afiado.',
+  },
+  {
+    id: 'scofflaw', nome: 'Scofflaw', copo: 'Taça coupé', tags: ['citrico', 'seco', 'frutado'],
+    ing: [{ id: 'whisky', q: '45 ml' }, { id: 'vermute-seco', q: '30 ml' }, { id: 'limao', q: '20 ml' }, { id: 'grenadine', q: '15 ml' }, { id: 'gelo', q: 'para bater' }],
+    preparo: 'Bata bem gelado e coe na taça. A granadina aqui é ingrediente de verdade, não gota de cor.',
+  },
+  {
+    id: 'air-mail', nome: 'Air Mail', copo: 'Taça flute', tags: ['citrico', 'doce', 'refrescante'],
+    ing: [{ id: 'rum-branco', q: '40 ml' }, { id: 'mel', q: '15 ml' }, { id: 'limao', q: '20 ml' }, { id: 'espumante', q: '80 ml' }, { id: 'gelo', q: 'para bater' }],
+    preparo: 'Dilua o mel em água morna, bata com o rum e o limão, coe na taça e complete com espumante.',
+  },
+  {
+    id: 'saturn', nome: 'Saturn', copo: 'Taça grande', tags: ['tropical', 'citrico', 'doce'],
+    ing: [{ id: 'gin', q: '45 ml' }, { id: 'xarope-orgeat', q: '15 ml' }, { id: 'xarope-falernum', q: '15 ml' }, { id: 'maracuja', q: '1/2 unidade' }, { id: 'limao', q: '20 ml' }, { id: 'gelo', q: 'picado' }],
+    preparo: 'Bata tudo com gelo e sirva com gelo picado. Um tiki de gin, que é raridade — quase todos são de rum.',
+  },
+  {
+    id: 'zombie', nome: 'Zombie', copo: 'Copo alto', tags: ['tropical', 'forte', 'frutado'],
+    ing: [{ id: 'rum-branco', q: '40 ml' }, { id: 'rum-escuro', q: '40 ml' }, { id: 'xarope-falernum', q: '15 ml' }, { id: 'suco-abacaxi', q: '40 ml' }, { id: 'limao', q: '25 ml' }, { id: 'grenadine', q: '10 ml' }, { id: 'angostura', q: '2 gotas' }, { id: 'gelo', q: 'picado' }],
+    preparo: 'Bata tudo com gelo picado e sirva sem coar. Donn Beach limitava a dois por cliente, e o motivo é o teor alcoólico.',
+  },
+  {
+    id: 'painkiller', nome: 'Painkiller', copo: 'Copo alto', tags: ['tropical', 'cremoso', 'doce'],
+    ing: [{ id: 'rum-escuro', q: '60 ml' }, { id: 'suco-abacaxi', q: '100 ml' }, { id: 'suco-laranja', q: '30 ml' }, { id: 'leite-de-coco', q: '30 ml' }, { id: 'gelo', q: 'bastante' }],
+    preparo: 'Bata tudo com gelo e sirva no copo cheio. Noz-moscada ralada por cima não é enfeite: é o aroma que fecha o drink.',
+  },
+  {
+    id: 'fog-cutter', nome: 'Fog Cutter', copo: 'Copo alto', tags: ['tropical', 'forte', 'citrico'],
+    ing: [{ id: 'rum-branco', q: '45 ml' }, { id: 'conhaque', q: '25 ml' }, { id: 'gin', q: '15 ml' }, { id: 'xarope-orgeat', q: '20 ml' }, { id: 'suco-laranja', q: '50 ml' }, { id: 'limao', q: '25 ml' }, { id: 'gelo', q: 'picado' }],
+    preparo: 'Bata tudo e sirva com gelo picado. Trader Vic avisava: "depois de dois destes, você não enxerga mais nada".',
+  },
+  {
+    id: 'bitter-mai-tai', nome: 'Bitter Mai Tai', copo: 'Copo baixo', tags: ['amargo', 'tropical', 'citrico'],
+    ing: [{ id: 'mezcal', q: '45 ml' }, { id: 'campari', q: '25 ml' }, { id: 'xarope-orgeat', q: '20 ml' }, { id: 'licor-laranja', q: '10 ml' }, { id: 'limao', q: '25 ml' }, { id: 'gelo', q: 'picado' }],
+    preparo: 'Bata tudo com gelo e sirva com gelo picado. Fumaça, amargo e amêndoa — o tiki menos tiki que existe.',
+  },
+  {
+    id: 'kingston-negroni', nome: 'Kingston Negroni', copo: 'Copo baixo', tags: ['amargo', 'forte', 'tropical'],
+    ing: [{ id: 'rum-escuro', q: '30 ml' }, { id: 'campari', q: '30 ml' }, { id: 'vermute-tinto', q: '30 ml' }, { id: 'laranja', q: '1 casca' }, { id: 'gelo', q: 'pedra grande' }],
+    preparo: 'Mexa com gelo e sirva sobre pedra grande. Um Negroni que trocou o gin por rum jamaicano — mais funky, mais doce.',
+  },
+  {
+    id: 'chartreuse-swizzle', nome: 'Chartreuse Swizzle', copo: 'Copo alto', tags: ['citrico', 'tropical', 'refrescante'],
+    ing: [{ id: 'chartreuse-verde', q: '45 ml' }, { id: 'suco-abacaxi', q: '30 ml' }, { id: 'xarope-falernum', q: '20 ml' }, { id: 'limao', q: '20 ml' }, { id: 'gelo', q: 'triturado' }],
+    preparo: 'Copo cheio de gelo triturado e mexa de baixo para cima com colher longa até o copo suar. É o que "swizzle" quer dizer.',
+  },
+  {
+    id: 'toronto', nome: 'Toronto', copo: 'Copo baixo', tags: ['amargo', 'forte', 'seco'],
+    ing: [{ id: 'whisky', q: '55 ml' }, { id: 'fernet', q: '10 ml' }, { id: 'xarope-simples', q: '8 ml' }, { id: 'angostura', q: '2 gotas' }, { id: 'gelo', q: 'para mexer' }],
+    preparo: 'Mexa com gelo e coe. É um Old Fashioned que trocou parte do açúcar por amargo de ervas.',
+  },
+  {
+    id: 'amaretto-sour', nome: 'Amaretto Sour', copo: 'Copo baixo', tags: ['doce', 'citrico', 'cremoso'],
+    ing: [{ id: 'amaretto', q: '55 ml' }, { id: 'bourbon', q: '20 ml' }, { id: 'limao', q: '25 ml' }, { id: 'ovo', q: '1 clara' }, { id: 'gelo', q: 'para bater' }],
+    preparo: 'Bata sem gelo, depois com gelo, e coe sobre gelo novo. O golpe do bourbon é o que tira o drink do enjoativo.',
+  },
+  {
+    id: 'godfather', nome: 'Godfather', copo: 'Copo baixo', tags: ['forte', 'doce'],
+    ing: [{ id: 'whisky', q: '50 ml' }, { id: 'amaretto', q: '20 ml' }, { id: 'gelo', q: 'pedra grande' }],
+    preparo: 'Direto no copo, sobre uma pedra grande, e mexa. Dois ingredientes: a proporção é o drink inteiro.',
+  },
+  {
+    id: 'grasshopper', nome: 'Grasshopper', copo: 'Taça coupé', tags: ['cremoso', 'doce'],
+    ing: [{ id: 'licor-menta', q: '30 ml' }, { id: 'licor-cacau', q: '30 ml' }, { id: 'creme-de-leite', q: '30 ml' }, { id: 'gelo', q: 'para bater' }],
+    preparo: 'Partes iguais, batidas com bastante gelo até gelar o metal, e coadas na taça. Sobremesa em forma de copo.',
+  },
+  {
+    id: 'stinger', nome: 'Stinger', copo: 'Copo baixo', tags: ['forte', 'doce', 'refrescante'],
+    ing: [{ id: 'conhaque', q: '55 ml' }, { id: 'licor-menta', q: '20 ml' }, { id: 'gelo', q: 'triturado' }],
+    preparo: 'Mexa com gelo e sirva sobre gelo triturado. Era o digestivo da alta sociedade americana antes da Lei Seca.',
+  },
+  {
+    id: 'brandy-alexander', nome: 'Brandy Alexander', copo: 'Taça coupé', tags: ['cremoso', 'doce'],
+    ing: [{ id: 'conhaque', q: '35 ml' }, { id: 'licor-cacau', q: '35 ml' }, { id: 'creme-de-leite', q: '35 ml' }, { id: 'gelo', q: 'para bater' }],
+    preparo: 'Bata bem gelado e coe na taça. Noz-moscada ralada por cima — sem ela o drink fica plano.',
+  },
+  {
+    id: 'bamboo', nome: 'Bamboo', copo: 'Taça coupé', tags: ['seco', 'amargo'],
+    ing: [{ id: 'xerez', q: '45 ml' }, { id: 'vermute-seco', q: '45 ml' }, { id: 'angostura', q: '2 gotas' }, { id: 'limao', q: '1 casca' }, { id: 'gelo', q: 'para mexer' }],
+    preparo: 'Mexa com gelo e coe na taça gelada. Tem metade do álcool de um martíni e o dobro de sutileza.',
+  },
+  {
+    id: 'adonis', nome: 'Adonis', copo: 'Taça coupé', tags: ['seco', 'doce'],
+    ing: [{ id: 'xerez', q: '50 ml' }, { id: 'vermute-tinto', q: '40 ml' }, { id: 'angostura', q: '2 gotas' }, { id: 'laranja', q: '1 casca' }, { id: 'gelo', q: 'para mexer' }],
+    preparo: 'Mexa com gelo e coe. Irmão do Bamboo, com vermute tinto — mais doce e mais escuro.',
+  },
+  {
+    id: 'sherry-cobbler', nome: 'Sherry Cobbler', copo: 'Copo alto', tags: ['frutado', 'refrescante', 'doce'],
+    ing: [{ id: 'xerez', q: '90 ml' }, { id: 'laranja', q: '2 rodelas' }, { id: 'acucar', q: '1 colher de chá' }, { id: 'abacaxi', q: '1 fatia', opcional: true }, { id: 'gelo', q: 'triturado' }],
+    preparo: 'Macere a laranja com o açúcar, junte o xerez, encha de gelo triturado e mexa. Sirva com canudo — foi este drink que popularizou o canudo.',
+  },
+  {
+    id: 'michelada', nome: 'Michelada', copo: 'Copo alto', tags: ['salgado', 'citrico', 'refrescante'],
+    ing: [{ id: 'cerveja', q: '330 ml' }, { id: 'limao', q: '30 ml' }, { id: 'molho-ingles', q: '4 gotas' }, { id: 'sal', q: 'na borda' }, { id: 'gelo', q: 'bastante' }],
+    preparo: 'Borda salgada, limão e molho inglês no fundo do copo com gelo, e complete com cerveja bem gelada, inclinando o copo.',
+  },
+  {
+    id: 'radler', nome: 'Radler', copo: 'Copo alto', tags: ['refrescante', 'citrico', 'doce'],
+    ing: [{ id: 'cerveja', q: '200 ml' }, { id: 'refrigerante-limao', q: '200 ml' }, { id: 'limao', q: '1 rodela', opcional: true }, { id: 'gelo', q: 'a gosto' }],
+    preparo: 'Metade e metade, os dois bem gelados, no copo inclinado. Fica com cerca de metade do álcool de uma cerveja.',
+  },
+  {
+    id: 'whiskey-smash', nome: 'Whiskey Smash', copo: 'Copo baixo', tags: ['citrico', 'refrescante', 'forte'],
+    ing: [{ id: 'bourbon', q: '60 ml' }, { id: 'limao', q: '1/2 unidade' }, { id: 'hortela', q: '8 folhas' }, { id: 'xarope-simples', q: '20 ml' }, { id: 'gelo', q: 'triturado' }],
+    preparo: 'Macere o limão em pedaços com a hortelã e o xarope, junte o bourbon, bata e sirva sem coar sobre gelo triturado.',
+  },
+  {
+    id: 'southside', nome: 'Southside', copo: 'Taça coupé', tags: ['citrico', 'refrescante', 'seco'],
+    ing: [{ id: 'gin', q: '55 ml' }, { id: 'limao', q: '22 ml' }, { id: 'hortela', q: '8 folhas' }, { id: 'xarope-simples', q: '20 ml' }, { id: 'gelo', q: 'para bater' }],
+    preparo: 'Bata tudo com gelo e coe duas vezes na taça. É um Mojito de gin servido sem gelo — e bem mais elegante.',
+  },
+  {
+    id: 'gin-fizz', nome: 'Gin Fizz', copo: 'Copo alto', tags: ['citrico', 'cremoso', 'refrescante'],
+    ing: [{ id: 'gin', q: '55 ml' }, { id: 'limao', q: '25 ml' }, { id: 'xarope-simples', q: '20 ml' }, { id: 'ovo', q: '1 clara' }, { id: 'agua-com-gas', q: '60 ml' }, { id: 'gelo', q: 'para bater' }],
+    preparo: 'Bata sem gelo, depois com gelo, coe no copo sem gelo e complete com água com gás bem devagar — a espuma sobe sozinha acima da borda.',
+  },
+  {
+    id: 'vesper', nome: 'Vesper', copo: 'Taça coupé', tags: ['seco', 'forte'],
+    ing: [{ id: 'gin', q: '60 ml' }, { id: 'vodka', q: '20 ml' }, { id: 'vermute-seco', q: '10 ml' }, { id: 'limao', q: '1 casca' }, { id: 'gelo', q: 'para bater' }],
+    preparo: 'Batido, não mexido — como o personagem pede, mesmo sendo tecnicamente errado para um drink só de destilados.',
+  },
+  {
+    id: 'french-connection', nome: 'French Connection', copo: 'Copo baixo', tags: ['forte', 'doce'],
+    ing: [{ id: 'conhaque', q: '45 ml' }, { id: 'amaretto', q: '25 ml' }, { id: 'gelo', q: 'pedra grande' }],
+    preparo: 'Direto no copo com uma pedra grande. Dois ingredientes, nenhuma técnica, e mesmo assim precisa de conhaque decente.',
+  },
+  {
+    id: 'blood-and-sand', nome: 'Blood and Sand', copo: 'Taça coupé', tags: ['frutado', 'doce', 'forte'],
+    ing: [{ id: 'whisky', q: '25 ml' }, { id: 'vermute-tinto', q: '25 ml' }, { id: 'licor-cassis', q: '25 ml' }, { id: 'suco-laranja', q: '25 ml' }, { id: 'gelo', q: 'para bater' }],
+    preparo: 'Quatro partes iguais, batidas com gelo e coadas na taça. O original usa licor de cereja; com cassis fica mais escuro e mais ácido.',
+  },
+  {
+    id: 'quentao', nome: 'Quentão', copo: 'Caneca de vidro', tags: ['quente', 'doce', 'forte'],
+    ing: [{ id: 'cachaca', q: '200 ml' }, { id: 'gengibre', q: '1 pedaço' }, { id: 'xarope-canela', q: '30 ml' }, { id: 'laranja', q: '1 unidade' }, { id: 'acucar', q: '4 colheres' }],
+    preparo: 'Faça uma calda com o açúcar, junte gengibre, casca de laranja e canela, cozinhe alguns minutos e só então acrescente a cachaça. Sirva quente, nunca fervendo.',
+  },
+  {
+    id: 'vinho-quente', nome: 'Vinho Quente', copo: 'Caneca de vidro', tags: ['quente', 'doce', 'frutado'],
+    ing: [{ id: 'vinho-tinto', q: '500 ml' }, { id: 'xarope-canela', q: '40 ml' }, { id: 'laranja', q: '1 unidade' }, { id: 'acucar', q: '3 colheres' }, { id: 'gengibre', q: '1 fatia', opcional: true }],
+    preparo: 'Aqueça o vinho com açúcar, canela e rodelas de laranja sem deixar ferver. Quinze minutos em fogo baixo bastam.',
+  },
+  {
+    id: 'leite-de-onca', nome: 'Leite de Onça', copo: 'Copo alto', tags: ['cremoso', 'doce'],
+    ing: [{ id: 'cachaca', q: '50 ml' }, { id: 'leite-condensado', q: '100 ml' }, { id: 'licor-cacau', q: '30 ml' }, { id: 'gelo', q: 'para bater' }],
+    preparo: 'Bata tudo com gelo até ficar homogêneo. Canela em pó por cima. É doce sem pedir desculpa — e é para ser mesmo.',
   },
 ];
 

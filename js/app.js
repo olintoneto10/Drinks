@@ -12,7 +12,8 @@ const state = {
   festa: Store.getFesta(), // ids das pessoas no modo festa
   favoritos: Store.getFavoritos(),
   animar: true, // cascata só ao entrar na aba, não a cada toque
-  filtroTag: 'todos',
+  afrouxou: false,
+  filtros: new Set(),   // vazio = todos; vários combinam entre si
   rende: 1,
   buscaSugestao: '',
   fotoURLs: new Map(), // entryId -> objectURL
@@ -221,14 +222,50 @@ function matchRecipes() {
   return { ready, almost };
 }
 
+// "favoritos" e "autorais" não são sabores — são recortes do acervo, e por isso
+// somam com qualquer sabor: favoritos + cítrico é uma pergunta legítima.
+const FILTROS_ESPECIAIS = {
+  favoritos: r => state.favoritos.has(r.id),
+  autorais: r => !!r.autoral,
+};
+
+// Vários sabores estreitam a busca (E, não OU): quem marca cítrico e forte quer
+// o drink que é as duas coisas, não a soma das duas listas — que seria quase o
+// catálogo inteiro. Quando esse cruzamento não devolve nada, renderSugestoes
+// afrouxa para OU e avisa, em vez de mostrar tela vazia.
+function combinaComFiltros(receita, filtros, exigirTodos = true) {
+  if (!filtros.size) return true;
+  const sabores = [];
+  for (const f of filtros) {
+    if (FILTROS_ESPECIAIS[f]) { if (!FILTROS_ESPECIAIS[f](receita)) return false; }
+    else sabores.push(f);
+  }
+  if (!sabores.length) return true;
+  return exigirTodos
+    ? sabores.every(t => receita.tags.includes(t))
+    : sabores.some(t => receita.tags.includes(t));
+}
+
+// Os sabores marcados, em texto, para o aviso de afrouxamento
+function saboresMarcados() {
+  return [...state.filtros]
+    .filter(f => !FILTROS_ESPECIAIS[f])
+    .map(t => (TAG_NOMES[t] || t).toLowerCase());
+}
+
+function pintarFiltros() {
+  $$('#filtros .chip').forEach(c => {
+    const tag = c.dataset.tag;
+    const on = tag === 'todos' ? state.filtros.size === 0 : state.filtros.has(tag);
+    c.classList.toggle('on', on);
+    c.setAttribute('aria-pressed', String(on));
+  });
+}
+
 function passaFiltro(receita) {
   const busca = state.buscaSugestao.trim().toLowerCase();
   if (busca && !receita.nome.toLowerCase().includes(busca)) return false;
-  if (state.filtroTag === 'favoritos') return state.favoritos.has(receita.id);
-  // "autorais" não é sabor: é a leva moderna, com autor, ano e endereço conhecidos
-  if (state.filtroTag === 'autorais') return !!receita.autoral;
-  if (state.filtroTag !== 'todos' && !receita.tags.includes(state.filtroTag)) return false;
-  return true;
+  return combinaComFiltros(receita, state.filtros, !state.afrouxou);
 }
 
 // ---------- Render: Sugestões ----------
@@ -306,8 +343,17 @@ function renderPessoasRow() {
 function renderSugestoes() {
   renderPessoasRow();
   const { ready, almost } = matchRecipes();
-  const readyF = ready.filter(x => passaFiltro(x.receita));
-  const almostF = almost.filter(x => passaFiltro(x.receita));
+
+  // Cruzar sabores é o comportamento certo, mas não vale entregar tela vazia:
+  // se nada é as duas coisas ao mesmo tempo, mostra o que é pelo menos uma.
+  state.afrouxou = false;
+  let readyF = ready.filter(x => passaFiltro(x.receita));
+  let almostF = almost.filter(x => passaFiltro(x.receita));
+  if (!readyF.length && !almostF.length && saboresMarcados().length > 1) {
+    state.afrouxou = true;
+    readyF = ready.filter(x => passaFiltro(x.receita));
+    almostF = almost.filter(x => passaFiltro(x.receita));
+  }
 
   let perfilHtml = '';
   if (state.pessoaAtiva === 'eu') {
@@ -340,6 +386,12 @@ function renderSugestoes() {
   const fotos = fotosPorReceita();
 
   let html = blocoBoasVoltas() + efemeride() + blocoDrinkDoDia() + perfilHtml;
+  if (state.afrouxou) {
+    const s = saboresMarcados();
+    html += `<p class="afrouxou">Nenhum drink é
+      <strong>${esc(s.join(' e '))}</strong> ao mesmo tempo. Mostrando os que são
+      pelo menos uma dessas coisas.</p>`;
+  }
   if (state.bar.size === 0) {
     html += `<div class="vazio">🍾 Seu bar está vazio.<br>
       Cadastre o que você tem em casa na aba <strong>Meu Bar</strong> e eu digo o que dá para fazer.</div>`;
@@ -1324,8 +1376,11 @@ function initEventos() {
   $('#filtros').addEventListener('click', ev => {
     const chip = ev.target.closest('.chip');
     if (!chip) return;
-    state.filtroTag = chip.dataset.tag;
-    $$('#filtros .chip').forEach(c => c.classList.toggle('on', c === chip));
+    const tag = chip.dataset.tag;
+    if (tag === 'todos') state.filtros.clear();
+    else if (state.filtros.has(tag)) state.filtros.delete(tag);
+    else state.filtros.add(tag);
+    pintarFiltros();
     renderSugestoes();
   });
   $('#busca-sugestoes').addEventListener('input', ev => {
