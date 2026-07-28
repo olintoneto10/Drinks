@@ -227,6 +227,7 @@ function matchRecipes() {
 const FILTROS_ESPECIAIS = {
   favoritos: r => state.favoritos.has(r.id),
   autorais: r => !!r.autoral,
+  lendas: r => !!r.lenda,
 };
 
 // Vários sabores estreitam a busca (E, não OU): quem marca cítrico e forte quer

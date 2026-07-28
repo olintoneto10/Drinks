@@ -1116,6 +1116,70 @@ const RECEITAS = [
     ing: [{ id: 'suco-laranja', q: '180 ml' }, { id: 'xarope-canela', q: '20 ml' }, { id: 'limao', q: '10 ml' }, { id: 'gelo', q: 'bastante' }],
     preparo: 'Tudo no copo com gelo e mexa. Uma casca de laranja torcida por cima fecha o aroma.',
   },
+
+  // ---------- Lendas da casa: drinks originais, com histórias assumidamente
+  // inventadas. São criações nossas de propósito: lenda colada num clássico
+  // competiria com a história verdadeira dele. ----------
+  {
+    id: 'aurora-de-ipanema', nome: 'Aurora de Ipanema', copo: 'Copo alto', tags: ['tropical', 'citrico', 'refrescante'], lenda: true,
+    familia: 'Criação da casa. A história deste drink é invenção nossa — a receita é de verdade.',
+    ing: [{ id: 'cachaca', q: '50 ml' }, { id: 'maracuja', q: '1/2 unidade' }, { id: 'xarope-tangerina', q: '20 ml' }, { id: 'limao', q: '20 ml' }, { id: 'agua-com-gas', q: '60 ml' }, { id: 'gelo', q: 'bastante' }],
+    preparo: 'Macere a polpa do maracujá com o xarope, junte a cachaça e o limão, bata com gelo e coe no copo. Complete com água com gás.',
+  },
+  {
+    id: 'correio-das-onze', nome: 'Correio das Onze', copo: 'Copo alto', tags: ['citrico', 'seco', 'refrescante'], lenda: true,
+    familia: 'Criação da casa. A história deste drink é invenção nossa — a receita é de verdade.',
+    ing: [{ id: 'gin', q: '50 ml' }, { id: 'xarope-gengibre', q: '20 ml' }, { id: 'limao', q: '22 ml' }, { id: 'agua-tonica', q: '120 ml' }, { id: 'gelo', q: 'bastante' }],
+    preparo: 'Gin, gengibre e limão batidos com gelo, coados no copo cheio de gelo e completados com tônica gelada.',
+  },
+  {
+    id: 'ultimo-bonde', nome: 'Último Bonde', copo: 'Copo baixo', tags: ['forte', 'amargo', 'doce'], lenda: true,
+    familia: 'Criação da casa. A história deste drink é invenção nossa — a receita é de verdade.',
+    ing: [{ id: 'bourbon', q: '45 ml' }, { id: 'amaro', q: '20 ml' }, { id: 'laranja', q: '1 casca' }, { id: 'angostura', q: '2 gotas' }, { id: 'gelo', q: 'pedra grande' }],
+    preparo: 'Mexa o bourbon, o amaro e as gotas com gelo por 20 segundos. Coe sobre uma pedra grande e queime a casca de laranja por cima.',
+  },
+  {
+    id: 'vento-sul', nome: 'Vento Sul', copo: 'Taça coupé', tags: ['citrico', 'seco', 'forte'], lenda: true,
+    familia: 'Criação da casa. A história deste drink é invenção nossa — a receita é de verdade.',
+    ing: [{ id: 'mezcal', q: '45 ml' }, { id: 'suco-toranja', q: '30 ml' }, { id: 'mel', q: '15 ml' }, { id: 'limao', q: '20 ml' }, { id: 'gelo', q: 'para bater' }],
+    preparo: 'Dilua o mel em água morna, bata tudo com gelo e coe na taça. Uma pitada de sal na superfície fecha o drink.',
+  },
+  {
+    id: 'cafe-da-madrugada', nome: 'Café da Madrugada', copo: 'Taça coupé', tags: ['forte', 'doce', 'amargo'], lenda: true,
+    familia: 'Criação da casa. A história deste drink é invenção nossa — a receita é de verdade.',
+    ing: [{ id: 'rum-escuro', q: '40 ml' }, { id: 'licor-cafe', q: '25 ml' }, { id: 'cafe-espresso', q: '1 dose' }, { id: 'xarope-canela', q: '10 ml' }, { id: 'gelo', q: 'para bater' }],
+    preparo: 'Bata tudo com bastante gelo até formar espuma e coe na taça. O espresso tem que entrar quente e sair gelado.',
+  },
+  {
+    id: 'chuva-de-fevereiro', nome: 'Chuva de Fevereiro', copo: 'Copo alto', tags: ['refrescante', 'citrico', 'seco'], lenda: true,
+    familia: 'Criação da casa. A história deste drink é invenção nossa — a receita é de verdade.',
+    ing: [{ id: 'gin', q: '45 ml' }, { id: 'pepino', q: '4 rodelas' }, { id: 'hortela', q: '6 folhas' }, { id: 'limao', q: '22 ml' }, { id: 'xarope-simples', q: '18 ml' }, { id: 'agua-com-gas', q: '70 ml' }, { id: 'gelo', q: 'bastante' }],
+    preparo: 'Macere o pepino, junte hortelã, limão, xarope e gin, bata com gelo e coe duas vezes. Complete com água com gás.',
+  },
+  {
+    id: 'relogio-parado', nome: 'Relógio Parado', copo: 'Taça coupé', tags: ['seco', 'forte', 'amargo'], lenda: true,
+    familia: 'Criação da casa. A história deste drink é invenção nossa — a receita é de verdade.',
+    ing: [{ id: 'whisky', q: '50 ml' }, { id: 'vermute-seco', q: '25 ml' }, { id: 'maraschino', q: '8 ml' }, { id: 'absinto', q: 'para lavar o copo' }, { id: 'gelo', q: 'para mexer' }],
+    preparo: 'Lave a taça com absinto e descarte o excesso. Mexa o resto com gelo e coe na taça lavada, sem gelo.',
+  },
+  {
+    id: 'rua-de-tras', nome: 'Rua de Trás', copo: 'Copo baixo', tags: ['forte', 'doce', 'tropical'], lenda: true,
+    familia: 'Criação da casa. A história deste drink é invenção nossa — a receita é de verdade.',
+    ing: [{ id: 'rum-escuro', q: '50 ml' }, { id: 'xarope-falernum', q: '20 ml' }, { id: 'limao', q: '20 ml' }, { id: 'angostura', q: '3 gotas' }, { id: 'gelo', q: 'triturado' }],
+    preparo: 'Bata o rum, o falernum e o limão, sirva sobre gelo triturado e deixe as gotas de angostura escorrerem por cima.',
+  },
+  {
+    id: 'senhorita-melancia', nome: 'Senhorita Melancia', copo: 'Copo alto', tags: ['frutado', 'refrescante', 'doce'], lenda: true,
+    familia: 'Criação da casa. A história deste drink é invenção nossa — a receita é de verdade.',
+    ing: [{ id: 'vodka', q: '45 ml' }, { id: 'melancia', q: '5 cubos' }, { id: 'hortela', q: '5 folhas' }, { id: 'limao', q: '20 ml' }, { id: 'agua-com-gas', q: '60 ml' }, { id: 'gelo', q: 'bastante' }],
+    preparo: 'Macere a melancia, junte vodka, limão e hortelã batida na mão, coe no copo com gelo e complete com água com gás.',
+  },
+  {
+    id: 'dona-alzira', nome: 'Boa Noite, Dona Alzira', copo: 'Taça coupé', tags: ['cremoso', 'doce', 'quente'], lenda: true,
+    familia: 'Criação da casa. A história deste drink é invenção nossa — a receita é de verdade.',
+    ing: [{ id: 'conhaque', q: '35 ml' }, { id: 'licor-cacau', q: '25 ml' }, { id: 'creme-de-leite', q: '30 ml' }, { id: 'cafe-espresso', q: '1/2 dose' }, { id: 'gelo', q: 'para bater' }],
+    preparo: 'Bata tudo com gelo até gelar o metal da coqueteleira e coe na taça. Canela ralada por cima, sempre.',
+  },
 ];
 
 const RECEITA_MAP = Object.fromEntries(RECEITAS.map(r => [r.id, r]));

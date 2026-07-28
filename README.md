@@ -10,11 +10,17 @@ bar e o seu gosto.
   licores, mixers, **xaropes**, frutas). Açúcar, sal e gelo já contam como
   disponíveis. São 15 xaropes, de tangerina e gengibre a orgeat e falernum, e
   cada um destrava receitas de verdade — nenhum entra só para enfeitar a lista.
-- **🍸 Sugestões** — 188 receitas divididas em *"pode fazer agora"* e
+- **🍸 Sugestões** — 198 receitas divididas em *"pode fazer agora"* e
   *"falta só 1 ingrediente"* (com botão para mandar o item que falta para a
   lista de compras). Os filtros de perfil **combinam entre si**: marque cítrico
   e forte e veja só o que é as duas coisas. Quando o cruzamento não devolve nada,
   o app afrouxa para "pelo menos uma" e avisa, em vez de mostrar tela vazia.
+- **✦ Lendas da casa** — dez drinks originais, criados para o app, cada um com
+  uma história **assumidamente inventada**. A ficção fica só em drink da casa,
+  nunca colada num clássico: lenda em drink real competiria com a história
+  verdadeira dele. Todo verbete fictício abre com aviso em destaque —
+  *"Esta história é invenção nossa, não fato histórico"* — antes do texto, e o
+  drink em si é receita de verdade, com proporções que funcionam.
 - **✎ Autorais** — além do cânone clássico, a leva moderna com autor, ano e
   endereço conhecidos: Paper Plane, Naked & Famous, Last Word, Division Bell,
   Oaxaca Old Fashioned, Gin Basil Smash, Old Cuban, Trinidad Sour, Siesta e

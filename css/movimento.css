@@ -854,3 +854,20 @@ body.noite .dialogo-fundo { background: rgba(12, 9, 7, .62); }
   padding-left: 12px;
   margin: 8px 0 10px;
 }
+
+/* ---------- Lenda da casa: ficção, e tem que parecer ---------- */
+.historia.e-lenda {
+  border-left: 2px dashed var(--acento);
+  padding-left: 14px;
+}
+.historia.e-lenda .rotulo-hist { color: var(--acento); }
+.aviso-lenda {
+  font-family: var(--sans);
+  font-size: .74rem;
+  line-height: 1.5;
+  letter-spacing: .2px;
+  color: var(--acento);
+  border: 1px dashed var(--acento);
+  padding: 8px 10px;
+  margin: 8px 0 10px;
+}

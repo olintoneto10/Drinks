@@ -1503,6 +1503,130 @@ const HISTORIAS = {
     variacoes: 'Com canela, com café, com chocolate em pó',
     cultura: 'Clássico de barraca de festa junina',
   },
+
+  // ---------- Lendas da casa ----------
+  // Tudo aqui é invenção. O campo `lenda` faz o app rotular o bloco inteiro
+  // como ficção, e o texto nunca finge ser documento.
+  'aurora-de-ipanema': {
+    lenda: true,
+    origem: 'Rio de Janeiro · lenda ambientada nos anos 1960',
+    criador: 'Seu Damião, do quiosque que ninguém achou depois',
+    historia: 'Contam que Damião fechava o quiosque às cinco da manhã e ficava sozinho vendo o sol nascer sobre a pedra. Numa dessas, misturou o que sobrava de cada garrafa da noite e provou. Serviu aos pescadores que chegavam e disse que o nome era o que estava acontecendo na frente deles. O quiosque não existe mais e ninguém sabe dizer exatamente onde ficava.',
+    curiosidade: 'A cor vai do laranja ao dourado conforme o maracujá assenta — foi essa camada, dizem, que deu o nome.',
+    ocasiao: 'Fim de tarde, praia, amanhecer depois de festa',
+    temperatura: 'Muito gelado, copo cheio de gelo',
+    harmoniza: 'Petiscos de praia, queijo coalho, frutos do mar',
+    variacoes: 'Com vodka, sem gás, com abacaxi',
+    cultura: 'Não procure: este quiosque nunca existiu',
+  },
+  'correio-das-onze': {
+    lenda: true,
+    origem: 'Interior de São Paulo · lenda ambientada nos anos 1940',
+    criador: 'Um carteiro noturno de nome esquecido',
+    historia: 'A história que se conta é de um carteiro que fazia a última entrega às onze da noite e passava no bar da esquina antes de recolher. Pedia sempre gin com gengibre, dizendo que o gengibre segurava o frio da estrada e o gin segurava o resto. O barman passou a deixar o copo pronto quando ouvia a bicicleta.',
+    curiosidade: 'O gengibre realmente provoca sensação de calor: o gingerol ativa os mesmos receptores da pele que a temperatura alta. O carteiro estava certo, mesmo sem saber por quê.',
+    ocasiao: 'Noite, fim de expediente, frio',
+    temperatura: 'Gelado, copo cheio de gelo',
+    harmoniza: 'Petiscos quentes, frituras, comida apimentada',
+    variacoes: 'Com vodka, com mel no lugar do xarope',
+    cultura: 'Lenda nossa — o carteiro é invenção, o gengibre não',
+  },
+  'ultimo-bonde': {
+    lenda: true,
+    origem: 'Santa Teresa, Rio de Janeiro · lenda ambientada nos anos 1950',
+    criador: 'O barman que fechava depois do último bonde',
+    historia: 'Diz a nossa lenda que um bar de Santa Teresa fechava no horário do último bonde, e quem perdia o bonde ganhava um drink por conta da casa — o consolo de quem ia descer o morro a pé. A receita mudava conforme a noite, mas o amaro estava sempre lá, porque o dono achava que quem perdeu o bonde já não precisava de mais doçura.',
+    curiosidade: 'O bonde de Santa Teresa é real e funciona desde 1896. O bar é nosso.',
+    ocasiao: 'Fim de noite, digestivo, conversa que se estende',
+    temperatura: 'Gelado, pedra grande',
+    harmoniza: 'Chocolate amargo, castanhas, queijo curado',
+    variacoes: 'Com centeio, com Fernet, sem bitters',
+    cultura: 'O bonde existe; o bar da história, não',
+  },
+  'vento-sul': {
+    lenda: true,
+    origem: 'Litoral de Santa Catarina · lenda sem data',
+    criador: 'Uma tripulação inteira, segundo a nossa versão',
+    historia: 'Conta a lenda que uma tripulação presa no porto por três dias de vento sul passou a misturar o que tinha a bordo: um destilado defumado, a última toranja e o mel que sobrava do rancho. Quando o vento virou, ninguém quis mudar a receita. O sal por cima seria lembrança da água que entrava pelo convés.',
+    curiosidade: 'O sal na superfície não é enfeite e essa parte é verdade: uma pitada suprime o amargo da toranja e faz o mel parecer mais presente.',
+    ocasiao: 'Fim de tarde, frio, mar',
+    temperatura: 'Bem gelado, taça sem gelo',
+    harmoniza: 'Frutos do mar, peixe grelhado, defumados',
+    variacoes: 'Com tequila, sem sal, com alecrim',
+    cultura: 'História inventada; o truque do sal é técnica de bar de verdade',
+  },
+  'cafe-da-madrugada': {
+    lenda: true,
+    origem: 'Padaria de bairro · lenda ambientada nos anos 1970',
+    criador: 'O padeiro do turno da noite',
+    historia: 'A nossa história diz que o padeiro do turno da madrugada guardava uma garrafa atrás dos sacos de farinha e pingava rum no café das quatro da manhã, quando a massa descansava. Um cliente insone descobriu e pediu igual. Em pouco tempo a padaria tinha uma clientela que só aparecia antes do amanhecer.',
+    curiosidade: 'Café e rum envelhecido dividem compostos aromáticos de verdade — os dois passam por processos que produzem as mesmas notas de caramelo e baunilha.',
+    ocasiao: 'Madrugada, depois do jantar, noite longa',
+    temperatura: 'Bem gelado, taça sem gelo',
+    harmoniza: 'Pão fresco, chocolate, sobremesas de café',
+    variacoes: 'Com conhaque, sem canela, servido quente',
+    cultura: 'A padaria é invenção; a química entre café e rum não é',
+  },
+  'chuva-de-fevereiro': {
+    lenda: true,
+    origem: 'Recife · lenda ambientada num carnaval qualquer',
+    criador: 'Uma dona de bar que a nossa história não nomeia',
+    historia: 'Segundo a lenda, choveu tanto num carnaval que o bloco inteiro se abrigou num bar que só tinha gin, pepino e hortelã. A dona improvisou para a rua toda e a chuva não parou mais até de noite. No ano seguinte, contam, gente apareceu pedindo o drink da chuva mesmo com sol.',
+    curiosidade: 'Pepino é 96% água e quase não tem sabor próprio: ele não compete com a hortelã, só dilui a intensidade dela. Isso é técnica real, e é o motivo de a dupla funcionar.',
+    ocasiao: 'Calor, chuva de verão, tarde',
+    temperatura: 'Muito gelado, copo cheio de gelo',
+    harmoniza: 'Saladas, peixe, queijos frescos',
+    variacoes: 'Com vodka, com manjericão, sem gás',
+    cultura: 'Carnaval chuvoso existe todo ano; este bar, não',
+  },
+  'relogio-parado': {
+    lenda: true,
+    origem: 'Lenda de hotel, sem cidade definida',
+    criador: 'Um barman que a história não nomeia de propósito',
+    historia: 'A nossa lenda fala de um bar de hotel cujo relógio parou às onze e vinte e nunca foi consertado. O barman passou a dizer que ali dentro não existia hora, e criou um drink para hóspedes que perguntavam se já era tarde. Quem pedia recebia a resposta no copo: um drink que não indica hora nenhuma — nem aperitivo, nem digestivo.',
+    curiosidade: 'A lavagem de absinto é técnica documentada e antiga: o licor é girado no copo e descartado, deixando só o aroma. O que fica são microgramas — e mesmo assim é a primeira coisa que se sente.',
+    ocasiao: 'Qualquer hora, que é a piada do drink',
+    temperatura: 'Muito gelado, taça sem gelo',
+    harmoniza: 'Azeitonas, castanhas, queijo curado',
+    variacoes: 'Com bourbon, sem absinto, com bitters de laranja',
+    cultura: 'Hotel inventado; a lavagem de absinto é do Sazerac, e é real',
+  },
+  'rua-de-tras': {
+    lenda: true,
+    origem: 'Salvador · lenda sem data',
+    criador: 'Um bar de porta estreita, na nossa versão',
+    historia: 'Conta a nossa lenda que existia um bar sem placa numa ladeira, atrás de tudo, e que quem chegava lá tinha sido mandado por alguém. A regra da casa era que ninguém pedia pelo nome: apontava para a garrafa de rum e o barman fazia o resto. As gotas de angostura por cima seriam a assinatura dele.',
+    curiosidade: 'O falernum é de Barbados e leva cravo, gengibre e limão. Num drink de rum escuro, ele faz o trabalho que o açúcar sozinho não faria: adoça e tempera ao mesmo tempo.',
+    ocasiao: 'Fim de noite, digestivo, calor',
+    temperatura: 'Gelado, gelo triturado',
+    harmoniza: 'Comida baiana, dendê, apimentados',
+    variacoes: 'Com rum da Jamaica, sem angostura, com limão siciliano',
+    cultura: 'A ladeira existe em toda cidade velha; o bar é nosso',
+  },
+  'senhorita-melancia': {
+    lenda: true,
+    origem: 'Interior de Minas · lenda ambientada num verão qualquer',
+    criador: 'Uma feirante, segundo a nossa história',
+    historia: 'A lenda que inventamos fala de uma feirante que vendia melancia e, no fim da feira, batia as sobras com o que tivesse. Chamava de "o drink das quatro", horário em que ninguém mais comprava e ela já podia beber. Os outros feirantes passaram a esperar as quatro.',
+    curiosidade: 'Melancia é 92% água. Ela não é diluída pelo gelo — ela já é a diluição, e por isso o drink pede menos gelo e menos mixer que qualquer outra fruta.',
+    ocasiao: 'Verão, tarde, piscina',
+    temperatura: 'Muito gelada, copo cheio de gelo',
+    harmoniza: 'Queijo branco, salada, churrasco',
+    variacoes: 'Com tequila, com pimenta rosa, com manjericão',
+    cultura: 'A feirante é personagem nossa; a conta da água na melancia é real',
+  },
+  'dona-alzira': {
+    lenda: true,
+    origem: 'Pensão de cidade pequena · lenda ambientada nos anos 1960',
+    criador: 'Dona Alzira, que não existiu',
+    historia: 'A nossa lenda diz que Dona Alzira mantinha uma pensão e servia isto aos hóspedes que chegavam tarde, sempre com a mesma frase que dá nome ao drink. Nunca cobrou por ele e nunca deu a receita a ninguém — o que, na história, é a razão de ela ter se perdido e precisar ser reconstruída.',
+    curiosidade: 'Bater creme com gelo por tempo suficiente muda a textura de verdade: a gordura emulsiona e o drink ganha corpo sem virar chantilly. O ponto é o metal da coqueteleira doer na mão.',
+    ocasiao: 'Fim de noite, depois do jantar, frio',
+    temperatura: 'Bem gelado, taça sem gelo',
+    harmoniza: 'Sobremesas, chocolate, café',
+    variacoes: 'Sem café, com rum, servido quente',
+    cultura: 'Dona Alzira é invenção — a frase, você pode adotar',
+  },
 };
 
 // ---------- Ficha derivada: vale para as 47 receitas ----------
@@ -1628,8 +1752,10 @@ function blocoHistoria(r, h) {
   }
 
   return `
-    <div class="historia">
-      <span class="rotulo-hist">A história</span>
+    <div class="historia${h.lenda ? ' e-lenda' : ''}">
+      <span class="rotulo-hist">${h.lenda ? '✦ Lenda da casa' : 'A história'}</span>
+      ${h.lenda ? `<p class="aviso-lenda">Esta história é invenção nossa, não fato
+        histórico. O drink é de verdade — só o passado dele que não é.</p>` : ''}
       <p>${h.historia}</p>
       ${h.criador ? `<p class="assinatura">— ${h.criador}</p>` : ''}
       ${h.curiosidade ? `<p class="curiosidade">${h.curiosidade}</p>` : ''}
