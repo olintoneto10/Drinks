@@ -10,7 +10,7 @@ bar e o seu gosto.
   licores, mixers, **xaropes**, frutas). Açúcar, sal e gelo já contam como
   disponíveis. São 15 xaropes, de tangerina e gengibre a orgeat e falernum, e
   cada um destrava receitas de verdade — nenhum entra só para enfeitar a lista.
-- **🍸 Sugestões** — 136 receitas divididas em *"pode fazer agora"* e
+- **🍸 Sugestões** — 188 receitas divididas em *"pode fazer agora"* e
   *"falta só 1 ingrediente"* (com botão para mandar o item que falta para a
   lista de compras). Os filtros de perfil **combinam entre si**: marque cítrico
   e forte e veja só o que é as duas coisas. Quando o cruzamento não devolve nada,
@@ -78,9 +78,13 @@ bar e o seu gosto.
 - **O Brinde** — ao concluir, o copo se enche, sobem bolhas e o celular vibra
   *antes* de qualquer formulário; marcos (1º, 10º, 50º…) ganham selo carimbado.
 - **Histórias** — origem, criador, curiosidade, harmonização, variações e
-  aparições culturais. **As 136 receitas têm verbete escrito à mão** (lendas
-  marcadas como lendas — "conta-se que", "há quem reivindique"); nada depende
-  da chave de API. Receitas próprias ganham história do Especialista sob demanda.
+  aparições culturais. **136 verbetes escritos à mão**, com lendas marcadas como
+  lendas ("conta-se que", "há quem reivindique"); nada depende da chave de API.
+  As outras 52 receitas são variações de família (Collins, Mule, Sour, caipifruta,
+  batida) e trazem, em vez de história, **uma linha verdadeira sobre a família a
+  que pertencem** — nada é inventado, e é isso que mantém os 136 verbetes
+  confiáveis. Quem quiser a história delas pede ao Especialista, e ela vem
+  identificada como escrita por IA.
 - **Trilha** — cada drink sugere o que ouvir enquanto se prepara, escolhido pela
   origem e pelo destilado: samba para a caipirinha, son cubano para o mojito,
   blues para o Whiskey Sour, folk irlandês para o Irish Coffee.

@@ -843,3 +843,14 @@ body.noite .dialogo-fundo { background: rgba(12, 9, 7, .62); }
   margin: 4px 0 12px;
 }
 .afrouxou strong { color: var(--acento); font-weight: normal; font-style: normal; }
+
+/* Família do drink, quando não há verbete escrito */
+.familia {
+  font-size: .92rem;
+  line-height: 1.5;
+  font-style: italic;
+  color: var(--cinza);
+  border-left: 2px solid var(--linha);
+  padding-left: 12px;
+  margin: 8px 0 10px;
+}

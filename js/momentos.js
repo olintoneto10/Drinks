@@ -159,6 +159,22 @@ const PAIS_DO_DRINK = {
   'painkiller': 'Ilhas Virgens', 'bamboo': 'Japão', 'adonis': 'Estados Unidos',
   'michelada': 'México', 'radler': 'Alemanha',
   'quentao': 'Brasil', 'vinho-quente': 'Brasil', 'leite-de-onca': 'Brasil',
+  // Das variações de família, só entram no passaporte as de origem documentada.
+  // Um "Gin Sour" não tem país — atribuir um seria inventar.
+  'whisky-highball': 'Japão', 'fernet-com-cola': 'Argentina',
+  'vermute-tonica': 'Espanha', 'tinto-de-verano': 'Espanha',
+  'kalimotxo': 'Espanha', 'sangria-branca': 'Espanha', 'carajillo': 'Espanha',
+  'spritzer': 'Áustria', 'grog': 'Inglaterra',
+  'planters-punch': 'Jamaica', 'hurricane': 'Estados Unidos',
+  'blue-hawaii': 'Estados Unidos', 'bahama-mama': 'Bahamas',
+  'missionarys-downfall': 'Estados Unidos', 'new-york-sour': 'Estados Unidos',
+  'gin-gin-mule': 'Estados Unidos', 'gibson': 'Estados Unidos',
+  'john-collins': 'Inglaterra',
+  'caipifruta-maracuja': 'Brasil', 'caipifruta-abacaxi': 'Brasil',
+  'caipifruta-kiwi': 'Brasil', 'caipifruta-tangerina': 'Brasil',
+  'caipiroska-morango': 'Brasil', 'caipisaque': 'Brasil',
+  'caju-amigo': 'Brasil', 'batida-de-maracuja': 'Brasil',
+  'batida-de-amendoim': 'Brasil', 'batida-de-morango': 'Brasil',
 };
 
 function statsColecao() {

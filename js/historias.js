@@ -1545,6 +1545,10 @@ const TRILHA_POR_PAIS = {
   'Japão': { busca: 'japanese city pop jazz', nome: 'city pop japonês' },
   'Canadá': { busca: 'canadian indie folk', nome: 'folk canadense' },
   'Ilhas Virgens': { busca: 'calypso caribbean', nome: 'calypso' },
+  'Argentina': { busca: 'tango argentino', nome: 'tango' },
+  'Jamaica': { busca: 'reggae roots classics', nome: 'reggae' },
+  'Bahamas': { busca: 'calypso caribbean', nome: 'calypso' },
+  'Áustria': { busca: 'viennese waltz classical', nome: 'valsa vienense' },
 };
 
 // Onde o país não decide (Estados Unidos faz de tudo), o destilado decide:
@@ -1608,11 +1612,15 @@ function blocoHistoria(r, h) {
   const linha = (rotulo, valor) => valor
     ? `<li><span>${rotulo}</span><span>${valor}</span></li>` : '';
 
+  // Sem verbete o drink não fica órfão: mostra o que se sabe de verdade — a
+  // família a que pertence e a ficha derivada da própria receita. Nada aqui é
+  // inventado; é por isso que o convite à IA vem separado e identificado.
   if (!h) {
-    const ficha = `<ul class="ficha-drink">
-      ${linha('Ocasião', esc(ocasiaoDerivada(r)))}
-      ${linha('Copo', esc(r.copo))}
-    </ul>`;
+    const ficha = `${r.familia ? `<p class="familia">${esc(r.familia)}</p>` : ''}
+      <ul class="ficha-drink">
+        ${linha('Ocasião', esc(ocasiaoDerivada(r)))}
+        ${linha('Copo', esc(r.copo))}
+      </ul>`;
     if (r.custom) return ficha;
     return `${ficha}
       <button class="btn btn-descobrir" data-descobrir="${r.id}">
