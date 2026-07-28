@@ -78,8 +78,10 @@ function abrirBoasVindas() {
           ? `E com mais um ingrediente você desbloqueia outros ${almost.length}.`
           : 'Toque em qualquer um para ver a receita e a história.'}</p>`
       : `<p class="bv-texto">Com o que você marcou ainda não fecho uma receita inteira.
-          Adicione mais alguns itens no Meu Bar — ou peça uma sugestão ao Especialista.</p>`}
-      <button class="btn primario" data-fim>Entrar no bar</button>`);
+          Sem problema: me diga que estilo você curte e eu calculo a menor lista de
+          compras que resolve isso.</p>
+        <button class="btn primario" data-montar>🛒 Montar meu bar</button>`}
+      <button class="btn ${lista.length ? 'primario' : ''}" data-fim>Entrar no bar</button>`);
   };
 
   const ir = n => {
@@ -98,6 +100,16 @@ function abrirBoasVindas() {
     }
     const avancar = ev.target.closest('[data-ir]');
     if (avancar) { ir(Number(avancar.dataset.ir)); return; }
+    // Quem chegou ao fim sem fechar nenhuma receita está exatamente na pergunta
+    // que o Montar meu bar responde. Fecha as boas-vindas e já abre a ferramenta.
+    if (ev.target.closest('[data-montar]')) {
+      Store.setBoasVindas(true);
+      tela.remove();
+      renderBar();
+      trocarAba('bar');
+      abrirMontarBar();
+      return;
+    }
     if (ev.target.closest('[data-pular]') || ev.target.closest('[data-fim]')) {
       Store.setBoasVindas(true);
       tela.remove();

@@ -528,7 +528,55 @@ body.noite .pontos, body.noite .bv-pontos { border-color: #52402F; }
    border-color num <path> e não fazia nada — o copo sumia no escuro. */
 body.noite .copo-traco { stroke: var(--tinta); }
 body.noite .copo-brilho { opacity: .3; }
+/* ---------- Convite para instalar ---------- */
+/* Sobe de baixo, ocupa a largura e sai. Não cobre a tela inteira: o convite é
+   um pedido, e pedido que bloqueia o app vira pedágio. */
+#convite-instalar {
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  z-index: 60;
+  background: var(--branco);
+  border-top: 3px solid var(--acento);
+  padding: 18px 20px calc(18px + env(safe-area-inset-bottom));
+  box-shadow: 0 -14px 40px -16px rgba(32, 29, 26, .34);
+  transform: translateY(102%);
+  transition: transform .38s cubic-bezier(.22,.9,.3,1);
+}
+#convite-instalar.aberto { transform: none; }
+#convite-instalar .ci-fechar {
+  position: absolute; top: 10px; right: 12px;
+  background: none; border: none;
+  font-size: 1.1rem; color: var(--cinza); cursor: pointer;
+  padding: 6px 8px; line-height: 1;
+}
+#convite-instalar .ci-motivo {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--acento);
+  margin-bottom: 4px;
+}
+#convite-instalar h3 {
+  font-family: var(--serif);
+  font-weight: normal;
+  font-size: 1.24rem;
+  margin-bottom: 6px;
+}
+#convite-instalar .ci-texto {
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: var(--cinza);
+  margin-bottom: 14px;
+}
+#convite-instalar .ci-acoes { display: grid; gap: 8px; }
+#convite-instalar .ci-acoes .btn { margin: 0; }
+#linha-instalar { margin-top: 14px; }
+@media (prefers-reduced-motion: reduce) {
+  #convite-instalar { transition: none; }
+}
+
 body.noite .toast { box-shadow: 0 10px 34px -12px rgba(0, 0, 0, .6); }
+body.noite #convite-instalar { box-shadow: 0 -14px 40px -16px rgba(0, 0, 0, .6); }
 /* No claro a estrela apagada é um cinza escuro; no escuro esse mesmo tom seria
    claro demais e leria como estrela já acesa. */
 body.noite .estrelas.rapidas .estrela { color: #55483C; }

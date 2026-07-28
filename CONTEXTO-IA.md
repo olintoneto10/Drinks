@@ -102,9 +102,14 @@ Quatro abas. O app abre em **Meu Bar** se a estante estiver vazia, e em
 - Botões: criar minha receita · cardápio da noite (imagem)
 
 ### Aba 2 — Meu Bar
-- **📸 Fotografar minha estante** — a IA identifica as garrafas (precisa da chave)
+O topo **muda com a situação da estante**: com menos de 8 itens o "Montar meu
+bar" é a ação em destaque e a foto desce; com a estante montada a ordem se
+inverte. Cada botão leva sua legenda.
 - **🛒 Montar meu bar pelo que eu gosto** — escolhe um estilo e o app calcula a
-  menor lista de compras que destrava mais drinks daquele estilo
+  menor lista de compras que destrava mais drinks daquele estilo. Também
+  aparece na lista "pode fazer agora" vazia e no fim das boas-vindas de quem
+  não fechou nenhuma receita.
+- **📸 Fotografar minha estante** — a IA identifica as garrafas (precisa da chave)
 - Busca de ingrediente
 - Chips por categoria: Destilados · Licores, vermutes e vinhos · Mixers e sucos ·
   Xaropes e adoçantes · Frutas e frescos · Outros
@@ -243,6 +248,7 @@ js/cartao.js          cartão de receita em imagem + importação por QR
 js/db.js              IndexedDB (diário com fotos) + localStorage
 js/ai.js              API da Anthropic (chave do usuário)
 js/demo.js            bartender local: interpreta o pedido e responde sem chave
+js/instalar.js        convite para instalar como app (merecido, recusável)
 js/app.js             UI, motor de sugestões e perfil de sabor
 js/kit.js             lista de compras a partir do estilo preferido
 js/jogo.js            nível, conquistas e rotas

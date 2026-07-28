@@ -418,9 +418,15 @@ function renderSugestoes() {
       Cadastre o que você tem em casa na aba <strong>Meu Bar</strong> e eu digo o que dá para fazer.</div>`;
   }
   html += `<h2>Pode fazer agora <span class="badge">${readyF.length}</span></h2>`;
+  // Lista vazia é onde a pergunta "o que eu compro?" nasce. Mandar a pessoa
+  // "adicionar mais itens ao seu bar" devolvia ela para 89 caixinhas sem dizer
+  // qual marcar; aqui ela sai com uma lista calculada.
   html += readyF.length
     ? `<div class="cards">${readyF.map(x => cardReceita(x, true, fotos)).join('')}</div>`
-    : '<p class="dica">Nada por enquanto — adicione mais itens ao seu bar.</p>';
+    : `<p class="dica">Nada por enquanto${state.bar.size ? ' com o que você tem em casa' : ''}.</p>
+       <button class="btn primario" id="btn-montar-daqui">🛒 Montar meu bar pelo que eu gosto</button>
+       <p class="dica">Escolha um estilo e eu calculo a menor lista de compras que
+         destrava o máximo de drinks dele.</p>`;
 
   // Compras inteligentes: o que mais desbloqueia drinks do perfil ativo.
   // Some durante a busca — quem procurou "mezcal" não quer ver sugestão de
@@ -493,7 +499,40 @@ function blocoAcervo(longeF, fotos) {
 }
 
 // ---------- Render: Meu Bar ----------
+// O topo da aba muda com a situação da estante. "Fotografar minha estante" é
+// inútil para quem não tem estante, e era o botão em destaque justamente para
+// quem chega. Com pouca coisa em casa a pergunta é outra — "o que eu compro?" —
+// e quem responde é o Montar meu bar, que estava em terceiro lugar, sem
+// destaque, com um nome que não deixa claro que ele calcula a lista para você.
+const BAR_MONTADO = 8;
+
+function renderTopoBar() {
+  const alvo = $('#topo-bar');
+  if (!alvo) return;
+  const poucos = state.bar.size < BAR_MONTADO;
+  const montar = `<button id="btn-montar-bar" class="btn ${poucos ? 'primario' : ''}">
+    🛒 Montar meu bar pelo que eu gosto</button>`;
+  const foto = `<label class="btn ${poucos ? '' : 'primario'} btn-estante">📸 Fotografar minha estante
+    <input id="input-estante" type="file" accept="image/*" capture="environment" hidden>
+  </label>`;
+  const dicaFoto = '<p class="dica dica-topo">A IA identifica as garrafas e preenche seu bar '
+    + 'sozinha (precisa da chave de API configurada na aba IA).</p>';
+  const dicaFotoCurta = '<p class="dica dica-topo">A IA lê as garrafas por você '
+    + '(precisa da chave de API, na aba IA).</p>';
+  const dicaMontar = '<p class="dica dica-topo">Escolha um estilo — cítrico, amargo, tropical — '
+    + 'e eu calculo a <strong>menor lista de compras</strong> que destrava o máximo de drinks dele, '
+    + 'contando o que você já tem.</p>';
+  const dicaMontarCurta = '<p class="dica dica-topo">A menor lista de compras para o estilo '
+    + 'que você curte.</p>';
+  // Cada botão leva sua legenda: o que está em destaque explica-se por extenso,
+  // o outro em uma linha. Botão sem legenda vira adivinhação.
+  alvo.innerHTML = poucos
+    ? montar + dicaMontar + foto + dicaFotoCurta
+    : foto + dicaFoto + montar + dicaMontarCurta;
+}
+
 function renderBar() {
+  renderTopoBar();
   const busca = ($('#busca-bar')?.value || '').trim().toLowerCase();
   let html = '';
 
@@ -577,6 +616,7 @@ function renderDiario() {
   renderStatsDiario();
   renderColecao();
   renderJogo();
+  renderLinhaInstalar();
   $('#btn-retrospectiva').classList.toggle('escondido', state.entries.length < 3);
   const busca = ($('#busca-diario')?.value || '').trim().toLowerCase();
   const notaMin = Number($('#filtro-nota')?.value || 0);
@@ -776,6 +816,9 @@ async function registrarRapido(receitaId, nota) {
       toast('Registro desfeito', '', 'info');
     },
   });
+  // Um drink registrado é o momento em que o app provou que serve para algo —
+  // é daí, e não da chegada, que sai o convite para levá-lo à tela inicial.
+  talvezConvidarInstalar('registro');
   if (!celebrarMarco(state.entries.length)) {
     // Sem marco a comemorar, o convite para completar aparece discreto no aviso
     // seguinte — nunca como formulário aberto na cara de quem já terminou.
@@ -1557,6 +1600,7 @@ function initEventos() {
     renderSugestoes();
   });
   $('#lista-sugestoes').addEventListener('click', ev => {
+    if (ev.target.closest('#btn-montar-daqui')) { abrirMontarBar(); return; }
     if (ev.target.closest('#btn-abrir-acervo')) {
       state.acervoAberto = true;
       renderSugestoes();
@@ -1592,7 +1636,6 @@ function initEventos() {
     const peca = ev.target.closest('[data-receita]');
     if (peca) abrirReceita(peca.dataset.receita);
   });
-  $('#btn-montar-bar').addEventListener('click', abrirMontarBar);
   $('#modal-corpo').addEventListener('click', ev => {
     const estilo = ev.target.closest('[data-estilo]');
     if (estilo) mostrarKit(estilo.dataset.estilo);
@@ -1600,13 +1643,23 @@ function initEventos() {
   $('#btn-nova-receita').addEventListener('click', () => abrirFormReceita());
   $('#btn-cardapio').addEventListener('click', gerarCardapioFesta);
 
-  // Meu Bar
-  $('#input-estante').addEventListener('change', ev => {
+  // Meu Bar — o topo é redesenhado a cada render, então os dois botões
+  // principais vão por delegação em vez de referência direta.
+  $('#topo-bar').addEventListener('click', ev => {
+    if (ev.target.closest('#btn-montar-bar')) abrirMontarBar();
+  });
+  $('#topo-bar').addEventListener('change', ev => {
+    if (!ev.target.closest('#input-estante')) return;
     const arquivo = ev.target.files[0];
     if (arquivo) analisarEstante(arquivo);
     ev.target.value = '';
   });
   $('#busca-bar').addEventListener('input', renderBar);
+  // Caminho manual de instalação, no rodapé do Diário
+  $('#linha-instalar').addEventListener('click', ev => {
+    if (!ev.target.closest('#btn-instalar-app')) return;
+    ehIOS() ? abrirConviteInstalar('geral') : dispararInstalacao();
+  });
   $('#conteudo-bar').addEventListener('click', ev => {
     const ing = ev.target.closest('[data-ing]');
     if (ing) {

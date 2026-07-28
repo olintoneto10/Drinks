@@ -45,7 +45,12 @@ Com a sua chave da Anthropic, o chat vira um bartender de IA de verdade.
   seco, forte, tropical, sem álcool) e o app calcula a **menor lista de compras
   que destrava o máximo de drinks daquele estilo**, contando o que você já tem.
   É a pergunta inversa do motor de sugestões: não "o que faço com isto?", mas
-  "o que compro para fazer o que eu gosto?".
+  "o que compro para fazer o que eu gosto?". **O topo da aba Meu Bar muda com a
+  situação da estante**: com menos de 8 itens, montar vira a ação em destaque e
+  "fotografar minha estante" desce — fotografar não serve a quem não tem estante.
+  Com a estante montada a ordem se inverte de volta. A ferramenta também aparece
+  onde a pergunta nasce: na lista "pode fazer agora" vazia e no fim das
+  boas-vindas de quem não fechou nenhuma receita.
 - **⚖️ Escala e medida** — "vou fazer para 8" multiplica a receita inteira, e
   o Modo Preparo herda a conta. Alterna entre **ml e oz** (arredondado ao quarto
   de onça, como se mede atrás do balcão). O que é instrução — "a gosto", "para
@@ -107,6 +112,15 @@ Com a sua chave da Anthropic, o chat vira um bartender de IA de verdade.
   sugestões, no perfil e no diário) e anote seus ajustes nos clássicos.
 - **🎁 Retrospectiva** — cartaz do seu ano em drinks: total, o campeão, a nota
   máxima, o mês mais animado, com quem você mais brindou e seu paladar.
+- **📲 Instalar como app** — o MeuBar sempre foi um PWA completo e nunca dizia
+  isso a ninguém. Agora convida — mas só depois de um **momento de valor de
+  verdade** (um drink registrado, um preparo terminado), nunca na chegada, e
+  nunca por cima de uma celebração ou de um aviso: o convite espera a tela
+  esvaziar. **"Não" é resposta**: a 1ª recusa silencia por 30 dias, a 2ª por 90,
+  e na 3ª o app para de perguntar para sempre — com o caminho manual sempre
+  disponível no rodapé do Diário. No iPhone, onde a instalação automática não
+  existe, ele ensina o caminho do Safari em vez de mostrar um botão que não faz
+  nada.
 - **✉️ Cartão de convidado** — mande um link, a pessoa marca o que gosta e
   evita, e devolve um link que a cadastra no seu app. Sem servidor: as
   preferências viajam dentro da própria URL.
@@ -213,6 +227,7 @@ js/art.js             ilustrações dos drinks geradas em SVG
 js/db.js              persistência (IndexedDB + localStorage)
 js/ai.js              integração com a API da Anthropic (modo Especialista)
 js/demo.js            bartender local: interpreta o pedido e responde sem chave
+js/instalar.js        convite para instalar como app (merecido, recusável)
 js/app.js             UI, motor de sugestões e perfil de sabor
 js/retro.js           cartaz da retrospectiva do ano (canvas)
 js/preparo.js         modo preparo passo a passo e o brinde

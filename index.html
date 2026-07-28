@@ -55,12 +55,7 @@
 
     <!-- Meu Bar -->
     <section id="aba-bar" class="aba">
-      <label class="btn primario btn-estante">📸 Fotografar minha estante
-        <input id="input-estante" type="file" accept="image/*" capture="environment" hidden>
-      </label>
-      <p class="dica" style="text-align:center">A IA identifica as garrafas e preenche seu bar
-        sozinha (precisa da chave de API configurada na aba IA).</p>
-      <button id="btn-montar-bar" class="btn">🛒 Montar meu bar pelo que eu gosto</button>
+      <div id="topo-bar"></div>
       <input id="busca-bar" type="search" placeholder="Buscar ingrediente...">
       <div id="conteudo-bar"></div>
     </section>
@@ -98,6 +93,7 @@
             <input id="input-importar" type="file" accept="application/json,.json" hidden>
           </label>
         </div>
+        <div id="linha-instalar"></div>
       </div>
     </section>
 
@@ -158,5 +154,6 @@
   <script src="js/jogo.js"></script>
   <script src="js/boasvindas.js"></script>
   <script src="js/convite.js"></script>
+  <script src="js/instalar.js"></script>
 </body>
 </html>

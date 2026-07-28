@@ -126,6 +126,8 @@ function abrirBrinde(r) {
   document.body.appendChild(tela);
   vibrar(HAPTICO.brinde);
   tela.querySelector('.estrela').focus();
+  // Levou o preparo até o fim: o app acabou de valer a pena.
+  talvezConvidarInstalar('preparo');
 
   const fechar = () => tela.remove();
   // Copo na mão, drink recém-pronto: é aqui que a nota é mais honesta e mais

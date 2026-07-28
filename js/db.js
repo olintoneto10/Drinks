@@ -113,4 +113,7 @@ const Store = {
   // Último acesso encerrado, para saber há quanto tempo a pessoa não aparece
   getUltimoAcesso() { return LS.get('meubar.ultimoAcesso', null); },
   setUltimoAcesso(iso) { LS.set('meubar.ultimoAcesso', iso); },
+  // Convite de instalação: quantas recusas, quando foi a última, se já instalou
+  getInstalar() { return LS.get('meubar.instalar', {}); },
+  setInstalar(obj) { LS.set('meubar.instalar', obj); },
 };
