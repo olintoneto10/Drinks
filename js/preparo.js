@@ -113,16 +113,29 @@ function abrirBrinde(r) {
     ${svgBrinde(r)}
     <h2>Ficou pronto. Saúde!</h2>
     <p class="brinde-sub">${esc(r.nome)} — feito por você.</p>
+    <p class="brinde-nota">Ficou bom?</p>
+    <div class="estrelas rapidas" role="group" aria-label="Registrar no diário com nota">
+      ${[1, 2, 3, 4, 5].map(n => `<button type="button" class="estrela" data-nota="${n}"
+        aria-label="Registrar com ${n} ${n === 1 ? 'estrela' : 'estrelas'}">★</button>`).join('')}
+    </div>
     <div class="brinde-acoes">
-      <button class="btn primario" data-registrar>Registrar no diário</button>
+      <button class="btn" data-registrar>Registrar com detalhes</button>
       <button class="btn" data-compartilhar>Compartilhar a receita</button>
       <button class="btn" data-fechar>Fechar</button>
     </div>`;
   document.body.appendChild(tela);
   vibrar(HAPTICO.brinde);
-  tela.querySelector('[data-registrar]').focus();
+  tela.querySelector('.estrela').focus();
 
   const fechar = () => tela.remove();
+  // Copo na mão, drink recém-pronto: é aqui que a nota é mais honesta e mais
+  // barata de dar. Uma estrela fecha a tela e grava — nada de formulário.
+  tela.querySelectorAll('[data-nota]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      fechar();
+      registrarRapido(r.id, Number(btn.dataset.nota));
+    });
+  });
   tela.querySelector('[data-registrar]').addEventListener('click', () => {
     fechar();
     abrirFormEntrada(null, r.id);

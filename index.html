@@ -103,25 +103,31 @@
 
     <!-- Especialista -->
     <section id="aba-expert" class="aba">
-      <div id="expert-config">
+      <div id="expert-chat">
+        <p id="chat-aviso"></p>
+        <div id="chat-mensagens"></div>
+        <div id="chat-exemplos"></div>
+        <form id="form-chat">
+          <input id="chat-input" type="text" placeholder='Ex.: "me surpreende com algo cítrico"' autocomplete="off">
+          <button class="btn primario" type="submit" aria-label="Perguntar">➤</button>
+        </form>
+        <button id="btn-modo-ia" class="mini"></button>
+      </div>
+      <div id="expert-config" class="escondido">
         <div class="vazio">
-          🤖 <strong>Modo Especialista</strong><br>
-          Converse com um bartender de IA que conhece o seu bar e o seu gosto.<br><br>
+          🤖 <strong>Especialista com IA</strong><br>
+          Aqui você conversa com um bartender de IA de verdade, que conhece o seu bar
+          e o seu gosto — ele inventa receita nova, improvisa com o que sobrou na
+          geladeira e responde qualquer coisa.<br><br>
           Para ativar, cole sua chave da API da Anthropic
-          (crie em <em>console.anthropic.com</em>). Ela fica salva <strong>apenas neste aparelho</strong>.
+          (crie em <em>console.anthropic.com</em>). Ela fica salva <strong>apenas neste aparelho</strong>
+          e as cobranças vão para a sua conta.
         </div>
         <form id="form-chave">
           <input id="input-chave" type="password" placeholder="sk-ant-..." required>
           <button class="btn primario" type="submit">Ativar especialista</button>
         </form>
-      </div>
-      <div id="expert-chat" class="escondido">
-        <div id="chat-mensagens"></div>
-        <form id="form-chat">
-          <input id="chat-input" type="text" placeholder='Ex.: "me surpreende com algo cítrico"' autocomplete="off">
-          <button class="btn primario" type="submit">➤</button>
-        </form>
-        <button id="btn-trocar-chave" class="mini">trocar chave de API</button>
+        <button id="btn-voltar-demo" class="mini">voltar sem chave</button>
       </div>
     </section>
   </main>
@@ -139,6 +145,7 @@
   <script src="js/art.js"></script>
   <script src="js/db.js"></script>
   <script src="js/ai.js"></script>
+  <script src="js/demo.js"></script>
   <script src="js/app.js"></script>
   <script src="js/retro.js"></script>
   <script src="js/preparo.js"></script>

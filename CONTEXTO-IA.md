@@ -90,8 +90,15 @@ Quatro abas. O app abre em **Meu Bar** se a estante estiver vazia, e em
 - **Efeméride** — "há um ano você tomou um Daiquiri hoje"
 - **Boas-voltas** — saudação para quem ficou tempo sem abrir (5 faixas: 7, 21,
   60, 180, 400 dias)
-- Lista em duas seções: **"Pode fazer agora"** e **"Falta só 1 ingrediente"**
-- **"Vale a pena comprar"** — ingredientes que destravam mais drinks
+- Lista em **três seções**: **"Pode fazer agora"**, **"Falta só 1 ingrediente"**
+  e **"Explorar o acervo"** (tudo que pede 2+ ingredientes que faltam). O acervo
+  vem fechado, ordenado por distância, cada linha nomeando o que falta, com um
+  botão "+ tudo na lista" que manda todos os itens de uma vez para as compras.
+  Sem ele, uma estante de iniciante enxergava 32 das 198 receitas.
+- **Busca por nome de drink OU nome de ingrediente**, ignorando acento
+  ("maracuja" acha "maracujá"). A busca abre o acervo sozinha.
+- **"Vale a pena comprar"** — ingredientes que destravam mais drinks (some
+  durante a busca)
 - Botões: criar minha receita · cardápio da noite (imagem)
 
 ### Aba 2 — Meu Bar
@@ -105,8 +112,11 @@ Quatro abas. O app abre em **Meu Bar** se a estante estiver vazia, e em
 - Açúcar, sal e gelo contam como sempre disponíveis
 
 ### Aba 3 — Diário
-- Registrar drink: nome, receita do app, data, quem bebeu, nota 1–5, **onde**,
-  **quanto custou**, texto livre, foto (comprimida a ~1200px)
+- **Registro em um toque** — na receita e na tela do brinde, tocar numa estrela
+  grava a entrada (data de hoje, nome do drink, nota). Grava primeiro e pergunta
+  depois: o aviso traz **desfazer** e um convite discreto para completar.
+- Caminho longo (opcional): nome, receita do app, data, quem bebeu, nota 1–5,
+  **onde**, **quanto custou**, texto livre, foto (comprimida a ~1200px)
 - Resumo do mês · busca · filtros por nota mínima e período
 - **🎁 Retrospectiva** — cartaz do ano em imagem
 - **Coleção e passaporte** — clássicos a conquistar + países visitados
@@ -115,9 +125,19 @@ Quatro abas. O app abre em **Meu Bar** se a estante estiver vazia, e em
 - Backup — exportar e importar tudo em um JSON
 
 ### Aba 4 — IA (Especialista)
-Chat com um bartender de IA que conhece o bar, o gosto de cada pessoa e o
-histórico. Requer chave da API da Anthropic colada pelo usuário, guardada só no
-aparelho. Modelo usado: `claude-opus-5`.
+Abre num chat que **funciona sem chave e sem internet**.
+
+- **Modo demonstração (padrão, `js/demo.js`)** — bartender local, determinístico.
+  Interpreta o pedido em português: sabor (com sinônimos — "azedo" → cítrico),
+  ingrediente (só palavra inteira: "dirigindo" não conta como "gin"), restrição
+  ("estou dirigindo", "grávida" → sem álcool), pessoa cadastrada pelo nome e
+  disponibilidade ("com o que eu tenho"). Responde com ficha completa:
+  ingredientes, medidas, preparo, copo, o que falta na estante e uma
+  curiosidade. Cinco perguntas prontas abrem a conversa. **Toda resposta declara
+  que não é a IA** e o que a versão com chave faz a mais.
+- **Modo IA** — com a chave da API da Anthropic colada pelo usuário (guardada só
+  no aparelho), o chat vira o bartender de verdade, que inventa receita nova e
+  improvisa. Modelo usado: `claude-opus-5`.
 
 ---
 
@@ -222,6 +242,7 @@ js/qr.js              gerador de QR Code em JS puro
 js/cartao.js          cartão de receita em imagem + importação por QR
 js/db.js              IndexedDB (diário com fotos) + localStorage
 js/ai.js              API da Anthropic (chave do usuário)
+js/demo.js            bartender local: interpreta o pedido e responde sem chave
 js/app.js             UI, motor de sugestões e perfil de sabor
 js/kit.js             lista de compras a partir do estilo preferido
 js/jogo.js            nível, conquistas e rotas

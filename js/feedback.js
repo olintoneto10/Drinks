@@ -15,6 +15,7 @@ const HAPTICO = {
   toque: 10,        // marcar um ingrediente
   gostei: [12],     // favoritar
   brinde: [8, 40, 14], // drink concluído
+  registro: [10, 30],  // um toque virou entrada no diário
   erro: [22, 60, 22],
 };
 
@@ -31,10 +32,20 @@ function elToasts() {
 }
 
 // tipo: 'ok' (padrão) | 'erro' | 'info'
-function toast(titulo, detalhe = '', tipo = 'ok') {
+// acao (opcional): { rotulo, aoTocar } vira um botão dentro do aviso. É o que
+// permite salvar primeiro e perguntar depois — quem registrou sem querer desfaz
+// ali mesmo, sem confirmação antes de cada gravação.
+function toast(titulo, detalhe = '', tipo = 'ok', acao = null) {
   const div = document.createElement('div');
   div.className = `toast ${tipo}`;
   div.innerHTML = `<b>${esc(titulo)}</b>${detalhe ? esc(detalhe) : ''}`;
+  if (acao) {
+    const btn = document.createElement('button');
+    btn.className = 'toast-acao';
+    btn.type = 'button';
+    btn.textContent = acao.rotulo;
+    div.appendChild(btn);
+  }
   elToasts().appendChild(div);
   requestAnimationFrame(() => div.classList.add('aparece'));
   if (tipo === 'erro') vibrar(HAPTICO.erro);
@@ -42,8 +53,14 @@ function toast(titulo, detalhe = '', tipo = 'ok') {
     div.classList.remove('aparece');
     setTimeout(() => div.remove(), 400);
   };
-  const timer = setTimeout(sair, tipo === 'erro' ? 5200 : 3600);
-  div.addEventListener('click', () => { clearTimeout(timer); sair(); });
+  // Com botão o aviso fica mais tempo: desfazer precisa caber num movimento
+  // humano, não numa corrida contra o relógio.
+  const timer = setTimeout(sair, acao ? 7000 : (tipo === 'erro' ? 5200 : 3600));
+  div.addEventListener('click', ev => {
+    clearTimeout(timer);
+    if (acao && ev.target.closest('.toast-acao')) acao.aoTocar();
+    sair();
+  });
 }
 
 // Diálogo próprio, acima de qualquer modal. Retorna Promise.

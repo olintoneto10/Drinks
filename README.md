@@ -1,8 +1,9 @@
 # 🍹 MeuBar — seu bartender de bolso
 
 App (PWA) que sugere drinks a partir do que você tem em casa, guarda um diário
-de degustação com fotos e notas, e inclui um bartender de IA que conhece o seu
-bar e o seu gosto.
+de degustação com fotos e notas, e responde em português a pedidos como "algo
+cítrico e refrescante" ou "o que faço com gin?" — sem chave de API e offline.
+Com a sua chave da Anthropic, o chat vira um bartender de IA de verdade.
 
 ## Funcionalidades
 
@@ -58,13 +59,31 @@ bar e o seu gosto.
 - **📔 Diário** — registre cada drink com foto, data, nota (1–5 estrelas) e um
   texto sobre a experiência, mais **onde foi e quanto custou**. Tudo fica salvo
   no aparelho (IndexedDB), com busca.
+- **⭐ Registro em um toque** — na receita e na tela do brinde, tocar numa
+  estrela grava a entrada e pronto: data de hoje, nome do drink, nota. O
+  formulário completo pedia nove campos para dizer "bebi isso", e o diário só
+  enche quando registrar custa menos do que o drink. A estrela é justamente o
+  dado que alimenta o perfil de sabor; o resto continua editável pelo caminho
+  longo. Grava primeiro e pergunta depois — quem tocou sem querer **desfaz no
+  próprio aviso**, em vez de confirmar antes de cada gravação.
 - **🛒 Lista de compras** — itens que faltam viram lista; ao marcar "comprei",
   o item entra automaticamente no seu bar.
-- **🤖 Especialista (IA)** — chat com um bartender que sabe o que você tem em
-  casa, o que cada pessoa gosta/evita e o que você já avaliou bem. Requer uma
-  chave da API da Anthropic (criada em
-  [console.anthropic.com](https://console.anthropic.com)), salva apenas no seu
-  aparelho. A conversa persiste entre sessões.
+- **🔎 Especialista, modo demonstração** — a aba abre num chat que **funciona
+  sem chave nenhuma e sem internet**. Antes era uma porta trancada: pedia uma
+  chave de API que quase ninguém tem e não mostrava nada do que havia atrás. O
+  bartender local interpreta o pedido em português — sabor ("algo cítrico e
+  refrescante"), ingrediente ("o que faço com gin?"), restrição ("estou
+  dirigindo"), pessoa ("algo para a Marília") e disponibilidade ("com o que eu
+  tenho") — e responde com ficha completa: ingredientes, medidas, preparo, copo,
+  o que falta na sua estante e uma curiosidade. Cinco perguntas prontas abrem a
+  conversa. Cada resposta **diz que não é a IA** e o que a versão com chave faz
+  a mais; a faixa no topo da aba nunca some.
+- **🤖 Especialista (IA)** — com sua chave da API da Anthropic o chat vira o
+  bartender de verdade: inventa receita nova, improvisa com o que sobrou na
+  geladeira e conversa sem roteiro, sabendo o que você tem em casa, o que cada
+  pessoa gosta/evita e o que você já avaliou bem. A chave (criada em
+  [console.anthropic.com](https://console.anthropic.com)) fica salva apenas no
+  seu aparelho. A conversa persiste entre sessões.
 - **👥 Pessoas, restrições e modo festa** — cadastre convidados com gostos
   ("Marília gosta de doce") e restrições ("João não bebe álcool"); o modo
   festa 🎉 prioriza drinks que agradam todo mundo respeitando as restrições.
@@ -176,8 +195,10 @@ python3 -m http.server 8080
 
 - Bar, lista de compras, diário e fotos ficam **somente no seu navegador**
   (localStorage + IndexedDB). Nada é enviado a servidor algum.
-- O modo Especialista envia apenas a conversa e um resumo do seu bar/perfil
-  para a API da Anthropic, usando a **sua** chave.
+- O modo demonstração do Especialista **não envia nada**: a interpretação do
+  pedido e a busca no acervo rodam no próprio aparelho, e funcionam offline.
+- Só com a sua chave configurada o Especialista envia algo — a conversa e um
+  resumo do seu bar/perfil — para a API da Anthropic, usando a **sua** chave.
 
 ## Estrutura
 
@@ -191,6 +212,7 @@ js/historias.js       histórias dos clássicos, ficha derivada e trilha
 js/art.js             ilustrações dos drinks geradas em SVG
 js/db.js              persistência (IndexedDB + localStorage)
 js/ai.js              integração com a API da Anthropic (modo Especialista)
+js/demo.js            bartender local: interpreta o pedido e responde sem chave
 js/app.js             UI, motor de sugestões e perfil de sabor
 js/retro.js           cartaz da retrospectiva do ano (canvas)
 js/preparo.js         modo preparo passo a passo e o brinde

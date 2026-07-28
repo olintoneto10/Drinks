@@ -693,7 +693,7 @@ function abrirReceita(id) {
     <a class="btn btn-video" target="_blank" rel="noopener"
       href="https://www.youtube.com/results?search_query=${encodeURIComponent('como fazer ' + r.nome + ' drink receita')}">
       ▶ Ver vídeos do preparo</a>
-    <button class="btn" id="btn-registrar" data-receita="${r.id}">Já fiz — só registrar</button>
+    ${blocoRegistroRapido(r)}
     <div class="botoes-duplos">
       <button class="btn" id="btn-favoritar" data-receita="${r.id}">
         ${state.favoritos.has(r.id) ? '♥ Favorito' : '♡ Favoritar'}</button>
@@ -724,6 +724,69 @@ function compartilharReceita(id) {
   const ing = r.ing.map(i => `• ${ING_MAP[i.id]?.nome || i.id} — ${i.q}`).join('\n');
   compartilharTexto(r.nome,
     `🍸 ${r.nome}\n\n${ing}\n\nPreparo: ${r.preparo}\n\n(via MeuBar)`);
+}
+
+// ---------- Registro em um toque ----------
+// O formulário completo pede nome, receita, data, pessoa, nota, lugar, preço,
+// texto e foto. Para "bebi isso hoje" é caro demais: o diário só enche quando
+// registrar custa menos do que o drink. Aqui um toque na estrela grava tudo —
+// e a estrela é justamente o dado que alimenta o perfil de sabor. O resto tem
+// valor padrão e continua editável pelo caminho longo.
+function blocoRegistroRapido(r) {
+  const estrelas = [1, 2, 3, 4, 5].map(n =>
+    `<button type="button" class="estrela" data-rapido="${n}" data-receita="${r.id}"
+      aria-label="Registrar com ${n} ${n === 1 ? 'estrela' : 'estrelas'}">★</button>`).join('');
+  return `<div class="registro-rapido">
+    <p class="dica">Bebi isso hoje — toque numa estrela e está registrado:</p>
+    <div class="estrelas rapidas" role="group" aria-label="Registrar no diário com nota">${estrelas}</div>
+    <button class="mini" id="btn-registrar" data-receita="${r.id}">registrar com detalhes</button>
+  </div>`;
+}
+
+async function registrarRapido(receitaId, nota) {
+  const r = RECEITA_MAP[receitaId];
+  if (!r) return;
+  const dados = {
+    nome: r.nome,
+    receitaId,
+    pessoaId: 'eu',
+    pessoaNome: null,
+    data: new Date().toISOString().slice(0, 10),
+    nota,
+    texto: '',
+    lugar: '',
+    preco: null,
+    foto: null,
+    criadoEm: Date.now(),
+  };
+  const id = await dbAddEntry(dados);
+  state.entries = await dbGetEntries();
+  fecharModal();
+  vibrar(HAPTICO.registro);
+  renderDiario();
+  renderSugestoes();
+  // Grava primeiro, pergunta depois: quem tocou errado desfaz no próprio aviso.
+  toast(`${'★'.repeat(nota)} ${r.nome}`, 'No diário, com a data de hoje.', 'ok', {
+    rotulo: 'desfazer',
+    aoTocar: async () => {
+      await dbDeleteEntry(id);
+      state.entries = await dbGetEntries();
+      renderDiario();
+      renderSugestoes();
+      toast('Registro desfeito', '', 'info');
+    },
+  });
+  if (!celebrarMarco(state.entries.length)) {
+    // Sem marco a comemorar, o convite para completar aparece discreto no aviso
+    // seguinte — nunca como formulário aberto na cara de quem já terminou.
+    setTimeout(() => toast('Quer contar mais?', 'Onde foi, com quem, quanto custou.', 'info', {
+      rotulo: 'completar',
+      aoTocar: () => {
+        const e = state.entries.find(x => x.id === id);
+        if (e) abrirFormEntrada(e);
+      },
+    }), 1200);
+  }
 }
 
 // ---------- Formulário do diário ----------
@@ -1319,14 +1382,36 @@ async function importarDados(arquivo) {
 // ---------- Especialista (IA) ----------
 const chat = { history: Store.getChat(), ocupado: false };
 
+// A aba abre no chat, com ou sem chave. Sem chave quem responde é o modo
+// demonstração (js/demo.js), que procura no acervo local; o formulário da API
+// fica um toque atrás, para quem quiser a IA de verdade.
 function renderExpert() {
   const temChave = !!Store.getApiKey();
-  $('#expert-config').classList.toggle('escondido', temChave);
-  $('#expert-chat').classList.toggle('escondido', !temChave);
+  $('#expert-config').classList.add('escondido');
+  $('#expert-chat').classList.remove('escondido');
+  $('#chat-aviso').innerHTML = temChave
+    ? '🤖 <b>IA ativa</b> — respostas do Claude, com o seu bar e o seu gosto no contexto.'
+    : '🔎 <b>Modo demonstração</b> — respondo procurando nas 198 receitas do acervo, '
+      + 'aqui no aparelho, sem internet. Não é a IA.';
+  $('#chat-aviso').className = temChave ? 'aviso-ia' : 'aviso-ia demo';
+  $('#btn-modo-ia').textContent = temChave ? 'trocar ou remover a chave de API' : 'tenho uma chave da API — quero a IA';
   // Restaura a conversa salva ao voltar para a aba
-  if (temChave && !$('#chat-mensagens').children.length && chat.history.length) {
+  if (!$('#chat-mensagens').children.length && chat.history.length) {
     for (const msg of chat.history) addBubble(msg.role, msg.content);
   }
+  renderExemplosChat();
+}
+
+// Perguntas prontas. Um campo em branco não ensina nada sobre o que perguntar —
+// e as cinco daqui são exatamente o que o interpretador local sabe responder.
+function renderExemplosChat() {
+  const alvo = $('#chat-exemplos');
+  if (!alvo) return;
+  // Somem depois da primeira pergunta: viraram ruído assim que a conversa começa.
+  alvo.innerHTML = chat.history.length ? '' : '<p class="rotulo-exemplos">Experimente</p>'
+    + DEMO_EXEMPLOS
+      .map(q => `<button type="button" class="chip" data-exemplo="${esc(q)}">${esc(q)}</button>`)
+      .join('');
 }
 
 function addBubble(role, text) {
@@ -1349,9 +1434,28 @@ async function enviarPergunta() {
   $('#form-chat button').disabled = true;
   addBubble('user', texto);
   chat.history.push({ role: 'user', content: texto });
+  renderExemplosChat();
 
   const pensando = addBubble('assistant', '');
   pensando.innerHTML = '<div class="skeleton"><i></i><i></i><i></i></div>';
+
+  // Sem chave, quem responde é o acervo. A pausa é de propósito: resposta
+  // instantânea num chat parece erro, não velocidade.
+  if (!Store.getApiKey()) {
+    const resposta = responderDemo(texto);
+    setTimeout(() => {
+      pensando.textContent = resposta;
+      chat.history.push({ role: 'assistant', content: resposta });
+      Store.setChat(chat.history);
+      chat.ocupado = false;
+      input.disabled = false;
+      $('#form-chat button').disabled = false;
+      input.focus();
+      $('#chat-mensagens').scrollTop = $('#chat-mensagens').scrollHeight;
+    }, 420);
+    return;
+  }
+
   const pesos = tasteProfile();
   const top = [...new Set([...getPessoa('eu').tags, ...topProfileTags(pesos, 4)])];
   const topDrinks = state.entries
@@ -1606,6 +1710,11 @@ function initEventos() {
     }
     const prep = ev.target.closest('#btn-preparar');
     if (prep) { abrirPreparo(prep.dataset.receita); return; }
+    const rapido = ev.target.closest('[data-rapido]');
+    if (rapido) {
+      registrarRapido(rapido.dataset.receita, Number(rapido.dataset.rapido));
+      return;
+    }
     const reg = ev.target.closest('#btn-registrar');
     if (reg) abrirFormEntrada(null, reg.dataset.receita);
     const favBtn = ev.target.closest('#btn-favoritar');
@@ -1673,12 +1782,28 @@ function initEventos() {
     Store.setApiKey($('#input-chave').value.trim());
     renderExpert();
   });
-  $('#btn-trocar-chave').addEventListener('click', () => {
-    Store.setApiKey('');
-    chat.history = [];
-    Store.setChat([]);
-    $('#chat-mensagens').innerHTML = '';
-    renderExpert();
+  // Sem chave o botão abre o formulário; com chave, apaga tudo e volta ao demo.
+  $('#btn-modo-ia').addEventListener('click', () => {
+    if (Store.getApiKey()) {
+      Store.setApiKey('');
+      chat.history = [];
+      Store.setChat([]);
+      $('#chat-mensagens').innerHTML = '';
+      renderExpert();
+      toast('Chave removida', 'Voltamos para o modo demonstração.', 'info');
+      return;
+    }
+    $('#expert-chat').classList.add('escondido');
+    $('#expert-config').classList.remove('escondido');
+    $('#input-chave').focus();
+  });
+  $('#btn-voltar-demo').addEventListener('click', renderExpert);
+  // Perguntas de exemplo: um toque escreve e envia
+  $('#chat-exemplos').addEventListener('click', ev => {
+    const btn = ev.target.closest('[data-exemplo]');
+    if (!btn) return;
+    $('#chat-input').value = btn.dataset.exemplo;
+    enviarPergunta();
   });
   $('#form-chat').addEventListener('submit', ev => {
     ev.preventDefault();

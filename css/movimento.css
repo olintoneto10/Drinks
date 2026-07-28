@@ -40,6 +40,21 @@
 }
 .toast.erro { border-left-color: var(--erro); }
 .toast.info { border-left-color: var(--acento); }
+/* Botão do aviso — "desfazer", "completar". Sublinhado porque dentro de um
+   aviso que já é clicável inteiro, só a cor não distinguiria a ação. */
+.toast-acao {
+  display: block;
+  width: fit-content;
+  margin-top: 8px;
+  background: none;
+  border: none;
+  padding: 4px 0;
+  font: inherit;
+  color: var(--acento);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
 
 /* ---------- Diálogos próprios ---------- */
 .dialogo-fundo {
@@ -308,7 +323,18 @@
   color: var(--cinza);
   font-style: italic;
   animation: sobeLinha .5s .62s backwards;
-  margin-bottom: 26px;
+  margin-bottom: 18px;
+}
+#brinde .brinde-nota {
+  color: var(--cinza);
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  animation: sobeLinha .5s .7s backwards;
+}
+#brinde .estrelas.rapidas {
+  margin-bottom: 22px;
+  animation: sobeLinha .5s .74s backwards;
 }
 #brinde .brinde-acoes {
   width: 100%; max-width: 340px;
@@ -503,6 +529,9 @@ body.noite .pontos, body.noite .bv-pontos { border-color: #52402F; }
 body.noite .copo-traco { stroke: var(--tinta); }
 body.noite .copo-brilho { opacity: .3; }
 body.noite .toast { box-shadow: 0 10px 34px -12px rgba(0, 0, 0, .6); }
+/* No claro a estrela apagada é um cinza escuro; no escuro esse mesmo tom seria
+   claro demais e leria como estrela já acesa. */
+body.noite .estrelas.rapidas .estrela { color: #55483C; }
 body.noite #modal { background: rgba(12, 9, 7, .62); }
 body.noite .dialogo-fundo { background: rgba(12, 9, 7, .62); }
 

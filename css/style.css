@@ -364,6 +364,30 @@ form label {
   font-size: 1.9rem; color: var(--linha); cursor: pointer;
 }
 .estrela.on { color: var(--acento); }
+
+/* Registro em um toque: a estrela é o botão, não um campo do formulário.
+   Acende da primeira até a apontada para dizer "cinco estrelas", não "a quinta". */
+.registro-rapido {
+  border: 1px solid var(--linha);
+  border-radius: 2px;
+  padding: 12px 14px 6px;
+  margin: 14px 0 10px;
+  text-align: center;
+}
+.registro-rapido .dica { margin-bottom: 8px; }
+.estrelas.rapidas { justify-content: center; gap: 2px; margin-bottom: 6px; }
+.estrelas.rapidas .estrela {
+  font-size: 2.2rem;
+  padding: 2px 4px;
+  /* Mais escuras que as do formulário: no toque não há hover para revelar que
+     são botões, então elas já precisam parecer clicáveis paradas. */
+  color: #C9C2B4;
+  transition: color .16s ease, transform .16s ease;
+}
+.estrelas.rapidas:hover .estrela { color: var(--acento); }
+.estrelas.rapidas .estrela:hover ~ .estrela { color: var(--linha); }
+.estrelas.rapidas .estrela:hover { transform: translateY(-2px); }
+.registro-rapido .mini { margin-bottom: 8px; }
 .btn-foto {
   display: inline-block;
   border: 1px solid var(--linha);
@@ -380,6 +404,33 @@ form label {
 }
 
 /* Chat */
+/* Faixa que diz quem está respondendo. Fica sempre visível, porque a diferença
+   entre "procurei no acervo" e "a IA pensou" muda o peso da resposta. */
+.aviso-ia {
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: var(--cinza);
+  background: var(--branco);
+  border: 1px solid var(--linha);
+  border-left: 3px solid var(--ok);
+  padding: 9px 12px;
+  margin-bottom: 12px;
+}
+.aviso-ia b { color: var(--tinta); font-weight: normal; font-family: var(--serif); }
+.aviso-ia.demo { border-left-color: var(--acento); }
+#chat-exemplos {
+  display: flex; flex-wrap: wrap; gap: 6px;
+  margin-bottom: 10px;
+}
+#chat-exemplos .chip { font-size: 0.82rem; }
+#chat-exemplos .rotulo-exemplos {
+  width: 100%;
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--cinza);
+  margin-bottom: 2px;
+}
 #chat-mensagens {
   display: flex; flex-direction: column; gap: 10px;
   min-height: 220px;
@@ -388,6 +439,9 @@ form label {
   padding: 8px 2px;
   margin-bottom: 10px;
 }
+/* Antes da primeira pergunta não há conversa para reservar espaço: a área vazia
+   virava um buraco entre o aviso e as perguntas prontas. */
+#chat-mensagens:empty { min-height: 0; padding: 0; margin: 0; }
 .bolha {
   max-width: 88%;
   padding: 11px 14px;
@@ -410,7 +464,7 @@ form label {
 #form-chat { display: flex; gap: 8px; }
 #form-chat input { flex: 1; margin-bottom: 0; }
 #form-chat .btn { width: auto; padding: 0 18px; margin: 0; }
-#btn-trocar-chave { margin-top: 10px; }
+#btn-modo-ia, #btn-voltar-demo { margin-top: 10px; }
 .escondido { display: none !important; }
 
 /* Botões que são links (vídeos, trilha) */
