@@ -405,6 +405,70 @@
   padding-left: 12px;
   margin: 12px 0;
 }
+
+/* ---------- Cartão da curiosidade ---------- */
+/* <details> nativo: o triângulo padrão do navegador sai e entra um sinal que
+   gira, porque o resto do app não tem nenhum triângulo de sistema. */
+.cartao-curiosidade {
+  border: 1px solid var(--linha-forte);
+  border-radius: 2px;
+  margin: 14px 0;
+  background: var(--branco);
+}
+.cartao-curiosidade summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 11px 14px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--sans);
+  font-size: .7rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--acento);
+}
+.cartao-curiosidade summary::-webkit-details-marker { display: none; }
+.cartao-curiosidade summary::after {
+  content: '+';
+  margin-left: auto;
+  font-family: var(--serif);
+  font-size: 1.3rem;
+  line-height: 1;
+  transition: transform .3s cubic-bezier(.22,.9,.3,1);
+}
+.cartao-curiosidade[open] summary::after { transform: rotate(45deg); }
+.cartao-curiosidade .curiosidade {
+  border-left: none;
+  margin: 0;
+  padding: 0 14px 14px;
+  animation: sobeLinha .34s cubic-bezier(.22,.9,.3,1);
+}
+
+/* ---------- Etiquetas automáticas ---------- */
+/* Tudo derivado de dado que o app já tinha — nível, tags, tempo, o seu diário.
+   Nenhuma precisa ser cadastrada drink a drink, então nenhuma envelhece. */
+.etiquetas { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0 2px; }
+.etiqueta {
+  font-family: var(--sans);
+  font-size: .6rem;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  line-height: 1;
+  padding: 5px 8px 4px;
+  border: 1px solid var(--linha-forte);
+  border-radius: 2px;
+  color: var(--cinza);
+  white-space: nowrap;
+}
+/* As duas que vêm do seu diário ganham a cor da casa: são as únicas que falam
+   de você, e não do drink. */
+.etiqueta.et-seu5, .etiqueta.et-favorito { color: var(--acento); border-color: var(--acento); }
+.etiqueta.et-zero { color: var(--ok); border-color: var(--ok); }
+/* No cardápio elas são menores: ali competem com o nome do drink. */
+.card .etiquetas { margin: 5px 0 0; }
+.card .etiqueta { font-size: .55rem; padding: 4px 7px 3px; }
 .ficha-drink { list-style: none; margin: 12px 0; font-size: .88rem; }
 .ficha-drink li {
   display: flex; justify-content: space-between; gap: 12px;

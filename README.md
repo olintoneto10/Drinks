@@ -96,6 +96,22 @@ Com a sua chave da Anthropic, o chat vira um bartender de IA de verdade.
 - **👥 Pessoas, restrições e modo festa** — cadastre convidados com gostos
   ("Marília gosta de doce") e restrições ("João não bebe álcool"); o modo
   festa 🎉 prioriza drinks que agradam todo mundo respeitando as restrições.
+- **🏷️ Etiquetas automáticas** — *Ideal para o pôr do sol*, *Pronto em 3 min*,
+  *Para começar*, *Sem álcool*, *★ Seu 5 estrelas*. Todas **derivadas de dado que
+  o app já tinha** — nível, tags, tempo e o seu diário —, nenhuma cadastrada à
+  mão: etiqueta que precisasse ser escrita drink a drink ficaria desatualizada na
+  primeira receita nova. No cardápio entram no máximo duas, e as que só repetem
+  uma tag de sabor ficam de fora, para não escrever a mesma palavra duas vezes na
+  mesma altura da tela. As duas que vêm do **seu** diário ganham a cor da casa —
+  são as únicas que falam de você, e não do drink.
+- **✎ Criar minha versão** — duplica a receita aberta como receita sua, já
+  preenchida, pronta para ajustar. Antes só dava para criar do zero ou anotar por
+  cima do clássico; faltava o meio-termo, que é como se ajusta receita de
+  verdade: parte do que existe e mexe numa medida. O original fica intacto.
+- **💡 Cartão da curiosidade** — a curiosidade de cada verbete virou um cartão
+  fechado com uma pergunta na frente. Fato lido de passagem não fica; o que se
+  escolhe abrir, se lembra. É `<details>` nativo — acessível de teclado e de
+  leitor de tela sem uma linha de JS.
 - **♥ Favoritos e compartilhar** — marque receitas para depois e compartilhe
   receitas ou registros do diário via WhatsApp e afins (Web Share API).
 - **🃏 Cartão de receita com QR** — gera uma imagem na cor do próprio drink,

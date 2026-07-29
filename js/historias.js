@@ -1660,6 +1660,70 @@ function tempoDaReceita(r) {
   return Math.min(6, n + Math.ceil(ings / 3));
 }
 
+// A curiosidade fechada, como cartão que se abre. Ela era um parágrafo no meio
+// de outros — e um fato que se lê de passagem não fica. Escondida atrás de uma
+// pergunta, ela vira uma escolha de abrir, e o que se escolhe ver, se lembra.
+// É <details>/<summary> puro: acessível de teclado e de leitor de tela sem uma
+// linha de JS, e continua legível se o CSS não carregar.
+function blocoCuriosidade(h) {
+  if (!h?.curiosidade) return '';
+  return `<details class="cartao-curiosidade">
+    <summary>Sabia disso?</summary>
+    <p class="curiosidade">${h.curiosidade}</p>
+  </details>`;
+}
+
+// ---------- Selos: o cardápio lido na diagonal ----------
+// Tudo aqui já era calculado ou já estava no dado — nível, tags, tempo, o
+// diário. O que faltava era mostrar em forma de etiqueta, para a lista se ler
+// de relance em vez de exigir a leitura das tags em corpo 8. Nada de conteúdo
+// novo escrito à mão: selo que precisasse ser cadastrado drink a drink ficaria
+// desatualizado na primeira receita nova.
+// `eco: true` marca a etiqueta que só repete uma tag de sabor já escrita na
+// linha de baixo do card. Ela vale no modal, onde é resumo, e atrapalha na
+// lista, onde seria a mesma palavra duas vezes na mesma altura da tela.
+const SELOS = [
+  { id: 'seu5', nome: '★ Seu 5 estrelas', quando: r => notaSuaMaxima(r.id) === 5 },
+  { id: 'favorito', nome: '♥ Favorito', eco: true,
+    quando: r => typeof state !== 'undefined' && state.favoritos?.has(r.id) },
+  { id: 'zero', nome: 'Sem álcool', eco: true, quando: r => r.tags.includes('sem-alcool') },
+  { id: 'sunset', nome: 'Ideal para o pôr do sol',
+    quando: r => (r.tags.includes('refrescante') || r.tags.includes('tropical'))
+      && !r.tags.includes('quente') && !r.tags.includes('forte') },
+  { id: 'rapido', nome: 'Pronto em pouco tempo', quando: r => tempoDaReceita(r) <= 2 },
+  { id: 'facil', nome: 'Para começar', quando: r => nivelDaReceita(r) === 1 },
+  { id: 'refrescante', nome: 'Refrescante', eco: true, quando: r => r.tags.includes('refrescante') },
+  { id: 'inverno', nome: 'Para o frio', eco: true, quando: r => r.tags.includes('quente') },
+];
+
+// A nota que VOCÊ deu, não a média de estranhos. Sem servidor, sem conta, sem
+// moderação — e mais útil, porque o app já sabe do que você gosta.
+function notaSuaMaxima(receitaId) {
+  if (typeof state === 'undefined' || !state.entries) return 0;
+  return state.entries
+    .filter(e => e.receitaId === receitaId && e.pessoaId === 'eu')
+    .reduce((m, e) => Math.max(m, e.nota || 0), 0);
+}
+
+// No máximo três: quatro etiquetas viram ruído e a lista deixa de se ler rápido,
+// que era o motivo de existirem. A ordem do array é a prioridade.
+function selosDoDrink(r, max = 3, semEco = false) {
+  return SELOS
+    .filter(s => !(semEco && s.eco))
+    .filter(s => { try { return s.quando(r); } catch { return false; } })
+    .slice(0, max)
+    .map(s => ({ id: s.id, nome: s.id === 'rapido' ? `Pronto em ${tempoDaReceita(r)} min` : s.nome }));
+}
+
+function blocoSelos(r, max = 3, semEco = false) {
+  const selos = selosDoDrink(r, max, semEco);
+  if (!selos.length) return '';
+  // 'etiqueta', não 'selo': .selo já pertence às conquistas do Diário, e
+  // reusar a classe herdaria o estilo daquela grade.
+  return `<div class="etiquetas">${selos
+    .map(s => `<span class="etiqueta et-${s.id}">${esc(s.nome)}</span>`).join('')}</div>`;
+}
+
 // ---------- Trilha: o que tocar enquanto se bebe ----------
 // A origem manda mais que o sabor — um samba não combina com um Manhattan, e
 // jazz de bar não combina com uma caipifruta. Onde não há país, o perfil decide.
@@ -1789,7 +1853,7 @@ function blocoHistoria(r, h) {
         <b class="selo-verdade ${classe}" title="${titulo}">${estado}</b></span>
       <p>${h.historia}</p>
       ${h.criador ? `<p class="assinatura">— ${h.criador}</p>` : ''}
-      ${h.curiosidade ? `<p class="curiosidade">${h.curiosidade}</p>` : ''}
+      ${blocoCuriosidade(h)}
       <ul class="ficha-drink">
         ${linha('Ocasião', h.ocasiao || ocasiaoDerivada(r))}
         ${linha('Temperatura', h.temperatura)}

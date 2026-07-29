@@ -318,6 +318,7 @@ function cardReceita({ receita, faltam, score }, destaque, fotos) {
         <span class="copo-item">${esc(receita.copo.toLowerCase())}</span>
       </div>
       <div class="sub">${match}<span class="tags-linha">${receita.custom ? 'sua receita · ' : ''}${tags}</span></div>
+      ${blocoSelos(receita, 2, true)}
     </button>
     ${faltaHtml}
   </div>`;
@@ -706,6 +707,7 @@ function abrirReceita(id) {
     <h2>${esc(r.nome)}</h2>
     <p class="linha-ficha">${h ? esc(h.origem) + ' · ' : ''}${'★'.repeat(nivel)}${'☆'.repeat(3 - nivel)} ${esc(NIVEL_NOMES[nivel])} · ${tempoDaReceita(r)} min</p>
     <div class="tags">${r.tags.map(t => `<span class="tag">${esc(TAG_NOMES[t] || t)}</span>`).join('')}</div>
+    ${blocoSelos(r)}
     <p class="meta">🥃 ${esc(r.copo)}</p>
     <div id="area-historia">${blocoHistoria(r, h)}</div>
     ${blocoTrilha(r)}
@@ -740,6 +742,8 @@ function abrirReceita(id) {
       <button class="btn" id="btn-cartao" data-receita="${r.id}">🃏 Cartão</button>
     </div>
     <button class="btn" id="btn-compartilhar" data-receita="${r.id}">Compartilhar como texto</button>
+    ${r.custom ? '' : `<button class="btn" id="btn-minha-versao" data-receita="${r.id}">
+      ✎ Criar minha versão desta receita</button>`}
     ${r.custom ? `<div class="botoes-duplos">
       <button class="btn" id="btn-editar-receita" data-receita="${r.id}">Editar receita</button>
       <button class="btn btn-excluir" id="btn-excluir-receita" data-receita="${r.id}">Excluir</button>
@@ -1056,7 +1060,10 @@ function abrirFormReceita(receita = null) {
     .map(i => linhaIngrediente(i.id, i.q)).join('');
 
   $('#modal-corpo').innerHTML = `
-    <h2>${receita ? 'Editar receita' : '🍸 Minha receita'}</h2>
+    <h2>${!receita ? '🍸 Minha receita'
+      : receita.id ? 'Editar receita' : '✎ Minha versão'}</h2>
+    ${receita && !receita.id ? `<p class="dica">Partindo de uma receita do acervo. O original
+      continua intacto — isto vira uma receita sua, que entra nas sugestões e no diário.</p>` : ''}
     <form id="form-receita">
       <label>Nome do drink
         <input name="nome" required maxlength="60" value="${esc(receita?.nome || '')}" placeholder="Ex.: Drink da casa">
@@ -1117,6 +1124,19 @@ function abrirFormReceita(receita = null) {
     fecharModal();
     renderSugestoes();
   });
+}
+
+// Cópia para o formulário: sem id (para salvar como nova, não sobrescrever a
+// original) e sem o gelo, que o formulário recoloca sozinho ao salvar.
+function copiaParaEditar(r) {
+  return {
+    nome: `${r.nome} (minha versão)`,
+    copo: r.copo,
+    tags: [...r.tags],
+    ing: r.ing.filter(i => !BASICOS.has(i.id)).map(i => ({ id: i.id, q: i.q })),
+    ingExtra: r.ingExtra || '',
+    preparo: r.preparo,
+  };
 }
 
 // ---------- Cardápio da noite (imagem para compartilhar) ----------
@@ -1817,6 +1837,16 @@ function initEventos() {
         Store.setNotas(notas);
         abrirReceita(id);
       }
+    }
+
+    // Duplicar e editar. Antes só dava para criar do zero (formulário em
+    // branco) ou anotar por cima do clássico — faltava o meio-termo, que é como
+    // se ajusta receita de verdade: parte do que existe e mexe numa medida.
+    const minhaVersao = ev.target.closest('#btn-minha-versao');
+    if (minhaVersao) {
+      const base = RECEITA_MAP[minhaVersao.dataset.receita];
+      if (base) abrirFormReceita(copiaParaEditar(base));
+      return;
     }
 
     const editarRec = ev.target.closest('#btn-editar-receita');
