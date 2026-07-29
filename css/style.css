@@ -415,6 +415,16 @@ form label {
 .estrelas.rapidas .estrela:hover ~ .estrela { color: var(--linha); }
 .estrelas.rapidas .estrela:hover { transform: translateY(-2px); }
 .registro-rapido .mini { margin-bottom: 8px; }
+/* Quebra por estilo, quando há mais de um marcado: mostra se a lista serve
+   mesmo a todos, ou se um deles ficou de fora. */
+.kit-quebra { list-style: none; margin: 4px 0 12px; font-size: 0.86rem; }
+.kit-quebra li {
+  display: flex; justify-content: space-between; gap: 12px;
+  padding: 5px 0; border-bottom: 1px solid var(--linha);
+  color: var(--cinza); font-style: italic;
+}
+.kit-quebra li span:last-child { font-style: normal; white-space: nowrap; }
+
 /* Toque final: sugestões de guarnição e bitters. Recuo à esquerda para se ler
    como conselho de margem, não como mais um passo obrigatório da receita. */
 .acabamento { list-style: none; margin: 4px 0 14px; }

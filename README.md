@@ -49,7 +49,13 @@ Com a sua chave da Anthropic, o chat vira um bartender de IA de verdade.
   seco, forte, tropical, sem álcool) e o app calcula a **menor lista de compras
   que destrava o máximo de drinks daquele estilo**, contando o que você já tem.
   É a pergunta inversa do motor de sugestões: não "o que faço com isto?", mas
-  "o que compro para fazer o que eu gosto?". **O topo da aba Meu Bar muda com a
+  "o que compro para fazer o que eu gosto?". Os estilos **combinam entre si** —
+  marque cítrico e amargo e sai uma lista só, que serve aos dois. Isso não é
+  somar: cítrico tem 87 receitas contra 37 do amargo e é mais barato de
+  destravar, então a soma pura devolvia 20 drinks cítricos e **zero** amargos.
+  A escolha é por **rodízio** — a cada compra, o estilo mais atrás é quem
+  decide —, e uma tabela mostra quanto cada estilo ganhou, para dar para ver se
+  a lista serve mesmo a todos. **O topo da aba Meu Bar muda com a
   situação da estante**: com menos de 8 itens, montar vira a ação em destaque e
   "fotografar minha estante" desce — fotografar não serve a quem não tem estante.
   Com a estante montada a ordem se inverte de volta. A ferramenta também aparece

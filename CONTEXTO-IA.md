@@ -106,7 +106,8 @@ O topo **muda com a situação da estante**: com menos de 8 itens o "Montar meu
 bar" é a ação em destaque e a foto desce; com a estante montada a ordem se
 inverte. Cada botão leva sua legenda.
 - **🛒 Montar meu bar pelo que eu gosto** — escolhe um estilo e o app calcula a
-  menor lista de compras que destrava mais drinks daquele estilo. Também
+  menor lista de compras que destrava mais drinks daqueles estilos — **dá para
+  marcar vários**, e a escolha é por rodízio para nenhum sair zerado. Também
   aparece na lista "pode fazer agora" vazia e no fim das boas-vindas de quem
   não fechou nenhuma receita.
 - **📸 Fotografar minha estante** — a IA identifica as garrafas (precisa da chave)
