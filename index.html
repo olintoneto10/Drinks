@@ -29,7 +29,8 @@
     <!-- Sugestões -->
     <section id="aba-sugestoes" class="aba">
       <div id="pessoas-row"></div>
-      <input id="busca-sugestoes" type="search" placeholder="Buscar drink pelo nome...">
+      <input id="busca-sugestoes" type="search" placeholder="Buscar drink pelo nome..."
+        aria-label="Buscar drink por nome ou por ingrediente">
       <div id="filtros" class="chips" role="group" aria-label="Filtrar por perfil (dá para marcar vários)">
         <button class="chip on" data-tag="todos" aria-pressed="true">Todos</button>
         <button class="chip" data-tag="citrico">Cítrico</button>
@@ -46,7 +47,7 @@
         <button class="chip" data-tag="lendas">✦ Lendas da casa</button>
         <button class="chip" data-tag="favoritos">♥ Favoritos</button>
       </div>
-      <div id="lista-sugestoes"></div>
+      <div id="lista-sugestoes" aria-live="polite" aria-busy="false"></div>
       <div class="acoes-sugestoes">
         <button id="btn-nova-receita" class="btn">＋ Criar minha receita</button>
         <button id="btn-cardapio" class="btn">📜 Cardápio da noite</button>
@@ -56,7 +57,8 @@
     <!-- Meu Bar -->
     <section id="aba-bar" class="aba">
       <div id="topo-bar"></div>
-      <input id="busca-bar" type="search" placeholder="Buscar ingrediente...">
+      <input id="busca-bar" type="search" placeholder="Buscar ingrediente..."
+        aria-label="Buscar ingrediente na lista">
       <div id="conteudo-bar"></div>
     </section>
 
@@ -64,7 +66,8 @@
     <section id="aba-diario" class="aba">
       <button id="btn-nova-entrada" class="btn primario">+ Registrar um drink</button>
       <div id="stats-diario"></div>
-      <input id="busca-diario" type="search" placeholder="Buscar no diário...">
+      <input id="busca-diario" type="search" placeholder="Buscar no diário..."
+        aria-label="Buscar no diário por drink ou anotação">
       <div class="filtros-diario">
         <select id="filtro-nota" aria-label="Filtrar por nota mínima">
           <option value="0">Todas as notas</option>
@@ -78,7 +81,7 @@
           <option value="ano">Este ano</option>
         </select>
       </div>
-      <div id="lista-diario"></div>
+      <div id="lista-diario" aria-live="polite"></div>
       <button id="btn-retrospectiva" class="btn escondido">🎁 Minha retrospectiva</button>
       <div id="colecao"></div>
       <div id="jogo"></div>
@@ -101,10 +104,11 @@
     <section id="aba-expert" class="aba">
       <div id="expert-chat">
         <p id="chat-aviso"></p>
-        <div id="chat-mensagens"></div>
+        <div id="chat-mensagens" aria-live="polite"></div>
         <div id="chat-exemplos"></div>
         <form id="form-chat">
-          <input id="chat-input" type="text" placeholder='Ex.: "me surpreende com algo cítrico"' autocomplete="off">
+          <input id="chat-input" type="text" placeholder='Ex.: "me surpreende com algo cítrico"'
+            autocomplete="off" aria-label="Escreva seu pedido ao bartender">
           <button class="btn primario" type="submit" aria-label="Perguntar">➤</button>
         </form>
         <button id="btn-modo-ia" class="mini"></button>
@@ -120,7 +124,8 @@
           e as cobranças vão para a sua conta.
         </div>
         <form id="form-chave">
-          <input id="input-chave" type="password" placeholder="sk-ant-..." required>
+          <input id="input-chave" type="password" placeholder="sk-ant-..." required
+            aria-label="Sua chave da API da Anthropic">
           <button class="btn primario" type="submit">Ativar especialista</button>
         </form>
         <button id="btn-voltar-demo" class="mini">voltar sem chave</button>
@@ -129,7 +134,7 @@
   </main>
 
   <div id="modal">
-    <div id="modal-caixa">
+    <div id="modal-caixa" role="dialog" aria-modal="true" aria-label="Detalhes">
       <button id="modal-fechar" aria-label="Fechar">✕</button>
       <div id="modal-corpo"></div>
     </div>

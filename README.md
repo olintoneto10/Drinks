@@ -121,6 +121,17 @@ Com a sua chave da Anthropic, o chat vira um bartender de IA de verdade.
   disponível no rodapé do Diário. No iPhone, onde a instalação automática não
   existe, ele ensina o caminho do Safari em vez de mostrar um botão que não faz
   nada.
+- **♿ Acessibilidade (WCAG 2.2 AA)** — contraste medido, não estimado, e travado
+  por teste: uma segunda variável de cor separa a linha decorativa da **borda que
+  é o componente** (campo, chip, botão), que estava em 1,25:1 contra os 3:1 da
+  norma — quem enxerga pouco não achava onde um chip terminava. No modo noite o
+  botão primário tinha 3,71:1 de branco sobre vermelho, então o acento se
+  desdobrou em dois: um mais claro para texto, um mais escuro para fundo de
+  botão. Fora contraste: nome acessível em todo campo e botão, alvos de toque
+  acima do mínimo (o ✕ do modal tinha 20×28, a aba "IA" 18px de largura),
+  navegação com 44×44 da HIG, títulos sem pular nível, regiões vivas na lista de
+  sugestões e no chat, e modal, preparo e brinde anunciados como diálogo com
+  nome próprio e foco preso dentro.
 - **✉️ Cartão de convidado** — mande um link, a pessoa marca o que gosta e
   evita, e devolve um link que a cadastra no seu app. Sem servidor: as
   preferências viajam dentro da própria URL.

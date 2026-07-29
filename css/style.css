@@ -6,7 +6,16 @@
   --tinta: #201D1A;
   --cinza: #6B665C;
   --acento: #C4372B;   /* vermelho campari */
+  /* Fundo de botão preenchido: o texto branco em cima dele precisa de 4.5:1.
+     No claro é o mesmo acento; no noite ele escurece (ver body.noite). */
+  --acento-btn: #C4372B;
   --linha: #E5E1D8;
+  /* Borda que É o componente — campo, chip, botão de contorno. A WCAG 1.4.11
+     pede 3:1 para isso, e a linha decorativa (1.25:1) não chega perto: quem
+     enxerga pouco não achava onde um chip terminava e o outro começava.
+     Mesma matiz e saturação da linha, só mais escura, para não trocar o
+     visual editorial por uma grade pesada. */
+  --linha-forte: #9F906F;
   --ok: #3E7A4E;
   --erro: #C4372B;
   --serif: Georgia, 'Times New Roman', serif;
@@ -53,6 +62,9 @@ header h1 em { color: var(--acento); }
   border-bottom: 2px solid var(--tinta);
   overflow-x: auto;
 }
+/* Alvo de toque: a WCAG 2.2 AA pede 24x24; a HIG da Apple, 44x44. A navegação
+   é o que mais se toca no app, então vai pelo número maior. A aba "IA" tinha
+   18px de largura — falhava até no mínimo da norma. */
 .tab {
   background: none;
   border: none;
@@ -62,7 +74,10 @@ header h1 em { color: var(--acento); }
   text-transform: uppercase;
   letter-spacing: 2px;
   color: var(--cinza);
-  padding: 6px 0 10px;
+  min-height: 44px;
+  min-width: 44px;
+  justify-content: center;
+  padding: 6px 4px 10px;
   cursor: pointer;
   white-space: nowrap;
   display: flex;
@@ -102,7 +117,7 @@ input[type="date"], select, textarea {
   width: 100%;
   padding: 10px 13px;
   border-radius: 2px;
-  border: 1px solid var(--linha);
+  border: 1px solid var(--linha-forte);
   background: var(--branco);
   color: var(--tinta);
   font-size: 1rem;
@@ -123,9 +138,14 @@ input:focus, select:focus, textarea:focus { outline: 2px solid var(--acento); bo
 /* Chips */
 .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
 .chip {
-  border: 1px solid var(--linha);
+  border: 1px solid var(--linha-forte);
   background: var(--branco);
   color: var(--tinta);
+  /* 89 ingredientes em grade: 44px de altura cada viraria uma parede. 40 é o
+     acordo — bem acima do mínimo da norma e ainda legível como lista. */
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
   padding: 6px 14px;
   border-radius: 2px;
   font-size: 0.88rem;
@@ -133,7 +153,7 @@ input:focus, select:focus, textarea:focus { outline: 2px solid var(--acento); bo
   font-style: italic;
   cursor: pointer;
 }
-.chip.on { background: var(--acento); border-color: var(--acento); color: #fff; }
+.chip.on { background: var(--acento-btn); border-color: var(--acento-btn); color: #fff; }
 #pessoas-row { margin: 2px 0 14px; }
 #pessoas-row .chips, #filtros { justify-content: center; }
 #pessoas-row .dica { text-align: center; }
@@ -261,13 +281,16 @@ input:focus, select:focus, textarea:focus { outline: 2px solid var(--acento); bo
   cursor: pointer;
   margin: 10px 0;
 }
-.btn.primario { background: var(--acento); border-color: var(--acento); color: #fff; }
+.btn.primario { background: var(--acento-btn); border-color: var(--acento-btn); color: #fff; }
 .mini {
-  border: 1px solid var(--linha);
+  border: 1px solid var(--linha-forte);
   background: var(--branco);
   color: var(--cinza);
   border-radius: 2px;
-  padding: 4px 10px;
+  min-height: 32px;
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
   font-family: var(--sans);
   font-size: 0.68rem;
   text-transform: uppercase;
@@ -318,8 +341,12 @@ input:focus, select:focus, textarea:focus { outline: 2px solid var(--acento); bo
   border: 1px solid var(--linha);
   padding: 24px 22px;
 }
+/* Tinha 20x28: o botão de sair da tela era o alvo mais difícil de acertar do
+   app inteiro. Cresce sem mudar de lugar nem ganhar moldura. */
 #modal-fechar {
-  position: absolute; top: 10px; right: 12px;
+  position: absolute; top: 6px; right: 8px;
+  width: 44px; height: 44px;
+  display: flex; align-items: center; justify-content: center;
   background: none; border: none;
   color: var(--cinza); font-size: 1.2rem; cursor: pointer;
 }
@@ -452,7 +479,7 @@ form label {
 }
 .bolha.user {
   align-self: flex-end;
-  background: var(--acento); color: #fff;
+  background: var(--acento-btn); color: #fff;
   border-radius: 2px;
 }
 .bolha.assistant {

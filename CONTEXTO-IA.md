@@ -249,6 +249,13 @@ js/db.js              IndexedDB (diário com fotos) + localStorage
 js/ai.js              API da Anthropic (chave do usuário)
 js/demo.js            bartender local: interpreta o pedido e responde sem chave
 js/instalar.js        convite para instalar como app (merecido, recusável)
+
+Acessibilidade: WCAG 2.2 AA, com o contraste medido em teste automatizado nos
+dois temas. `--linha` é decorativa; `--linha-forte` é a borda que identifica um
+componente (3:1). `--acento` é texto; `--acento-btn` é fundo de botão (4.5:1
+com branco em cima). Todo controle tem nome acessível, alvos passam de 24x24
+(navegação em 44x44), títulos não pulam nível, lista de sugestões e chat são
+regiões vivas, e modal/preparo/brinde são diálogos com foco preso.
 js/app.js             UI, motor de sugestões e perfil de sabor
 js/kit.js             lista de compras a partir do estilo preferido
 js/jogo.js            nível, conquistas e rotas

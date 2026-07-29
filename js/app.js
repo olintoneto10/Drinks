@@ -1317,6 +1317,11 @@ let focoAnterior = null;
 
 function abrirModal() {
   focoAnterior = document.activeElement;
+  // A caixa é role="dialog" fixo no HTML, mas o conteúdo muda a cada abertura:
+  // sem renomear, o leitor de tela anunciaria "Detalhes" para a receita, para o
+  // formulário do diário e para o montar bar — três coisas diferentes.
+  const titulo = $('#modal-corpo').querySelector('h2')?.textContent?.trim();
+  $('#modal-caixa').setAttribute('aria-label', titulo || 'Detalhes');
   $('#modal').classList.add('aberto');
   // O ✕ é o primeiro alvo: garante que o leitor de tela entre na caixa e que
   // a saída esteja a um Tab de distância.

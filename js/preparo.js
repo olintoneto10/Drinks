@@ -24,6 +24,9 @@ function abrirPreparo(receitaId) {
   fecharModal();
   const tela = document.createElement('div');
   tela.id = 'preparo';
+  tela.setAttribute('role', 'dialog');
+  tela.setAttribute('aria-modal', 'true');
+  tela.setAttribute('aria-label', `Preparo do ${r.nome}, passo a passo`);
   tela.innerHTML = `
     <div class="preparo-topo">
       <h2>${esc(r.nome)}</h2>
@@ -34,7 +37,7 @@ function abrirPreparo(receitaId) {
     </div>
     <div class="preparo-corpo">
       <div class="preparo-num"></div>
-      <p class="preparo-texto"></p>
+      <p class="preparo-texto" aria-live="polite"></p>
       <div class="preparo-ings"></div>
     </div>
     <div class="preparo-rodape">
@@ -108,6 +111,9 @@ function marcoDoDiario(total) {
 function abrirBrinde(r) {
   const tela = document.createElement('div');
   tela.id = 'brinde';
+  tela.setAttribute('role', 'dialog');
+  tela.setAttribute('aria-modal', 'true');
+  tela.setAttribute('aria-label', `${r.nome} pronto`);
   tela.innerHTML = `
     <div class="luz-brinde"></div>
     ${svgBrinde(r)}
@@ -152,6 +158,9 @@ function celebrarMarco(total) {
   if (!marco) return false;
   const tela = document.createElement('div');
   tela.id = 'brinde';
+  tela.setAttribute('role', 'dialog');
+  tela.setAttribute('aria-modal', 'true');
+  tela.setAttribute('aria-label', marco.titulo);
   tela.innerHTML = `
     <div class="luz-brinde"></div>
     <div class="selo-conquista"><b>${esc(marco.n)}</b><small>drink${marco.n === '1º' ? '' : 's'}</small></div>

@@ -129,7 +129,7 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: var(--acento);
+  background: var(--acento-btn);
   transform: scaleX(0);
   transform-origin: left;
   transition: transform .32s cubic-bezier(.22,.9,.3,1);
@@ -485,9 +485,10 @@
   position: absolute;
   top: 20px; right: 18px;
   background: none;
-  border: 1px solid var(--linha);
+  /* A borda é a única coisa que diz onde o botão está: linha funcional. */
+  border: 1px solid var(--linha-forte);
   border-radius: 50%;
-  width: 34px; height: 34px;
+  width: 44px; height: 44px;
   color: var(--cinza);
   font-size: .95rem;
   cursor: pointer;
@@ -506,10 +507,17 @@ body.noite {
   --branco: #2E251E;
   --tinta: #F2E7D8;
   --cinza: #A08D7C;
-  --acento: #E4553C;
+  /* O acento do noite era 4.05:1 sobre o fundo dos cards — passa como texto
+     grande, não como texto comum. Clareou o mínimo para chegar a 4.53:1. */
+  --acento: #E6654E;
+  /* E escureceu para o outro lado quando é fundo de botão: branco sobre o
+     vermelho antigo dava 3.71:1, no botão mais importante do app, no tema que
+     ele mesmo liga às 18h. Agora 4.53:1. */
+  --acento-btn: #DB3A1E;
   --linha: #3C2E24;
+  --linha-forte: #896952;
   --ok: #7FA86B;
-  --erro: #E4553C;
+  --erro: #E6654E;
 }
 /* a luz da luminária, vinda de cima */
 body.noite::before {
@@ -600,13 +608,19 @@ body.noite .dialogo-fundo { background: rgba(12, 9, 7, .62); }
   transition: transform .25s ease;
 }
 .drink-dia:active { transform: scale(.99); }
+/* Virou h2 para não pular nível no leitor de tela; a aparência é a do rótulo
+   que ele sempre foi, sem o ornamento nem a centralização dos outros h2. */
 .rotulo-dia {
   font-family: var(--sans);
   font-size: .62rem;
+  font-weight: normal;
   text-transform: uppercase;
   letter-spacing: 2.4px;
   color: var(--acento);
+  margin: 0;
+  text-align: left;
 }
+main h2.rotulo-dia::before { content: none; }
 .drink-dia h3 { font-size: 1.35rem; margin: 4px 0 3px; }
 .drink-dia p {
   color: var(--cinza);
@@ -714,7 +728,7 @@ body.noite .dialogo-fundo { background: rgba(12, 9, 7, .62); }
   text-transform: uppercase;
   letter-spacing: 1.6px;
   color: #fff;
-  background: var(--acento);
+  background: var(--acento-btn);
   padding: 2px 8px;
   line-height: 1.6;
 }

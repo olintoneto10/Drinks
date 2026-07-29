@@ -60,8 +60,11 @@ function blocoDrinkDoDia() {
   const h = historiaDe(d.receita.id);
   const chamada = h?.curiosidade
     || (d.inedito ? 'Você ainda não fez este. Hoje é um bom dia.' : 'Um velho conhecido, sempre bem-vindo.');
+  // O rótulo é h2 de verdade: era um span, e o nome do drink logo abaixo (h3)
+  // vinha direto depois do h1 do cabeçalho. Quem navega por títulos no leitor
+  // de tela caía de nível 1 para nível 3 e perdia a estrutura da página.
   return `<button type="button" class="drink-dia" data-receita="${d.receita.id}">
-    <span class="rotulo-dia">✦ Drink do dia</span>
+    <h2 class="rotulo-dia">✦ Drink do dia</h2>
     <h3>${esc(d.receita.nome)}</h3>
     <p>${chamada}</p>
   </button>`;
