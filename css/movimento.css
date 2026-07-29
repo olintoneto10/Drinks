@@ -446,6 +446,59 @@
   animation: sobeLinha .34s cubic-bezier(.22,.9,.3,1);
 }
 
+/* ---------- Seções dobráveis do Diário ---------- */
+/* A aba tinha sete blocos empilhados e o diário, que é o motivo de abri-la,
+   ficava espremido no meio. Mesma mecânica do cartão da curiosidade. */
+.secao-dobra {
+  border-top: 1px solid var(--linha-forte);
+  margin-top: 22px;
+}
+.secao-dobra summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 16px 2px;
+  min-height: 44px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 3px;
+  position: relative;
+  padding-right: 32px;
+}
+.secao-dobra summary::-webkit-details-marker { display: none; }
+.secao-dobra summary::after {
+  content: '+';
+  position: absolute;
+  right: 4px; top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--serif);
+  font-size: 1.4rem;
+  line-height: 1;
+  color: var(--acento);
+  transition: transform .3s cubic-bezier(.22,.9,.3,1);
+}
+.secao-dobra[open] summary::after { transform: translateY(-50%) rotate(45deg); }
+.dobra-titulo {
+  font-family: var(--sans);
+  font-size: .72rem;
+  text-transform: uppercase;
+  letter-spacing: 2.5px;
+  color: var(--acento);
+}
+/* O resumo é o que faz "fechado" não virar "escondido": diz o que tem dentro
+   sem obrigar a abrir. */
+.dobra-resumo {
+  font-style: italic;
+  font-size: .84rem;
+  color: var(--cinza);
+  line-height: 1.4;
+}
+.secao-dobra > *:not(summary) { animation: sobeLinha .34s cubic-bezier(.22,.9,.3,1); }
+/* Dentro da seção os títulos já não precisam do ornamento de cardápio. */
+.secao-dobra h2 { margin-top: 14px; }
+.secao-dobra h3 { margin-top: 20px; }
+#btn-som { margin-top: 4px; }
+
 /* ---------- Etiquetas automáticas ---------- */
 /* Tudo derivado de dado que o app já tinha — nível, tags, tempo, o seu diário.
    Nenhuma precisa ser cadastrada drink a drink, então nenhuma envelhece. */

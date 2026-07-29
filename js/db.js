@@ -113,6 +113,9 @@ const Store = {
   // Último acesso encerrado, para saber há quanto tempo a pessoa não aparece
   getUltimoAcesso() { return LS.get('meubar.ultimoAcesso', null); },
   setUltimoAcesso(iso) { LS.set('meubar.ultimoAcesso', iso); },
+  // Som do brinde: desligado por padrão, de propósito
+  getSom() { return LS.get('meubar.som', false); },
+  setSom(v) { LS.set('meubar.som', v); },
   // Convite de instalação: quantas recusas, quando foi a última, se já instalou
   getInstalar() { return LS.get('meubar.instalar', {}); },
   setInstalar(obj) { LS.set('meubar.instalar', obj); },

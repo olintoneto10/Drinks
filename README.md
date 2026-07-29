@@ -130,6 +130,20 @@ Com a sua chave da Anthropic, o chat vira um bartender de IA de verdade.
   celular** (não precisa de app nenhum para ler) e a receita abre no MeuBar
   pronta para guardar e editar. Clássico do catálogo viaja pelo id; receita
   própria viaja inteira dentro do QR. Sem servidor, como o cartão de convidado.
+- **🔉 Som do brinde** — um tinido de taça quando o drink fica pronto no Modo
+  Preparo, **sintetizado no Web Audio** (sem arquivo para baixar, funciona
+  offline). Duas notas a uma quinta de distância, com 60 ms entre elas e queda
+  exponencial — é o que faz soar como brinde e não como notificação. **Desligado
+  por padrão**, com interruptor em Ajustes que toca a amostra ao ligar: som que
+  dispara sozinho num app aberto no meio de uma festa incomoda mais do que
+  encanta. Respeita `prefers-reduced-motion`.
+- **🗂️ Diário enxuto** — a aba tinha sete blocos empilhados e a lista de
+  registros, que é o motivo de abri-la, ficava espremida no meio de uma rolagem
+  de 3.500px. Agora o diário fica no topo e o resto desce para duas seções
+  dobráveis — **Seu balcão** (coleção, passaporte, conquistas, rotas) e **Ajustes
+  e backup**. Fechada, a aba cabe em **548px: seis vezes menor**. E fechado não
+  vira escondido: cada seção mostra um resumo do que tem dentro
+  (*"Curioso · 1 de 14 conquistas · 1 país"*), legível sem abrir.
 - **📊 Diário rico** — filtros por nota mínima e período, resumo neutro do mês
   (nº de registros, nota média, destaque) e fotos comprimidas automaticamente
   (~1200px) para não estourar o armazenamento.

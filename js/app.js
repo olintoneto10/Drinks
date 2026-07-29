@@ -618,6 +618,8 @@ function renderDiario() {
   renderColecao();
   renderJogo();
   renderLinhaInstalar();
+  renderResumosDobra();
+  renderBotaoSom();
   $('#btn-retrospectiva').classList.toggle('escondido', state.entries.length < 3);
   const busca = ($('#busca-diario')?.value || '').trim().toLowerCase();
   const notaMin = Number($('#filtro-nota')?.value || 0);
@@ -769,6 +771,42 @@ function compartilharReceita(id) {
   const ing = r.ing.map(i => `• ${ING_MAP[i.id]?.nome || i.id} — ${i.q}`).join('\n');
   compartilharTexto(r.nome,
     `🍸 ${r.nome}\n\n${ing}\n\nPreparo: ${r.preparo}\n\n(via MeuBar)`);
+}
+
+// A seção fechada precisa dizer o que tem dentro, senão fechar vira esconder.
+// O resumo é a informação que a pessoa abriria para ver — sem obrigá-la a abrir.
+function renderResumosDobra() {
+  const balcao = $('#resumo-balcao');
+  if (balcao) {
+    if (!state.entries.length) {
+      balcao.textContent = 'coleção, países e conquistas — comece registrando um drink';
+    } else {
+      const c = typeof contextoDoJogo === 'function' ? contextoDoJogo() : null;
+      const nivel = c ? nivelDoBar(c.feitos.size).atual.nome : '';
+      const ganhas = c ? CONQUISTAS.filter(x => x.testa(c)).length : 0;
+      const { paises } = typeof statsColecao === 'function' ? statsColecao() : { paises: new Set() };
+      balcao.textContent = [
+        nivel, `${ganhas} de ${CONQUISTAS.length} conquistas`,
+        paises.size ? `${paises.size} ${paises.size === 1 ? 'país' : 'países'}` : '',
+      ].filter(Boolean).join(' · ');
+    }
+  }
+  const ajustes = $('#resumo-ajustes');
+  if (ajustes) {
+    ajustes.textContent = [
+      Store.getSom() ? 'som ligado' : 'som desligado',
+      'lembrete', 'backup',
+    ].join(' · ');
+  }
+}
+
+function renderBotaoSom() {
+  const btn = $('#btn-som');
+  if (!btn) return;
+  const ligado = Store.getSom();
+  btn.textContent = ligado ? '🔊 Som ligado' : '🔇 Som desligado';
+  btn.setAttribute('aria-pressed', String(ligado));
+  btn.classList.toggle('primario', ligado);
 }
 
 // ---------- Registro em um toque ----------
@@ -1716,6 +1754,23 @@ function initEventos() {
 
   // Diário
   $('#btn-nova-entrada').addEventListener('click', () => abrirFormEntrada());
+  // Interruptor simples. Ligar toca a amostra na hora: ninguém liga um som sem
+  // querer saber como ele é, e ouvir antes evita a surpresa no meio da festa.
+  $('#btn-som').addEventListener('click', () => {
+    const estava = Store.getSom();
+    if (!estava) {
+      Store.setSom(true);
+      renderBotaoSom();
+      renderResumosDobra();
+      tocarBrinde();
+      toast('Som ligado', 'Vai tocar quando um drink ficar pronto no Modo Preparo.');
+      return;
+    }
+    Store.setSom(false);
+    renderBotaoSom();
+    renderResumosDobra();
+    toast('Som desligado', '', 'info');
+  });
   $('#busca-diario').addEventListener('input', renderDiario);
   $('#filtro-nota').addEventListener('change', renderDiario);
   $('#filtro-periodo').addEventListener('change', renderDiario);

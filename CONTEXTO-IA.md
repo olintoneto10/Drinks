@@ -117,6 +117,12 @@ inverte. Cada botão leva sua legenda.
 - Açúcar, sal e gelo contam como sempre disponíveis
 
 ### Aba 3 — Diário
+A aba abre no **diário em si** (registrar, resumo do mês, busca, filtros,
+lista, retrospectiva). Tudo o mais desce para duas seções `<details>` fechadas,
+cada uma com um resumo do conteúdo: **Seu balcão** (coleção, passaporte,
+conquistas, rotas) e **Ajustes e backup** (lembrete `.ics`, som do brinde,
+exportar/importar, instalar como app). Fechada, a aba tem ~548px em vez de
+~3.586px.
 - **Registro em um toque** — na receita e na tela do brinde, tocar numa estrela
   grava a entrada (data de hoje, nome do drink, nota). Grava primeiro e pergunta
   depois: o aviso traz **desfazer** e um convite discreto para completar.

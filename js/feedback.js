@@ -5,6 +5,47 @@ function prefereMenosMovimento() {
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
+// ---------- Som do brinde ----------
+// Um único som no app inteiro, no momento em que o drink fica pronto — e
+// desligado por padrão. Áudio que toca sem aviso num app aberto no meio de uma
+// festa é intrusivo, e "encantador na primeira vez, irritante na décima" é o
+// destino de todo som automático. Quem quiser, liga em Ajustes.
+//
+// Sintetizado no Web Audio em vez de arquivo: não são bytes para baixar, não há
+// o que cachear, e funciona offline como o resto do app.
+let _audio = null;
+
+function tocarBrinde() {
+  if (!Store.getSom() || prefereMenosMovimento()) return;
+  try {
+    const Ctx = window.AudioContext || window.webkitAudioContext;
+    if (!Ctx) return;
+    // O contexto nasce suspenso até um gesto do usuário (regra do iOS e do
+    // Chrome). Aqui sempre há um: o som só toca depois de um toque.
+    _audio = _audio || new Ctx();
+    if (_audio.state === 'suspended') _audio.resume();
+
+    const agora = _audio.currentTime;
+    // Duas taças não soam na mesma nota. A segunda entra 60 ms depois, numa
+    // quinta acima — é o que faz soar como brinde e não como notificação.
+    [[1244.5, 0], [1864.7, 0.06]].forEach(([hz, atraso], i) => {
+      const osc = _audio.createOscillator();
+      const vol = _audio.createGain();
+      osc.type = 'triangle';
+      osc.frequency.value = hz;
+      const t0 = agora + atraso;
+      // Ataque quase instantâneo e queda exponencial longa: é o envelope do
+      // vidro. Rampa linear soaria como bipe de micro-ondas.
+      vol.gain.setValueAtTime(0.0001, t0);
+      vol.gain.exponentialRampToValueAtTime(i ? 0.10 : 0.16, t0 + 0.006);
+      vol.gain.exponentialRampToValueAtTime(0.0001, t0 + 1.1);
+      osc.connect(vol).connect(_audio.destination);
+      osc.start(t0);
+      osc.stop(t0 + 1.2);
+    });
+  } catch { /* navegador sem áudio, ou bloqueado — silêncio é aceitável */ }
+}
+
 // Vibração curta como confirmação física (Android; iOS ainda não expõe a API)
 function vibrar(padrao) {
   if (!navigator.vibrate || prefereMenosMovimento()) return;

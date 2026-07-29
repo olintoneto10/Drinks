@@ -131,6 +131,7 @@ function abrirBrinde(r) {
     </div>`;
   document.body.appendChild(tela);
   vibrar(HAPTICO.brinde);
+  tocarBrinde();
   tela.querySelector('.estrela').focus();
   // Levou o preparo até o fim: o app acabou de valer a pena.
   talvezConvidarInstalar('preparo');

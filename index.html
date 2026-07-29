@@ -83,11 +83,31 @@
       </div>
       <div id="lista-diario" aria-live="polite"></div>
       <button id="btn-retrospectiva" class="btn escondido">🎁 Minha retrospectiva</button>
-      <div id="colecao"></div>
-      <div id="jogo"></div>
-      <div id="lembrete" class="lembrete"></div>
-      <div class="backup">
-        <h2>Backup</h2>
+
+      <!-- Tudo que não é o diário em si desce para seções dobráveis. A aba
+           tinha o registro no topo e mais seis blocos abaixo; a lista, que é o
+           motivo de abrir a aba, ficava espremida no meio de uma rolagem longa.
+           <details> pelo mesmo motivo do cartão da curiosidade: acessível de
+           teclado e de leitor de tela sem uma linha de JS. -->
+      <details id="secao-balcao" class="secao-dobra">
+        <summary><span class="dobra-titulo">Seu balcão</span>
+          <span class="dobra-resumo" id="resumo-balcao"></span></summary>
+        <div id="colecao"></div>
+        <div id="jogo"></div>
+      </details>
+
+      <details id="secao-ajustes" class="secao-dobra">
+        <summary><span class="dobra-titulo">Ajustes e backup</span>
+          <span class="dobra-resumo" id="resumo-ajustes"></span></summary>
+        <div id="lembrete" class="lembrete"></div>
+
+        <h3>Som do brinde</h3>
+        <p class="dica">Um tinido de taça quando o drink fica pronto no Modo
+          Preparo. Desligado por padrão — som que toca sozinho no meio de uma
+          festa incomoda mais do que encanta.</p>
+        <button id="btn-som" class="btn" aria-pressed="false"></button>
+
+        <h3>Backup</h3>
         <p class="dica">Seus dados vivem só neste aparelho. Exporte de tempos em tempos
           para não perder o diário — e importe ao trocar de celular.</p>
         <div class="botoes-duplos">
@@ -97,7 +117,7 @@
           </label>
         </div>
         <div id="linha-instalar"></div>
-      </div>
+      </details>
     </section>
 
     <!-- Especialista -->
