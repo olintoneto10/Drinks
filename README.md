@@ -108,6 +108,17 @@ Com a sua chave da Anthropic, o chat vira um bartender de IA de verdade.
   preenchida, pronta para ajustar. Antes só dava para criar do zero ou anotar por
   cima do clássico; faltava o meio-termo, que é como se ajusta receita de
   verdade: parte do que existe e mexe numa medida. O original fica intacto.
+- **🍒 Toque final** — guarnições e bitters que combinam com a receita aberta,
+  com **uma linha dizendo por quê** cada um: *"torça a casca de laranja sobre o
+  copo — o óleo acende o amargo e o baunilhado do destilado"*. É o que um
+  bartender diria ao entregar o copo. São sugestões, nunca exigências: não
+  entram no motor e a receita funciona sem nada disso. Não repetem o que a
+  receita já pede, e o que existe no catálogo vira botão de lista de compras.
+  **Sem marca nenhuma** — "bitter de laranja", não a marca X: o app não cita
+  marca em lugar nenhum, e começar por aqui abriria a porta para o catálogo
+  virar vitrine. E **drink sem álcool não recebe bitter**, porque bitter é
+  destilado de 35% a 45% — quem evita álcool costuma ter um motivo que não
+  admite "só um dash". O app diz isso na tela, em vez de simplesmente omitir.
 - **💡 Cartão da curiosidade** — a curiosidade de cada verbete virou um cartão
   fechado com uma pergunta na frente. Fato lido de passagem não fica; o que se
   escolhe abrir, se lembra. É `<details>` nativo — acessível de teclado e de
@@ -259,6 +270,7 @@ js/db.js              persistência (IndexedDB + localStorage)
 js/ai.js              integração com a API da Anthropic (modo Especialista)
 js/demo.js            bartender local: interpreta o pedido e responde sem chave
 js/instalar.js        convite para instalar como app (merecido, recusável)
+js/acabamento.js      guarnições e bitters compatíveis, derivados da receita
 js/app.js             UI, motor de sugestões e perfil de sabor
 js/retro.js           cartaz da retrospectiva do ano (canvas)
 js/preparo.js         modo preparo passo a passo e o brinde

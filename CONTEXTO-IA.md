@@ -249,6 +249,7 @@ js/db.js              IndexedDB (diário com fotos) + localStorage
 js/ai.js              API da Anthropic (chave do usuário)
 js/demo.js            bartender local: interpreta o pedido e responde sem chave
 js/instalar.js        convite para instalar como app (merecido, recusável)
+js/acabamento.js      guarnições e bitters compatíveis, derivados da receita
 
 Acessibilidade: WCAG 2.2 AA, com o contraste medido em teste automatizado nos
 dois temas. `--linha` é decorativa; `--linha-forte` é a borda que identifica um

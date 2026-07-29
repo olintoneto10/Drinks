@@ -724,6 +724,7 @@ function abrirReceita(id) {
     <h3>Preparo</h3>
     <p>${esc(r.preparo)}</p>
     ${r.ingExtra ? `<p class="dica">Outros: ${esc(r.ingExtra)}</p>` : ''}
+    ${blocoAcabamento(r)}
     <h3>Minhas anotações</h3>
     <div id="nota-area">
       ${Store.getNotas()[r.id]
@@ -1788,6 +1789,21 @@ function initEventos() {
     }
     const prep = ev.target.closest('#btn-preparar');
     if (prep) { abrirPreparo(prep.dataset.receita); return; }
+    // O "+ lista" do Toque final vive no modal, e o handler de data-shop estava
+    // preso ao #lista-sugestoes — o botão existia e não fazia nada.
+    const shopModal = ev.target.closest('[data-shop]');
+    if (shopModal) {
+      const idIng = shopModal.dataset.shop;
+      state.shopping.has(idIng) ? state.shopping.delete(idIng) : state.shopping.add(idIng);
+      Store.setShopping(state.shopping);
+      // Redesenha só a linha, para não fechar o modal nem perder a rolagem.
+      const naLista = state.shopping.has(idIng);
+      shopModal.classList.toggle('ok', naLista);
+      shopModal.textContent = naLista ? '✓ na lista' : '+ lista';
+      renderBar();
+      return;
+    }
+
     const rapido = ev.target.closest('[data-rapido]');
     if (rapido) {
       registrarRapido(rapido.dataset.receita, Number(rapido.dataset.rapido));

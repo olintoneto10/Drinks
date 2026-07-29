@@ -415,6 +415,26 @@ form label {
 .estrelas.rapidas .estrela:hover ~ .estrela { color: var(--linha); }
 .estrelas.rapidas .estrela:hover { transform: translateY(-2px); }
 .registro-rapido .mini { margin-bottom: 8px; }
+/* Toque final: sugestões de guarnição e bitters. Recuo à esquerda para se ler
+   como conselho de margem, não como mais um passo obrigatório da receita. */
+.acabamento { list-style: none; margin: 4px 0 14px; }
+.acabamento li {
+  border-left: 2px solid var(--linha);
+  padding: 0 0 10px 12px;
+  margin-bottom: 8px;
+}
+.acabamento li:last-child { padding-bottom: 0; margin-bottom: 0; }
+.acabamento strong { font-weight: normal; font-size: 1rem; }
+.acabamento .mini { margin-left: 8px; vertical-align: 2px; }
+.acabamento .porque {
+  display: block;
+  color: var(--cinza);
+  font-size: 0.84rem;
+  font-style: italic;
+  line-height: 1.5;
+  margin-top: 2px;
+}
+
 .btn-foto {
   display: inline-block;
   border: 1px solid var(--linha);
