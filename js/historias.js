@@ -160,6 +160,20 @@ const HISTORIAS = {
     variacoes: 'Spritz com Campari, Hugo, Select',
     cultura: 'O som do verão europeu',
   },
+  // Terceiro estado do selo: nem 'real' nem 'lenda'. Este drink existe num
+  // balcão de verdade, mas a receita chegou aqui só por quatro ingredientes —
+  // as medidas são inferência, e o verbete não finge o contrário.
+  'aroma': {
+    recriado: true,
+    origem: 'Drink de casa · origem não documentada',
+    criador: null,
+    historia: 'Chega antes de ser provado. O morango macerado sobe da taça enquanto ela ainda cruza o salão, e por isso o nome faz sentido: o primeiro gole acontece pelo nariz. Depois o copo entrega o resto em camadas — o amargo curto do Aperol segurando o doce da fruta, a limonada rosa cortando com acidez, e o espumante rosé levantando tudo em bolha fina até sobrar só um final seco, limpo, que pede o gole seguinte. É um aperitivo que parece sobremesa e se comporta como aperitivo: fica rosa na taça, mas não pesa.',
+    curiosidade: 'Morango e cítrico se dão bem por química, não por acaso: os ésteres do morango são frutados e voláteis, e precisam de acidez para não empalmar em doce — é a mesma razão de o morango ir tão bem com limão e com espumante brut.',
+    ocasiao: 'Fim de tarde, brinde, mesa ao ar livre',
+    temperatura: 'Muito gelado, taça cheia de gelo, espumante direto da geladeira',
+    harmoniza: 'Burrata, presunto cru com melão, ceviche, tábua de frios, sobremesa de frutas vermelhas',
+    variacoes: 'Sem álcool com espumante zero; frozen no liquidificador; tropical trocando a limonada por maracujá',
+  },
   'cosmopolitan': {
     origem: 'Estados Unidos · anos 1980',
     criador: 'Disputado; consagrado por Dale DeGroff',
@@ -1751,12 +1765,28 @@ function blocoHistoria(r, h) {
         ✦ Descobrir a história deste drink</button>`;
   }
 
+  // Três estados, não dois. 'real' é história pesquisada; 'lenda' é ficção
+  // assumida em drink da casa; 'recriada' é o caso de um drink que existe num
+  // balcão de verdade mas chegou aqui só por uma lista de ingredientes — a
+  // bebida é real, as medidas são inferência. Chamar isso de "real" mentiria
+  // sobre a precisão; chamar de "lenda" mentiria sobre a existência.
+  const estado = h.lenda ? 'lenda' : h.recriado ? 'recriada' : 'real';
+  const classe = h.lenda ? 'e-lenda' : h.recriado ? 'e-recriada' : 'e-real';
+  const rotulo = h.lenda ? '✦ Lenda da casa' : h.recriado ? 'A reconstrução' : 'A história';
+  const titulo = h.lenda ? 'História inventada para este app'
+    : h.recriado ? 'Drink real, receita reconstruída a partir dos ingredientes conhecidos'
+    : 'História pesquisada, de fontes verificáveis';
+  const rodape = h.lenda
+    ? 'História inventada para este app. A receita, não.'
+    : h.recriado
+      ? 'Drink de um balcão real, reconstruído aqui a partir dos ingredientes conhecidos. '
+        + 'As proporções seguem o padrão clássico do estilo — não são a receita original da casa.'
+      : '';
+
   return `
-    <div class="historia${h.lenda ? ' e-lenda' : ''}">
-      <span class="rotulo-hist">${h.lenda ? '✦ Lenda da casa' : 'A história'}
-        <b class="selo-verdade ${h.lenda ? 'e-lenda' : 'e-real'}"
-          title="${h.lenda ? 'História inventada para este app' : 'História pesquisada, de fontes verificáveis'}"
-        >${h.lenda ? 'lenda' : 'real'}</b></span>
+    <div class="historia${h.lenda ? ' e-lenda' : ''}${h.recriado ? ' e-recriada' : ''}">
+      <span class="rotulo-hist">${rotulo}
+        <b class="selo-verdade ${classe}" title="${titulo}">${estado}</b></span>
       <p>${h.historia}</p>
       ${h.criador ? `<p class="assinatura">— ${h.criador}</p>` : ''}
       ${h.curiosidade ? `<p class="curiosidade">${h.curiosidade}</p>` : ''}
@@ -1767,7 +1797,7 @@ function blocoHistoria(r, h) {
         ${linha('Variações', h.variacoes)}
         ${linha('Na cultura', h.cultura)}
       </ul>
-      ${h.lenda ? '<p class="rodape-lenda">História inventada para este app. A receita, não.</p>' : ''}
+      ${rodape ? `<p class="rodape-lenda">${rodape}</p>` : ''}
       ${h.porIA ? '<p class="dica">História escrita pelo Especialista.</p>' : ''}
     </div>`;
 }

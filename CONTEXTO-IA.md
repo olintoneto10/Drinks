@@ -30,7 +30,7 @@ o app foi construído em par com uma IA e ele atua como dono de produto).
 
 | | |
 |---|---|
-| Receitas | **198** |
+| Receitas | **199** |
 | Ingredientes catalogados | **89**, em 6 categorias |
 | Verbetes históricos escritos à mão | **136** |
 | Lendas da casa (ficção assumida) | **10** |
@@ -94,7 +94,7 @@ Quatro abas. O app abre em **Meu Bar** se a estante estiver vazia, e em
   e **"Explorar o acervo"** (tudo que pede 2+ ingredientes que faltam). O acervo
   vem fechado, ordenado por distância, cada linha nomeando o que falta, com um
   botão "+ tudo na lista" que manda todos os itens de uma vez para as compras.
-  Sem ele, uma estante de iniciante enxergava 32 das 198 receitas.
+  Sem ele, uma estante de iniciante enxergava 32 das 199 receitas.
 - **Busca por nome de drink OU nome de ingrediente**, ignorando acento
   ("maracuja" acha "maracujá"). A busca abre o acervo sozinha.
 - **"Vale a pena comprar"** — ingredientes que destravam mais drinks (some
@@ -149,7 +149,7 @@ Abre num chat que **funciona sem chave e sem internet**.
 ## 5. Funcionalidades em detalhe
 
 ### Motor de sugestões
-Cruza a estante com as 198 receitas. Ordena por afinidade com o perfil ativo.
+Cruza a estante com as 199 receitas. Ordena por afinidade com o perfil ativo.
 O perfil combina **tags declaradas** (o usuário diz que curte doce) com **tags
 aprendidas** (notas 4–5 no diário ensinam sozinhas).
 
@@ -195,8 +195,8 @@ pelo **destilado**: samba para a caipirinha, son cubano para o mojito, blues
 para o Whiskey Sour, folk irlandês para o Irish Coffee.
 
 ### Ilustrações
-Geradas em **SVG**, não fotografadas — sem licença, sem CDN, cobrindo 198 de
-198. A cor do líquido é **calculada a partir dos ingredientes**, com peso por
+Geradas em **SVG**, não fotografadas — sem licença, sem CDN, cobrindo 199 de
+199. A cor do líquido é **calculada a partir dos ingredientes**, com peso por
 poder de tingimento e realce de saturação. Inclui copo correto, gelo conforme o
 preparo pede, camada densa no fundo quando há granadina, espuma de clara, sal
 na borda, reflexo no vidro e guarnição escolhida entre 16. **A foto do próprio
@@ -239,7 +239,7 @@ por `<script src>` em ordem, compartilhando escopo global.
 index.html            4 abas + modal
 css/style.css         tema Aperitivo Editorial
 css/movimento.css     movimento, feedback e modo noite
-js/data.js            198 receitas + 89 ingredientes + substituições
+js/data.js            199 receitas + 89 ingredientes + substituições
 js/historias.js       146 verbetes + ficha derivada + trilha
 js/art.js             ilustrações SVG com cor calculada
 js/medidas.js         escala de receita e conversão ml/oz

@@ -52,6 +52,7 @@ const INGREDIENTES = [
   // Mixers e sucos
   { id: 'agua-tonica', nome: 'Água tônica', cat: 'mixers' },
   { id: 'agua-com-gas', nome: 'Água com gás', cat: 'mixers' },
+  { id: 'limonada-rosa', nome: 'Pink lemonade (limonada rosa)', cat: 'mixers' },
   { id: 'refrigerante-cola', nome: 'Refrigerante de cola', cat: 'mixers' },
   { id: 'ginger-beer', nome: 'Ginger beer / ginger ale', cat: 'mixers' },
   { id: 'refrigerante-limao', nome: 'Refrigerante de limão (Sprite / 7up)', cat: 'mixers' },
@@ -164,6 +165,31 @@ const RECEITAS = [
     id: 'hugo-spritz', nome: 'Hugo Spritz', copo: 'Taça de vinho', tags: ['doce', 'refrescante'],
     ing: [{ id: 'licor-sabugueiro', q: '30 ml' }, { id: 'espumante', q: '90 ml' }, { id: 'agua-com-gas', q: '30 ml' }, { id: 'hortela', q: '1 ramo' }, { id: 'limao', q: '1 fatia', opcional: true }, { id: 'gelo', q: 'bastante' }],
     preparo: 'Na taça com gelo: licor de sabugueiro, espumante, água com gás e hortelã. Fresco e floral.',
+  },
+  {
+    // Reconstrução a partir de quatro ingredientes conhecidos de um drink de
+    // casa. As proporções são inferidas do padrão internacional de spritz
+    // (3-2-1) — não são a receita publicada do estabelecimento, e o verbete
+    // diz isso com todas as letras.
+    id: 'aroma', nome: 'Aroma', copo: 'Taça de vinho', tags: ['frutado', 'refrescante', 'doce', 'citrico'],
+    familia: 'Da família do spritz: um aperitivo de baixa graduação montado na taça, sobre gelo.',
+    ing: [
+      { id: 'morango', q: '3 unidades' },
+      { id: 'aperol', q: '30 ml' },
+      { id: 'limonada-rosa', q: '45 ml' },
+      { id: 'espumante', q: '90 ml' },
+      { id: 'limao', q: '10 ml de suco', opcional: true },
+      { id: 'gelo', q: 'bastante' },
+    ],
+    passos: [
+      'Macere dois morangos no fundo da coqueteleira, sem esmagar as sementes — pressione e solte, não gire.',
+      'Junte o Aperol, a pink lemonade, o limão e gelo. Bata curto, de 8 a 10 segundos: é para gelar e integrar, não para diluir.',
+      'Coe duas vezes para a taça já com bastante gelo, para nenhuma semente passar.',
+      'Complete com o espumante rosé bem gelado, escorrendo pela colher encostada na parede da taça.',
+      'Misture uma vez só, de baixo para cima, e decore com o morango que sobrou, cortado em leque.',
+    ],
+    preparo: 'Macere dois morangos, bata curto com Aperol, pink lemonade, limão e gelo, e coe duas vezes para a taça com bastante gelo. Complete com o espumante rosé gelado pela colher e misture uma vez só, de baixo para cima. Decore com morango em leque.',
+    ingExtra: 'Espumante rosé brut. O morango da decoração entra cortado em leque, apoiado na borda.',
   },
   {
     id: 'old-fashioned', nome: 'Old Fashioned', copo: 'Copo baixo', tags: ['forte', 'doce', 'amargo'],
@@ -1196,6 +1222,8 @@ const TAG_NOMES = {
 // significando que você tem o que a receita pede. Isto é conselho de balcão
 // para quando falta algo, não uma forma de inflar a lista.
 const SUBSTITUTOS = {
+  'limonada-rosa': [{ id: 'limao', nota: 'faça em casa: 30 ml de suco de limão, 20 ml de xarope de morango e 60 ml de água gelada' },
+                    { id: 'refrigerante-limao', nota: 'mais doce e com gás; corte o xarope pela metade' }],
   'xarope-simples': [{ id: 'acucar', nota: 'dissolva antes num pouco de água quente' },
                      { id: 'mel', nota: 'mais encorpado e com gosto próprio' }],
   'xarope-agave': [{ id: 'mel', nota: 'mais floral' },

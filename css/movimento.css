@@ -969,9 +969,14 @@ main h2.rotulo-dia::before { content: none; }
 }
 .selo-verdade.e-real { color: var(--cinza); }
 .selo-verdade.e-lenda { color: var(--acento); }
+/* Recriada fica entre as duas: nem o cinza discreto do fato pesquisado, nem o
+   vermelho da ficção — uma linha pontilhada, de "aproximação". */
+.selo-verdade.e-recriada { color: var(--ok); border-style: dashed; }
 
 .historia.e-lenda { border-left: 2px dashed var(--acento); padding-left: 14px; }
 .historia.e-lenda .rotulo-hist { color: var(--acento); }
+.historia.e-recriada { border-left: 2px dotted var(--ok); padding-left: 14px; }
+.historia.e-recriada .rotulo-hist { color: var(--ok); }
 .rodape-lenda {
   font-family: var(--sans);
   font-size: .68rem;

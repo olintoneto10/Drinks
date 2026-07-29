@@ -185,7 +185,7 @@ function aberturaDemo(p, total, afrouxou) {
 }
 
 const RODAPE_DEMO =
-  '— Isto é a demonstração: eu procuro no acervo de 198 receitas por sabor, ' +
+  '— Isto é a demonstração: eu procuro no acervo de 199 receitas por sabor, ' +
   'ingrediente e pessoa. Não sou a IA. Com sua chave da API da Anthropic, ' +
   'o especialista de verdade inventa receita nova, improvisa com o que sobrou ' +
   'na geladeira e conversa de fato.';

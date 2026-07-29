@@ -11,7 +11,7 @@ Com a sua chave da Anthropic, o chat vira um bartender de IA de verdade.
   licores, mixers, **xaropes**, frutas). Açúcar, sal e gelo já contam como
   disponíveis. São 15 xaropes, de tangerina e gengibre a orgeat e falernum, e
   cada um destrava receitas de verdade — nenhum entra só para enfeitar a lista.
-- **🍸 Sugestões** — 198 receitas divididas em *"pode fazer agora"* e
+- **🍸 Sugestões** — 199 receitas divididas em *"pode fazer agora"* e
   *"falta só 1 ingrediente"* (com botão para mandar o item que falta para a
   lista de compras). Os filtros de perfil **combinam entre si**: marque cítrico
   e forte e veja só o que é as duas coisas. Quando o cruzamento não devolve nada,
@@ -19,7 +19,7 @@ Com a sua chave da Anthropic, o chat vira um bartender de IA de verdade.
 - **🔎 Explorar o acervo** — a terceira seção da aba, com tudo que pede dois ou
   mais ingredientes que faltam. Sem ela, uma estante de iniciante enxergava 32
   receitas e escondia 166 — 84% do catálogo era invisível, sem lista, busca nem
-  filtro que chegasse lá. Agora as 198 estão alcançáveis. Vem fechada por padrão
+  filtro que chegasse lá. Agora as 199 estão alcançáveis. Vem fechada por padrão
   para não competir com o que dá para fazer agora, ordenada pelas que estão mais
   perto, cada linha dizendo **o que** falta pelo nome, e um botão *"+ tudo na
   lista"* que manda todos os itens de uma vez para as compras.
@@ -34,9 +34,13 @@ Com a sua chave da Anthropic, o chat vira um bartender de IA de verdade.
   verdadeira dele. Todo verbete fictício abre com aviso em destaque —
   *"Esta história é invenção nossa, não fato histórico"* — antes do texto, e o
   drink em si é receita de verdade, com proporções que funcionam. Cada verbete
-  leva um **carimbo `real` ou `lenda`** ao lado do título — os dois lados são
-  marcados, porque selo só na ficção pareceria ressalva, e selo só no fato não
-  diria nada.
+  leva um **carimbo** ao lado do título — os lados todos são marcados, porque
+  selo só na ficção pareceria ressalva, e selo só no fato não diria nada. São
+  três estados: `real` (história pesquisada), `lenda` (ficção assumida em drink
+  da casa) e `recriada` — drink que existe num balcão de verdade mas chegou aqui
+  só por uma lista de ingredientes, com as proporções inferidas do padrão
+  clássico do estilo. Chamar isso de "real" mentiria sobre a precisão; chamar de
+  "lenda" mentiria sobre a existência.
 - **✎ Autorais** — além do cânone clássico, a leva moderna com autor, ano e
   endereço conhecidos: Paper Plane, Naked & Famous, Last Word, Division Bell,
   Oaxaca Old Fashioned, Gin Basil Smash, Old Cuban, Trinidad Sour, Siesta e
@@ -139,7 +143,7 @@ Com a sua chave da Anthropic, o chat vira um bartender de IA de verdade.
 ### Ilustração
 
 As imagens são **geradas em SVG**, não fotografadas: sem licença, sem CDN, sem
-peso e cobrindo **198 de 198** receitas — inclusive as Lendas da casa, que não
+peso e cobrindo **199 de 199** receitas — inclusive as Lendas da casa, que não
 existem em banco de imagem nenhum. A sua foto do drink substitui a ilustração
 assim que você registra o preparo no diário.
 

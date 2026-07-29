@@ -1439,7 +1439,7 @@ function renderExpert() {
   $('#expert-chat').classList.remove('escondido');
   $('#chat-aviso').innerHTML = temChave
     ? '🤖 <b>IA ativa</b> — respostas do Claude, com o seu bar e o seu gosto no contexto.'
-    : '🔎 <b>Modo demonstração</b> — respondo procurando nas 198 receitas do acervo, '
+    : '🔎 <b>Modo demonstração</b> — respondo procurando nas 199 receitas do acervo, '
       + 'aqui no aparelho, sem internet. Não é a IA.';
   $('#chat-aviso').className = temChave ? 'aviso-ia' : 'aviso-ia demo';
   $('#btn-modo-ia').textContent = temChave ? 'trocar ou remover a chave de API' : 'tenho uma chave da API — quero a IA';

@@ -40,6 +40,7 @@ const COR_ING = {
   espumante: ['#F4E8B8', 1.2], 'vinho-branco': ['#F0E8B0', 1.2],
   'vermute-seco': ['#F0EAC8', 1.2], 'agua-tonica': ['#F0F6F8', .7],
   'agua-com-gas': ['#F0F6F8', .7], 'refrigerante-limao': ['#F0F8E0', .7],
+  'limonada-rosa': ['#F27B92', 1.6],
   'agua-de-coco': ['#F4F8F0', .7], limao: ['#E8F0C0', .5],
   'xarope-simples': ['#F4F0E0', .4], 'xarope-agave': ['#D8B060', 1],
   'xarope-orgeat': ['#F4EADC', 1], 'xarope-falernum': ['#F0E4C0', 1],
